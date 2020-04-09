@@ -94,6 +94,7 @@
                 </executions>
                 <configuration>
                     <packageName>io.process.analytics.tools.bpmn.generator.internal.model</packageName>
+                    <locale>en</locale>
 <!--                    <addGeneratedAnnotation>true</addGeneratedAnnotation>-->
                 </configuration>
             </plugin>
