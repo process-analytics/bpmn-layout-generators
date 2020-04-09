@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright 2020 Bonitasoft S.A.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_12nbmjq" targetNamespace="http://modeler.bpmn/schema/bpmn">
+    <bpmn:collaboration id="Collaboration_1cajy2f">
+        <bpmn:participant id="Participant_0zyusbn" name="Pool" processRef="Process_1duwsyj" />
+    </bpmn:collaboration>
+    <bpmn:process id="Process_1duwsyj" isExecutable="false">
+        <bpmn:startEvent id="StartEvent_05jmofc" name="début">
+            <bpmn:outgoing>Flow_1bic2fy</bpmn:outgoing>
+        </bpmn:startEvent>
+    </bpmn:process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1cajy2f">
+            <bpmndi:BPMNShape id="Participant_0zyusbn_di" bpmnElement="Participant_0zyusbn" isHorizontal="true">
+                <dc:Bounds x="152" y="39" width="760" height="121" />
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_05jmofc">
+                <dc:Bounds x="206" y="81" width="36" height="36" />
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="210" y="124" width="28" height="14" />
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn:definitions>

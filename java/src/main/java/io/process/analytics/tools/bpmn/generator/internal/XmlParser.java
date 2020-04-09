@@ -18,7 +18,9 @@ package io.process.analytics.tools.bpmn.generator.internal;
 import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.transform.stream.StreamSource;
 import java.io.StringReader;
 
 public class XmlParser {
@@ -42,7 +44,9 @@ public class XmlParser {
 
     public TDefinitions unmarshall(String xml) {
         try {
-            return (TDefinitions) context.createUnmarshaller().unmarshal(new StringReader(xml));
+            StreamSource source = new StreamSource(new StringReader(xml));
+            JAXBElement<TDefinitions> root = context.createUnmarshaller().unmarshal(source, TDefinitions.class);
+            return root.getValue();
         } catch (JAXBException e) {
             throw new RuntimeException("Unable to marshal", e);
         }

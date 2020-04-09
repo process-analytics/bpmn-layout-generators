@@ -20,6 +20,9 @@ import io.process.analytics.tools.bpmn.generator.internal.model.BPMNPlane;
 import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,16 +32,23 @@ public class XmlParserTest {
     private final XmlParser xmlParser = new XmlParser();
 
     @Test
-    public void unmarshall() {
-        String xmlString = "";
-        TDefinitions definitions = xmlParser.unmarshall(xmlString);
+    public void unmarshall() throws IOException {
+        String bpmnAsXml = fileContent("src/test/resources/bpmn/01-startEvent.bpmn.xml");
+
+        TDefinitions definitions = xmlParser.unmarshall(bpmnAsXml);
 
         List<BPMNDiagram> diagram = definitions.getBPMNDiagram();
         assertThat(diagram)
                 .hasSize(1)
-                .extracting(BPMNDiagram::getId).isEqualTo("BPMNDiagram_1");
+                .extracting(BPMNDiagram::getId).containsOnly("BPMNDiagram_1");
         BPMNPlane plane = diagram.get(0).getBPMNPlane();
-        assertThat(plane.getId()).isEqualTo("12");
+        assertThat(plane.getId()).isEqualTo("BPMNPlane_1");
+    }
+
+    private static String fileContent(String filePath) throws IOException {
+        String bpmnAsXml = Files.readString(new File(filePath).toPath());
+        //System.out.println("xml: " + bpmnAsXml);
+        return bpmnAsXml;
     }
 
 }
