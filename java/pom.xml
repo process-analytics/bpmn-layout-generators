@@ -23,12 +23,12 @@
             <version>${jaxb.version}</version>
         </dependency>
         <!-- Runtime -->
-<!--        <dependency>-->
-<!--            <groupId>org.glassfish.jaxb</groupId>-->
-<!--            <artifactId>jaxb-runtime</artifactId>-->
-<!--            <version>${jaxb.version}</version>-->
-<!--            <scope></scope>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>${jaxb.version}</version>
+            <scope>runtime</scope>
+        </dependency>
         <!-- test -->
         <dependency>
             <!-- Move to JUnit 5 -->
@@ -94,7 +94,7 @@
                 </executions>
                 <configuration>
                     <packageName>io.process.analytics.tools.bpmn.generator.internal.model</packageName>
-                    <!--          <addGeneratedAnnotation>true</addGeneratedAnnotation>-->
+<!--                    <addGeneratedAnnotation>true</addGeneratedAnnotation>-->
                 </configuration>
             </plugin>
             <plugin>
