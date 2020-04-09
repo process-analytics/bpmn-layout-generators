@@ -4,8 +4,12 @@ Tools for generating missing BPMNDiagram elements in BPMN files
 
 Plan work for the 1st implementation
 - could be based on https://www.researchgate.net/publication/221542866_A_Simple_Algorithm_for_Automatic_Layout_of_BPMN_Processes
-- will be implemented in `Java`. If it works, `javascript` and `R` implementations will be done
+- will be implemented in `Java`. If it works, `javascript`/`typescript` and `R` implementations will be done
 
+
+## Implementations
+
+- [java](java/README.md)
 
 ## Existing alternatives
 
