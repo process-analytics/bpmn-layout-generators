@@ -1,0 +1,16 @@
+language: java
+jdk: openjdk11
+os: linux
+dist: xenial
+
+cache:
+  directories:
+    # Maven dependencies and wrappers
+    - $HOME/.m2
+
+branches:
+  only:
+    - master
+
+install: skip
+script: cd java; ./mvnw verify
