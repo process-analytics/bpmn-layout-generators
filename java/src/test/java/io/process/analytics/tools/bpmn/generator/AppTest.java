@@ -15,14 +15,21 @@
  */
 package io.process.analytics.tools.bpmn.generator;
 
-import static org.junit.Assert.assertTrue;
-
+import io.process.analytics.tools.bpmn.generator.internal.model.BPMNDiagram;
+import io.process.analytics.tools.bpmn.generator.internal.model.BPMNPlane;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AppTest {
     @Test
-    public void shouldAnswerWithTrue() {
+    public void bpmn_diagram_can_be_instantiated() {
+        BPMNDiagram diagram = new BPMNDiagram();
+        BPMNPlane plane = new BPMNPlane();
+        diagram.setBPMNPlane(plane);
+        plane.setId("12");
 
-        assertTrue(true);
+        assertThat(plane.getId()).isEqualTo("12");
     }
+
 }
