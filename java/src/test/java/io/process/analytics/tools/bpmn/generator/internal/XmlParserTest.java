@@ -15,11 +15,10 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import io.process.analytics.tools.bpmn.generator.internal.model.BPMNDiagram;
-import io.process.analytics.tools.bpmn.generator.internal.model.BPMNPlane;
-import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
+import io.process.analytics.tools.bpmn.generator.internal.model.*;
 import org.junit.Test;
 
+import javax.xml.bind.JAXBElement;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,11 +31,22 @@ public class XmlParserTest {
     private final XmlParser xmlParser = new XmlParser();
 
     @Test
-    public void unmarshall() throws IOException {
+    public void unmarshall() throws IOException, ClassNotFoundException {
         String bpmnAsXml = fileContent("src/test/resources/bpmn/01-startEvent.bpmn.xml");
 
         TDefinitions definitions = xmlParser.unmarshall(bpmnAsXml);
 
+        // Semantic
+        List<JAXBElement<? extends TRootElement>> rootElement = definitions.getRootElement();
+        //rootElement.forEach(jaxbElement -> System.out.println(jaxbElement.getValue().getClass()));
+        assertThat(rootElement)
+                .hasSize(2)
+                .extracting(JAXBElement::getValue)
+                .extracting(TRootElement::getClass)
+                .extracting(Class::getName)
+                .containsExactly(TCollaboration.class.getName(),TProcess.class.getName());
+
+        // Shapes
         List<BPMNDiagram> diagram = definitions.getBPMNDiagram();
         assertThat(diagram)
                 .hasSize(1)
