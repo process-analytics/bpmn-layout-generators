@@ -17,6 +17,8 @@ package io.process.analytics.tools.bpmn.generator;
 
 import io.process.analytics.tools.bpmn.generator.internal.XmlParser;
 import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
+import org.camunda.bpm.model.bpmn.Bpmn;
+import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,13 +36,17 @@ public class BpmnInOut {
         TDefinitions unmarshall = xmlParser.unmarshall(xml);
     }
 
-    public void readFromBpmn(File bpmn) {
+    public void readFromBpmn(File file) {
         try {
-            String xml = Files.readString(bpmn.toPath());
+            String xml = Files.readString(file.toPath());
             readFromBpmn(xml);
         } catch (IOException e) {
-            throw new RuntimeException("Error while reading file " + bpmn.getName(), e);
+            throw new RuntimeException("Error while reading file " + file.getName(), e);
         }
+    }
+
+    public BpmnModelInstance readWithCamunda(File file) {
+        return Bpmn.readModelFromFile(file);
     }
 
 //    public void writeToBpmn() {
