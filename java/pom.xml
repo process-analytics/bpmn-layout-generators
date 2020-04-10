@@ -16,13 +16,17 @@
     </properties>
 
     <dependencies>
-        <!-- API -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>${jaxb.version}</version>
         </dependency>
-        <!-- Runtime -->
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
@@ -95,7 +99,7 @@
                 <configuration>
                     <packageName>io.process.analytics.tools.bpmn.generator.internal.model</packageName>
                     <locale>en</locale>
-<!--                    <addGeneratedAnnotation>true</addGeneratedAnnotation>-->
+                    <!--                    <addGeneratedAnnotation>true</addGeneratedAnnotation>-->
                 </configuration>
             </plugin>
             <plugin>

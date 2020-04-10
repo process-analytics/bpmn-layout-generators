@@ -16,6 +16,7 @@
 package io.process.analytics.tools.bpmn.generator;
 
 import io.process.analytics.tools.bpmn.generator.internal.XmlParser;
+import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class BpmnInOut {
     }
 
     public void readFromBpmn(String xml) {
-        xmlParser.unmarshall(xml);
+        TDefinitions unmarshall = xmlParser.unmarshall(xml);
     }
 
     public void readFromBpmn(File bpmn) {
