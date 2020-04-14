@@ -15,21 +15,28 @@
  */
 package io.process.analytics.tools.bpmn.generator;
 
-import io.process.analytics.tools.bpmn.generator.internal.model.BPMNDiagram;
-import io.process.analytics.tools.bpmn.generator.internal.model.BPMNPlane;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AppTest {
-    @Test
-    public void bpmn_diagram_can_be_instantiated() {
-        BPMNDiagram diagram = new BPMNDiagram();
-        BPMNPlane plane = new BPMNPlane();
-        diagram.setBPMNPlane(plane);
-        plane.setId("12");
 
-        assertThat(plane.getId()).isEqualTo("12");
+    @Test
+    public void main_generates_xml_output_file() {
+        String output = "target/test/output/A.2.0_with_diagram.bpmn.xml";
+        generate("src/test/resources/bpmn/A.2.0.bpmn.xml", output);
+
+        assertThat(new File(output)).exists();
+    }
+
+    // =================================================================================================================
+    // UTILS
+    // =================================================================================================================
+
+    private static void generate(String input, String output) {
+        App.main(new String[] { input, output });
     }
 
 }

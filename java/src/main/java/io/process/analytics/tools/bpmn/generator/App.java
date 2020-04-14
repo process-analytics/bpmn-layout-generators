@@ -18,16 +18,26 @@ import static io.process.analytics.tools.bpmn.generator.internal.BpmnInOut.defau
 
 import java.io.File;
 
+import io.process.analytics.tools.bpmn.generator.internal.BPMNDiagramRichBuilder;
+import io.process.analytics.tools.bpmn.generator.internal.BpmnInOut;
 import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
 
 public class App {
 
     public static void main(String[] args) {
         validate(args);
-        String bpmnFilePath = args[0];
-        log("Loading bpmn file: " + bpmnFilePath);
-        TDefinitions tDefinitions = defaultBpmnInOut().readFromBpmn(new File(bpmnFilePath));
+        String inputBpmnFilePath = args[0];
+        log("Loading bpmn file: " + inputBpmnFilePath);
+        BpmnInOut bpmnInOut = defaultBpmnInOut();
+        TDefinitions tDefinitions = bpmnInOut.readFromBpmn(new File(inputBpmnFilePath));
         log("Loaded " + tDefinitions);
+
+        log("Building bpmn diagram elements");
+        TDefinitions builtDefinitions = new BPMNDiagramRichBuilder(tDefinitions).build();
+        log("Bpmn diagram elements have been built");
+        File outputBpmnFile = new File(args[1]);
+        bpmnInOut.writeToBpmnFile(builtDefinitions, outputBpmnFile);
+        log("New file with bpmn diagram generated to " + outputBpmnFile.getAbsolutePath());
     }
 
     private static void validate(String[] args) {

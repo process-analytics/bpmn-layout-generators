@@ -47,8 +47,11 @@ public class BpmnInOut {
     }
 
 
-//    public void writeToBpmn() {
-//
-//    }
+    public void writeToBpmnFile(TDefinitions definitions, File file) {
+        // TODO file/folder creation
+        file.getParentFile().mkdirs();
+
+        xmlParser.marshal(definitions, file);
+    }
 
 }

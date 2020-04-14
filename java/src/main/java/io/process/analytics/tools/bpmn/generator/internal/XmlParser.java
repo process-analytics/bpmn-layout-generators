@@ -21,6 +21,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.transform.stream.StreamSource;
+import java.io.File;
 import java.io.StringReader;
 
 public class XmlParser {
@@ -34,9 +35,9 @@ public class XmlParser {
         }
     }
 
-    public void marshal() {
+    public void marshal(TDefinitions definitions, File outputFile) {
         try {
-            context.createMarshaller().marshal(null, System.out);
+            context.createMarshaller().marshal(definitions, outputFile);
         } catch (JAXBException e) {
             throw new RuntimeException("Unable to marshal", e);
         }
