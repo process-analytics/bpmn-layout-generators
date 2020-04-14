@@ -35,18 +35,24 @@ public class Semantic {
     private final TDefinitions definitions;
 
     public List<TParticipant> getParticipants() {
+        return getCollaboration()
+                .map(TCollaboration::getParticipant)
+                .orElseGet(Collections::emptyList);
+    }
+
+    public Optional<TCollaboration> getCollaboration() {
         List<TCollaboration> collaborations = definitions.getRootElement().stream()
                 .map(JAXBElement::getValue)
                 .filter(TCollaboration.class::isInstance)
                 .map(o -> (TCollaboration) o)
                 .collect(Collectors.toList());
-        // TODO check at most 1
-        //        if (collaborations.isEmpty()) {
-        //            return Collections.emptyList();
-        //        }
-        //        return collaborations.get(0).getParticipant();
-        return Optional.of(collaborations).map(list -> list.get(0).getParticipant())
-                .orElseGet(Collections::emptyList);
+
+        // TODO check at most 1 otherwise error
+        // TODO refactor into a more functional way
+        if (collaborations.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(collaborations.get(0));
     }
 
 }

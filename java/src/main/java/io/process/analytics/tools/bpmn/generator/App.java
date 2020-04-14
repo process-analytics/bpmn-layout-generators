@@ -14,10 +14,11 @@
  */
 package io.process.analytics.tools.bpmn.generator;
 
-import io.process.analytics.tools.bpmn.generator.internal.XmlParser;
-import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
+import static io.process.analytics.tools.bpmn.generator.internal.BpmnInOut.defaultBpmnInOut;
 
 import java.io.File;
+
+import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
 
 public class App {
 
@@ -25,8 +26,7 @@ public class App {
         validate(args);
         String bpmnFilePath = args[0];
         log("Loading bpmn file: " + bpmnFilePath);
-        BpmnInOut bpmnInOut = new BpmnInOut(new XmlParser());
-        TDefinitions tDefinitions = bpmnInOut.readFromBpmn(new File(bpmnFilePath));
+        TDefinitions tDefinitions = defaultBpmnInOut().readFromBpmn(new File(bpmnFilePath));
         log("Loaded " + tDefinitions);
     }
 

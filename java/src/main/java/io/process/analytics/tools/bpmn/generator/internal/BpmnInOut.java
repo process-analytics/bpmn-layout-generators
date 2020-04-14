@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.process.analytics.tools.bpmn.generator;
+package io.process.analytics.tools.bpmn.generator.internal;
 
-import io.process.analytics.tools.bpmn.generator.internal.XmlParser;
 import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
 
 import java.io.File;
@@ -25,6 +24,10 @@ import java.nio.file.Files;
 public class BpmnInOut {
 
     private final XmlParser xmlParser;
+
+    public static BpmnInOut defaultBpmnInOut() {
+        return new BpmnInOut(new XmlParser());
+    }
 
     public BpmnInOut(XmlParser xmlParser) {
         this.xmlParser = xmlParser;
@@ -42,6 +45,7 @@ public class BpmnInOut {
             throw new RuntimeException("Error while reading file " + bpmn.getName(), e);
         }
     }
+
 
 //    public void writeToBpmn() {
 //
