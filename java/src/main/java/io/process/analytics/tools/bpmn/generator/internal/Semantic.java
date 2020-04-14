@@ -55,4 +55,13 @@ public class Semantic {
         return Optional.of(collaborations.get(0));
     }
 
+    public List<TProcess> getProcesses() {
+        // TODO manage no process (should not occurred)
+        return definitions.getRootElement().stream()
+                .map(JAXBElement::getValue)
+                .filter(TProcess.class::isInstance)
+                .map(o -> (TProcess) o)
+                .collect(Collectors.toList());
+    }
+
 }
