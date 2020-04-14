@@ -15,6 +15,7 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
+import io.process.analytics.tools.bpmn.generator.internal.model.ObjectFactory;
 import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
 
 import javax.xml.bind.JAXBContext;
@@ -37,7 +38,8 @@ public class XmlParser {
 
     public void marshal(TDefinitions definitions, File outputFile) {
         try {
-            context.createMarshaller().marshal(definitions, outputFile);
+            JAXBElement<TDefinitions> root = new ObjectFactory().createDefinitions(definitions);
+            context.createMarshaller().marshal(root, outputFile);
         } catch (JAXBException e) {
             throw new RuntimeException("Unable to marshal", e);
         }
