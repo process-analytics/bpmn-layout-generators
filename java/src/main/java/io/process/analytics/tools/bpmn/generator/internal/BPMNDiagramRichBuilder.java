@@ -5,6 +5,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import javax.xml.namespace.QName;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -16,6 +17,7 @@ public class BPMNDiagramRichBuilder {
     @NonNull
     private final TDefinitions definitions;
 
+    // TODO make this internal and set the diagram to a field of this class
     public BPMNDiagram initializeBPMNDiagram() {
         BPMNDiagram bpmnDiagram = new BPMNDiagram();
         bpmnDiagram.setId("BPMNDiagram_1");
@@ -26,6 +28,22 @@ public class BPMNDiagramRichBuilder {
         putBpmnElement(bpmnPlane, computeBPMNPlaneBpmnElementId());
 
         return bpmnDiagram;
+    }
+
+    public void addNode() {
+        // TODO add node as bpmn shape to the initialized bpmn diagram
+    }
+
+    public void addEdge() {
+        // TODO add edge as bpmn edge to the initialized bpmn diagram
+    }
+
+    public TDefinitions build() {
+        // TODO it should be better to clone the initial definitions
+        List<BPMNDiagram> diagrams = definitions.getBPMNDiagram();
+        diagrams.clear();
+        diagrams.add(initializeBPMNDiagram());
+        return definitions;
     }
 
     // copied from the generated ObjectFactory

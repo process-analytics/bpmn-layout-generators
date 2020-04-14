@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.namespace.QName;
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import static io.process.analytics.tools.bpmn.generator.internal.BpmnInOut.defaultBpmnInOut;
@@ -36,6 +37,26 @@ class BPMNDiagramRichBuilderTest {
         Map<QName, String> attributes = bpmnPlane.getOtherAttributes();
         assertThat(attributes).containsValues("process_1");
     }
+
+    @Test
+    public void build_should_initialize_BPMNDiagram() {
+        BPMNDiagramRichBuilder builder = newBuildFromBpmnFile("src/test/resources/bpmn/A.2.0.bpmn.xml");
+
+        TDefinitions definitions = builder.build();
+
+        // TODO duplication with XmlParserTest + check method for id
+        // Shapes
+        List<BPMNDiagram> diagram = definitions.getBPMNDiagram();
+        assertThat(diagram)
+                .hasSize(1)
+                .extracting(BPMNDiagram::getId).containsOnly("BPMNDiagram_1");
+        BPMNPlane plane = diagram.get(0).getBPMNPlane();
+        assertThat(plane.getId()).isEqualTo("BPMNPlane_1");
+    }
+
+    // =================================================================================================================
+    // UTILS
+    // =================================================================================================================
 
     // always set like this
     private static BPMNPlane check(BPMNDiagram bpmnDiagram) {
