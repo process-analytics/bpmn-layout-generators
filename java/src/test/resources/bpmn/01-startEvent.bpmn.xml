@@ -19,7 +19,7 @@
         <bpmn:participant id="Participant_0zyusbn" name="Pool" processRef="Process_1duwsyj" />
     </bpmn:collaboration>
     <bpmn:process id="Process_1duwsyj" isExecutable="false">
-        <bpmn:startEvent id="StartEvent_05jmofc" name="début">
+        <bpmn:startEvent id="StartEvent_05jmofc" name="Start">
             <bpmn:outgoing>Flow_1bic2fy</bpmn:outgoing>
         </bpmn:startEvent>
     </bpmn:process>
