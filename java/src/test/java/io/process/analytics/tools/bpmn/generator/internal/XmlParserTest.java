@@ -31,7 +31,7 @@ public class XmlParserTest {
     private final XmlParser xmlParser = new XmlParser();
 
     @Test
-    public void unmarshall() throws IOException, ClassNotFoundException {
+    public void unmarshall() throws IOException {
         String bpmnAsXml = fileContent("src/test/resources/bpmn/01-startEvent.bpmn.xml");
 
         TDefinitions definitions = xmlParser.unmarshall(bpmnAsXml);
