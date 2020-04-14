@@ -1,9 +1,6 @@
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import io.process.analytics.tools.bpmn.generator.internal.model.BPMNDiagram;
-import io.process.analytics.tools.bpmn.generator.internal.model.BPMNPlane;
-import io.process.analytics.tools.bpmn.generator.internal.model.TCollaboration;
-import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
+import io.process.analytics.tools.bpmn.generator.internal.model.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -19,31 +16,48 @@ public class BPMNDiagramRichBuilder {
     @NonNull
     private final TDefinitions definitions;
 
-    private void createBPMNDiagram() {
-
+    public BPMNDiagram initializeBPMNDiagram() {
         BPMNDiagram bpmnDiagram = new BPMNDiagram();
         bpmnDiagram.setId("BPMNDiagram_1");
 
         BPMNPlane bpmnPlane = new BPMNPlane();
+        bpmnDiagram.setBPMNPlane(bpmnPlane);
         bpmnPlane.setId("BPMNPlane_1");
-        //        QName bpmnElement = bpmnPlane.getBpmnElement()
-        //        bpmnElement.getid
+        putBpmnElement(bpmnPlane, computeBPMNPlaneBpmnElementId());
 
+        return bpmnDiagram;
     }
 
+    // copied from the generated ObjectFactory
+    private final static QName _Process_QNAME = new QName("http://www.omg.org/spec/BPMN/20100524/MODEL", "process");
+    private final static QName _Collaboration_QNAME = new QName("http://www.omg.org/spec/BPMN/20100524/MODEL", "collaboration");
+
+    // TODO we need to know if this is a process or a collaboration to set the actual qname
+    private void putBpmnElement(BPMNPlane bpmnPlane, BpmnElementRef bpmnElementRef) {
+        QName qName = bpmnElementRef.qName;
+        bpmnPlane.setBpmnElement(qName);
+        bpmnPlane.getOtherAttributes().put(qName, bpmnElementRef.ref);
+    }
+
+    // TODO move to the Semantic class?
     // bpmn element value depends on semantic collaboration existence
-    private String computeBPMNPlaneBpmnElementId() {
-        Semantic semantic = new Semantic(definitions);
+    // if no collaboration, there is a single process, so use its id
+    private BpmnElementRef computeBPMNPlaneBpmnElementId() {
+        final Semantic semantic = new Semantic(definitions);
         Optional<TCollaboration> collaboration = semantic.getCollaboration();
-        // TODO refactor
-        if (collaboration.isPresent()) {
-            String bpmnElementId = collaboration.get().getId();
+        // TODO empty processes is supposed to be managed by Semantic
+        return collaboration.map(TBaseElement::getId)
+                .map(id -> new BpmnElementRef(_Collaboration_QNAME, id))
+                .orElseGet(() -> new BpmnElementRef(_Process_QNAME, semantic.getProcesses().get(0).getId()));
+    }
 
-        } else {
-            // get the single process
+    @RequiredArgsConstructor
+    private static class BpmnElementRef {
 
-        }
-        return null;
+        @NonNull
+        private final QName qName;
+        @NonNull
+        private final String ref;
     }
 
 }
