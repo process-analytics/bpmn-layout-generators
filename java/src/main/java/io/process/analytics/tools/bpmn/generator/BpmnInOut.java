@@ -30,14 +30,14 @@ public class BpmnInOut {
         this.xmlParser = xmlParser;
     }
 
-    public void readFromBpmn(String xml) {
-        TDefinitions unmarshall = xmlParser.unmarshall(xml);
+    public TDefinitions readFromBpmn(String xml) {
+        return xmlParser.unmarshall(xml);
     }
 
-    public void readFromBpmn(File bpmn) {
+    public TDefinitions readFromBpmn(File bpmn) {
         try {
             String xml = Files.readString(bpmn.toPath());
-            readFromBpmn(xml);
+            return readFromBpmn(xml);
         } catch (IOException e) {
             throw new RuntimeException("Error while reading file " + bpmn.getName(), e);
         }
