@@ -16,7 +16,7 @@
 package io.process.analytics.tools.bpmn.generator.internal;
 
 import io.process.analytics.tools.bpmn.generator.internal.model.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBElement;
 import java.io.File;

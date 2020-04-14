@@ -17,7 +17,7 @@ package io.process.analytics.tools.bpmn.generator;
 
 import io.process.analytics.tools.bpmn.generator.internal.model.BPMNDiagram;
 import io.process.analytics.tools.bpmn.generator.internal.model.BPMNPlane;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
