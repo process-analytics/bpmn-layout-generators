@@ -15,11 +15,8 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import io.process.analytics.tools.bpmn.generator.internal.model.TCollaboration;
-import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
-import io.process.analytics.tools.bpmn.generator.internal.model.TParticipant;
-import io.process.analytics.tools.bpmn.generator.internal.model.TProcess;
-import lombok.Getter;
+import io.process.analytics.tools.bpmn.generator.internal.model.*;
+import lombok.*;
 
 import javax.xml.bind.JAXBElement;
 import java.util.Collections;
@@ -30,13 +27,12 @@ import java.util.stream.Collectors;
 /**
  * Helper to access to the BPMN semantic part
  */
+@RequiredArgsConstructor
 public class Semantic {
 
+    @NonNull
+    @Getter
     private final TDefinitions definitions;
-
-    public Semantic(TDefinitions definitions) {
-        this.definitions = definitions;
-    }
 
     public List<TParticipant> getParticipants() {
         List<TCollaboration> collaborations = definitions.getRootElement().stream()
@@ -45,19 +41,12 @@ public class Semantic {
                 .map(o -> (TCollaboration) o)
                 .collect(Collectors.toList());
         // TODO check at most 1
-//        if (collaborations.isEmpty()) {
-//            return Collections.emptyList();
-//        }
-//        return collaborations.get(0).getParticipant();
+        //        if (collaborations.isEmpty()) {
+        //            return Collections.emptyList();
+        //        }
+        //        return collaborations.get(0).getParticipant();
         return Optional.of(collaborations).map(list -> list.get(0).getParticipant())
                 .orElseGet(Collections::emptyList);
     }
-
-    @Getter
-    private List<TProcess> process;
-
-    @Getter
-    private TCollaboration collaboration;
-
 
 }
