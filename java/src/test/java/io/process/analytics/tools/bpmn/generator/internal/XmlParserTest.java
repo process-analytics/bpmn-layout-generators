@@ -40,7 +40,6 @@ public class XmlParserTest {
 
         // Semantic
         List<JAXBElement<? extends TRootElement>> rootElement = definitions.getRootElement();
-        //rootElement.forEach(jaxbElement -> System.out.println(jaxbElement.getValue().getClass()));
         assertThat(rootElement)
                 .hasSize(2)
                 .extracting(JAXBElement::getValue)
@@ -58,9 +57,7 @@ public class XmlParserTest {
     }
 
     private static String fileContent(String filePath) throws IOException {
-        String bpmnAsXml = Files.readString(new File(filePath).toPath());
-        //System.out.println("xml: " + bpmnAsXml);
-        return bpmnAsXml;
+        return Files.readString(new File(filePath).toPath());
     }
 
 }
