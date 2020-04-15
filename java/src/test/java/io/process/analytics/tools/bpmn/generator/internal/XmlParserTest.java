@@ -15,16 +15,18 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import io.process.analytics.tools.bpmn.generator.internal.model.*;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import javax.xml.bind.JAXBElement;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import javax.xml.bind.JAXBElement;
+
+import org.junit.jupiter.api.Test;
+
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 
 public class XmlParserTest {
 

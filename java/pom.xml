@@ -103,7 +103,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <packageName>io.process.analytics.tools.bpmn.generator.internal.model</packageName>
+                    <packageName>io.process.analytics.tools.bpmn.generator.internal.generated.model</packageName>
                     <locale>en</locale>
                     <!--                    <addGeneratedAnnotation>true</addGeneratedAnnotation>-->
                 </configuration>

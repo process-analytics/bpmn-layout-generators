@@ -15,18 +15,19 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import io.process.analytics.tools.bpmn.generator.internal.model.BPMNDiagram;
-import io.process.analytics.tools.bpmn.generator.internal.model.BPMNPlane;
-import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
-import org.junit.jupiter.api.Test;
-
-import javax.xml.namespace.QName;
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
 import static io.process.analytics.tools.bpmn.generator.internal.BpmnInOut.defaultBpmnInOut;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.io.File;
+import java.util.List;
+
+import javax.xml.namespace.QName;
+
+import org.junit.jupiter.api.Test;
+
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.BPMNDiagram;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.BPMNPlane;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
 
 class BPMNDiagramRichBuilderTest {
 

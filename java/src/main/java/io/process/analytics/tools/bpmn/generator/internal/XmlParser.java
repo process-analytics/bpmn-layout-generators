@@ -15,15 +15,16 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import io.process.analytics.tools.bpmn.generator.internal.model.ObjectFactory;
-import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
+import java.io.File;
+import java.io.StringReader;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.transform.stream.StreamSource;
-import java.io.File;
-import java.io.StringReader;
+
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.ObjectFactory;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
 
 public class XmlParser {
     private static final JAXBContext context = initContext();

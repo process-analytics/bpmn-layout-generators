@@ -15,14 +15,15 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
-import io.process.analytics.tools.bpmn.generator.internal.model.TProcess;
-import org.junit.jupiter.api.Test;
+import static io.process.analytics.tools.bpmn.generator.internal.BpmnInOut.defaultBpmnInOut;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 
-import static io.process.analytics.tools.bpmn.generator.internal.BpmnInOut.defaultBpmnInOut;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.TProcess;
 
 class SemanticTest {
 

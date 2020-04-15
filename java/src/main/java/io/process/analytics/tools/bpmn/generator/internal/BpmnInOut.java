@@ -15,11 +15,11 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
 
 public class BpmnInOut {
 

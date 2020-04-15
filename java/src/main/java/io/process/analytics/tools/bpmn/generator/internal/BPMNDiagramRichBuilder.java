@@ -15,7 +15,7 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import io.process.analytics.tools.bpmn.generator.internal.model.*;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 

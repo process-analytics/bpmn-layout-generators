@@ -15,14 +15,20 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import io.process.analytics.tools.bpmn.generator.internal.model.*;
-import lombok.*;
-
-import javax.xml.bind.JAXBElement;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.xml.bind.JAXBElement;
+
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.TCollaboration;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.TParticipant;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.TProcess;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Helper to access to the BPMN semantic part

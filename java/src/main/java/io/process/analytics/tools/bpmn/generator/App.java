@@ -20,7 +20,7 @@ import java.io.File;
 
 import io.process.analytics.tools.bpmn.generator.internal.BPMNDiagramRichBuilder;
 import io.process.analytics.tools.bpmn.generator.internal.BpmnInOut;
-import io.process.analytics.tools.bpmn.generator.internal.model.TDefinitions;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
 
 public class App {
 
