@@ -34,22 +34,20 @@ class BPMNDiagramRichBuilderTest {
     public void initializeBPMNDiagram_when_collaboration_exist_in_bpmn_file() {
         BPMNDiagramRichBuilder builder = newBuildFromBpmnFile("src/test/resources/bpmn/01-startEvent.bpmn.xml");
 
-        BPMNDiagram bpmnDiagram = builder.initializeBPMNDiagram();
-        BPMNPlane bpmnPlane = check(bpmnDiagram);
+        BPMNDiagram diagram = builder.initializeBPMNDiagram();
 
-        Map<QName, String> attributes = bpmnPlane.getOtherAttributes();
-        assertThat(attributes).containsValues("Collaboration_1cajy2f");
+        BPMNPlane plane = check(diagram);
+        checkBpmnElement(plane, "Collaboration_1cajy2f");
     }
 
     @Test
     public void initializeBPMNDiagram_when_collaboration_not_exist_in_bpmn_file() {
         BPMNDiagramRichBuilder builder = newBuildFromBpmnFile("src/test/resources/bpmn/02-startEvent_task_endEvent-without-collaboration.bpmn.xml");
 
-        BPMNDiagram bpmnDiagram = builder.initializeBPMNDiagram();
-        BPMNPlane bpmnPlane = check(bpmnDiagram);
+        BPMNDiagram diagram = builder.initializeBPMNDiagram();
 
-        Map<QName, String> attributes = bpmnPlane.getOtherAttributes();
-        assertThat(attributes).containsValues("process_1");
+        BPMNPlane plane = check(diagram);
+        checkBpmnElement(plane, "process_1");
     }
 
     @Test
@@ -78,6 +76,13 @@ class BPMNDiagramRichBuilderTest {
         BPMNPlane bpmnPlane = bpmnDiagram.getBPMNPlane();
         assertThat(bpmnPlane.getId()).isEqualTo("BPMNPlane_1");
         return bpmnPlane;
+    }
+
+    private static void checkBpmnElement(BPMNPlane plane, String expectedId) {
+        QName bpmnElement = plane.getBpmnElement();
+        assertThat(bpmnElement.getLocalPart()).isEqualTo(expectedId);
+        assertThat(bpmnElement.getNamespaceURI()).isEmpty();
+        assertThat(bpmnElement.getPrefix()).isEmpty();
     }
 
     private static BPMNDiagramRichBuilder newBuildFromBpmnFile(String bpmnFilePath) {

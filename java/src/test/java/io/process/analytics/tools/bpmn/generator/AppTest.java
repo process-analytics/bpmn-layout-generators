@@ -25,10 +25,11 @@ public class AppTest {
 
     @Test
     public void main_generates_xml_output_file() {
-        String output = "target/test/output/A.2.0_with_diagram.bpmn.xml";
+        String output = "target/test/output/AppTest/A.2.0_with_diagram.bpmn.xml";
         generate("src/test/resources/bpmn/A.2.0.bpmn.xml", output);
 
         assertThat(new File(output)).exists();
+        // TODO add xml assertions (assertj and/or xmlunit)
     }
 
     // =================================================================================================================
