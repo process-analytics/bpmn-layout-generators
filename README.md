@@ -7,14 +7,6 @@ Plan work for the 1st implementation
 - will be implemented in `Java`. If it works, `javascript`/`TypeScript` and `R` implementations will be done
 
 
-## Building the Java implementation
-
-> Requirements: JDK 11
-
-- go to `java`
-- run `./mvw package`
-
-
 ## Implementations
 
 - [java](java/README.md)
