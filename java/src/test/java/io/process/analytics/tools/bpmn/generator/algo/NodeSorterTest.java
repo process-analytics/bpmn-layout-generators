@@ -52,6 +52,10 @@ class NodeSorterTest {
     @Test
     void should_sort_nodes_with_split_and_join() {
         // there is 2 branches: step2 and step3
+        //
+        // start --> step1 ---------> step 2
+        //             \               \
+        //              --> step 3 -->  step 4 -->  step 5
 
         Diagram diagram = Diagram.builder()
                 .node(step1)
@@ -78,6 +82,11 @@ class NodeSorterTest {
     @Test
     void should_sort_nodes_with_loop() {
         // loop between step2, step3, step4
+        //
+        //             ---------------------------------
+        //             |                                |
+        //             V                                |
+        // start --> step1 --> step 2 --> step 3 -->  step 4 -->  step 5
 
         Diagram diagram = Diagram.builder()
                 .node(step1)
@@ -98,6 +107,5 @@ class NodeSorterTest {
 
         assertThat(sorted.getNodes()).containsExactly(start, step1, step2, step3, step4, step5);
     }
-
 
 }
