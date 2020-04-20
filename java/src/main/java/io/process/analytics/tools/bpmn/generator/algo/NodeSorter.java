@@ -86,13 +86,9 @@ public class NodeSorter {
     }
 
     private Set<Node> getStartNodes(Set<Node> nodesToSort, Set<Edge> edges) {
-        Set<Node> startNodes = new HashSet<>();
-        for (Node m : nodesToSort) {
-            if (hasNoIncomingLink(m, edges)) {
-                startNodes.add(m);
-            }
-        }
-        return startNodes;
+        return nodesToSort.stream()
+                .filter(n -> hasNoIncomingLink(n, edges))
+                .collect(Collectors.toSet());
     }
 
     private List<Join> findAllJoins(Set<Node> nodes, Set<Edge> edges) {
