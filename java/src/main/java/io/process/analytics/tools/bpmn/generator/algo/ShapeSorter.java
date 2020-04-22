@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import io.process.analytics.tools.bpmn.generator.model.Edge;
 import io.process.analytics.tools.bpmn.generator.model.Shape;
+import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
@@ -34,7 +35,7 @@ import lombok.Singular;
  * The algorithm also handles cycle.
  *
  */
-public class NodeSorter {
+public class ShapeSorter {
 
 
     /**
@@ -43,12 +44,12 @@ public class NodeSorter {
      * @param diagram to sort
      * @return a diagram with same nodes but sorted
      */
-    Diagram sort(Diagram diagram) {
+    public SortedDiagram sort(Diagram diagram) {
         Set<Shape> nodesToSort = new HashSet<>(diagram.getShapes());
         Set<Edge> edges = new HashSet<>(diagram.getEdges());
         List<Join> joins = findAllJoins(nodesToSort, edges);
 
-        Diagram.DiagramBuilder sortedDiagram = Diagram.builder();
+        SortedDiagram.SortedDiagramBuilder sortedDiagram = SortedDiagram.builder();
 
         while (!nodesToSort.isEmpty()) {
             Set<Shape> startShapes = getStartNodes(nodesToSort, edges);
@@ -82,7 +83,7 @@ public class NodeSorter {
     }
 
     private Set<Edge> removeEdgesStartingWithNode(Set<Edge> edges, Shape startShape) {
-        return edges.stream().filter(e -> e.getFrom() != startShape.getUuid()).collect(Collectors.toSet());
+        return edges.stream().filter(e -> e.getFrom() != startShape.getId()).collect(Collectors.toSet());
     }
 
     private Set<Shape> getStartNodes(Set<Shape> nodesToSort, Set<Edge> edges) {
@@ -94,7 +95,7 @@ public class NodeSorter {
     private List<Join> findAllJoins(Set<Shape> shapes, Set<Edge> edges) {
         //get the nodes that are "join"
         return shapes.stream().map(n -> Join.builder().to(n))
-                .map(j -> j.incomings(edges.stream().filter(e -> e.getTo() == j.to.getUuid()).map(Edge::getFrom).collect(Collectors.toList())))
+                .map(j -> j.incomings(edges.stream().filter(e -> e.getTo() == j.to.getId()).map(Edge::getFrom).collect(Collectors.toList())))
                 .map(Join.JoinBuilder::build)
                 //keep only join if there is more than 1 edge incoming
                 .filter(j -> j.incomings.size() > 1)
@@ -104,7 +105,7 @@ public class NodeSorter {
 
 
     private boolean hasNoIncomingLink(Shape m, Set<Edge> edges) {
-        return edges.stream().noneMatch(e -> e.getTo() == m.getUuid());
+        return edges.stream().noneMatch(e -> e.getTo() == m.getId());
     }
 
     @Data
@@ -116,7 +117,7 @@ public class NodeSorter {
         private boolean wasProcessed;
 
         boolean isJoining(Shape shape) {
-            return incomings.contains(shape.getUuid());
+            return incomings.contains(shape.getId());
         }
 
         void markProcessed() {
@@ -124,7 +125,7 @@ public class NodeSorter {
         }
 
         boolean contains(Edge edge) {
-            return to.getUuid().equals(edge.getTo()) && incomings.contains(edge.getFrom());
+            return to.getId().equals(edge.getTo()) && incomings.contains(edge.getFrom());
         }
 
     }

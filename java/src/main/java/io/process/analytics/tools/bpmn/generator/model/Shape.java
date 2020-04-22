@@ -26,7 +26,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Shape {
 
-    private final UUID uuid = UUID.randomUUID();
+    private final UUID id = UUID.randomUUID();
     private final String name;
+
+    public static Shape shape(String name) {
+        return Shape.builder().name(name).build();
+    }
 
 }

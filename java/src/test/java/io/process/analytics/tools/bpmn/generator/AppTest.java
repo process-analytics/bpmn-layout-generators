@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AppTest {
 
     @Test
-    public void main_generates_xml_output_file() {
+    public void main_generates_xml_output_file() throws Exception {
         String output = "target/test/output/AppTest/A.2.0_with_diagram.bpmn.xml";
         generate("src/test/resources/bpmn/A.2.0.bpmn.xml", output);
 
@@ -36,7 +36,7 @@ public class AppTest {
     // UTILS
     // =================================================================================================================
 
-    private static void generate(String input, String output) {
+    private static void generate(String input, String output) throws Exception {
         App.main(new String[] { input, output });
     }
 

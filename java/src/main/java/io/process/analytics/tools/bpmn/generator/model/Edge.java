@@ -25,4 +25,8 @@ public class Edge {
     private final UUID from;
     private final UUID to;
 
+    public static Edge edge(Shape from, Shape to) {
+        return new Edge(from.getId(), to.getId());
+    }
+
 }
