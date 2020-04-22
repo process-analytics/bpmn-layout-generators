@@ -12,7 +12,7 @@ import lombok.Singular;
 public class Diagram {
 
     @Singular
-    private List<Node> nodes;
+    private List<Shape> shapes;
     @Singular
     private Set<Edge> edges;
 }

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import io.process.analytics.tools.bpmn.generator.model.Edge;
-import io.process.analytics.tools.bpmn.generator.model.Node;
+import io.process.analytics.tools.bpmn.generator.model.Shape;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
@@ -44,20 +44,20 @@ public class NodeSorter {
      * @return a diagram with same nodes but sorted
      */
     Diagram sort(Diagram diagram) {
-        Set<Node> nodesToSort = new HashSet<>(diagram.getNodes());
+        Set<Shape> nodesToSort = new HashSet<>(diagram.getShapes());
         Set<Edge> edges = new HashSet<>(diagram.getEdges());
         List<Join> joins = findAllJoins(nodesToSort, edges);
 
         Diagram.DiagramBuilder sortedDiagram = Diagram.builder();
 
         while (!nodesToSort.isEmpty()) {
-            Set<Node> startNodes = getStartNodes(nodesToSort, edges);
-            if (!startNodes.isEmpty()) {
-                for (Node startNode : startNodes) {
-                    nodesToSort.remove(startNode);
-                    sortedDiagram.node(startNode);
-                    edges = removeEdgesStartingWithNode(edges, startNode);
-                    joins.stream().filter(j -> j.isJoining(startNode)).forEach(Join::markProcessed);
+            Set<Shape> startShapes = getStartNodes(nodesToSort, edges);
+            if (!startShapes.isEmpty()) {
+                for (Shape startShape : startShapes) {
+                    nodesToSort.remove(startShape);
+                    sortedDiagram.shape(startShape);
+                    edges = removeEdgesStartingWithNode(edges, startShape);
+                    joins.stream().filter(j -> j.isJoining(startShape)).forEach(Join::markProcessed);
                 }
             } else {
                 //retrieve a join that we "entered", i.e. we processed an element that has an edge going to this join.
@@ -81,19 +81,19 @@ public class NodeSorter {
         return joins.stream().filter(j -> j.wasProcessed).findFirst().get();
     }
 
-    private Set<Edge> removeEdgesStartingWithNode(Set<Edge> edges, Node startNode) {
-        return edges.stream().filter(e -> e.getFrom() != startNode.getUuid()).collect(Collectors.toSet());
+    private Set<Edge> removeEdgesStartingWithNode(Set<Edge> edges, Shape startShape) {
+        return edges.stream().filter(e -> e.getFrom() != startShape.getUuid()).collect(Collectors.toSet());
     }
 
-    private Set<Node> getStartNodes(Set<Node> nodesToSort, Set<Edge> edges) {
+    private Set<Shape> getStartNodes(Set<Shape> nodesToSort, Set<Edge> edges) {
         return nodesToSort.stream()
                 .filter(n -> hasNoIncomingLink(n, edges))
                 .collect(Collectors.toSet());
     }
 
-    private List<Join> findAllJoins(Set<Node> nodes, Set<Edge> edges) {
+    private List<Join> findAllJoins(Set<Shape> shapes, Set<Edge> edges) {
         //get the nodes that are "join"
-        return nodes.stream().map(n -> Join.builder().to(n))
+        return shapes.stream().map(n -> Join.builder().to(n))
                 .map(j -> j.incomings(edges.stream().filter(e -> e.getTo() == j.to.getUuid()).map(Edge::getFrom).collect(Collectors.toList())))
                 .map(Join.JoinBuilder::build)
                 //keep only join if there is more than 1 edge incoming
@@ -103,7 +103,7 @@ public class NodeSorter {
     }
 
 
-    private boolean hasNoIncomingLink(Node m, Set<Edge> edges) {
+    private boolean hasNoIncomingLink(Shape m, Set<Edge> edges) {
         return edges.stream().noneMatch(e -> e.getTo() == m.getUuid());
     }
 
@@ -112,11 +112,11 @@ public class NodeSorter {
     private static class Join {
         @Singular
         private Set<UUID> incomings;
-        private final Node to;
+        private final Shape to;
         private boolean wasProcessed;
 
-        boolean isJoining(Node node) {
-            return incomings.contains(node.getUuid());
+        boolean isJoining(Shape shape) {
+            return incomings.contains(shape.getUuid());
         }
 
         void markProcessed() {

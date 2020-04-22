@@ -4,53 +4,53 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import io.process.analytics.tools.bpmn.generator.model.Edge;
-import io.process.analytics.tools.bpmn.generator.model.Node;
+import io.process.analytics.tools.bpmn.generator.model.Shape;
 import org.junit.jupiter.api.Test;
 
 class NodeSorterTest {
 
     private NodeSorter nodeSorter = new NodeSorter();
 
-    Node start = new Node("start");
-    Node step1 = new Node("step1");
-    Node step2 = new Node("step2");
-    Node step3 = new Node("step3");
-    Node step4 = new Node("step4");
-    Node step5 = new Node("step5");
+    Shape start = new Shape("start");
+    Shape step1 = new Shape("step1");
+    Shape step2 = new Shape("step2");
+    Shape step3 = new Shape("step3");
+    Shape step4 = new Shape("step4");
+    Shape step5 = new Shape("step5");
 
     @Test
-    void should_sort_2_nodes() {
+    void should_sort_2_shapes() {
         Diagram diagram = Diagram.builder()
-                .node(step1)
-                .node(start)
+                .shape(step1)
+                .shape(start)
                 .edge(edge(start, step1))
                 .build();
 
         Diagram sorted = nodeSorter.sort(diagram);
 
-        assertThat(sorted.getNodes()).containsExactly(start, step1);
+        assertThat(sorted.getShapes()).containsExactly(start, step1);
     }
     @Test
-    void should_sort_3_nodes() {
+    void should_sort_3_shapes() {
         Diagram diagram = Diagram.builder()
-                .node(step1)
-                .node(step2)
-                .node(start)
+                .shape(step1)
+                .shape(step2)
+                .shape(start)
                 .edge(edge(start, step1))
                 .edge(edge(step1, step2))
                 .build();
 
         Diagram sorted = nodeSorter.sort(diagram);
 
-        assertThat(sorted.getNodes()).containsExactly(start, step1, step2);
+        assertThat(sorted.getShapes()).containsExactly(start, step1, step2);
     }
 
-    private Edge edge(Node step1, Node step2) {
+    private Edge edge(Shape step1, Shape step2) {
         return new Edge(step1.getUuid(), step2.getUuid());
     }
 
     @Test
-    void should_sort_nodes_with_split_and_join() {
+    void should_sort_shapes_with_split_and_join() {
         // there is 2 branches: step2 and step3
         //
         // start --> step1 ---------> step 2
@@ -58,12 +58,12 @@ class NodeSorterTest {
         //              --> step 3 -->  step 4 -->  step 5
 
         Diagram diagram = Diagram.builder()
-                .node(step1)
-                .node(step3)
-                .node(step2)
-                .node(step5)
-                .node(step4)
-                .node(start)
+                .shape(step1)
+                .shape(step3)
+                .shape(step2)
+                .shape(step5)
+                .shape(step4)
+                .shape(start)
                 .edge(edge(start, step1))
                 .edge(edge(step1, step2))
                 .edge(edge(step1, step3))
@@ -74,27 +74,27 @@ class NodeSorterTest {
 
         Diagram sorted = nodeSorter.sort(diagram);
 
-        assertThat(sorted.getNodes()).startsWith(start, step1);
-        assertThat(sorted.getNodes()).contains(step2, step3);
-        assertThat(sorted.getNodes()).endsWith(step4, step5);
+        assertThat(sorted.getShapes()).startsWith(start, step1);
+        assertThat(sorted.getShapes()).contains(step2, step3);
+        assertThat(sorted.getShapes()).endsWith(step4, step5);
     }
 
     @Test
-    void should_sort_nodes_with_loop() {
+    void should_sort_shapes_with_loop() {
         // loop between step2, step3, step4
         //
-        //             ---------------------------------
-        //             |                                |
-        //             V                                |
+        //                      -------------------------
+        //                      |                        |
+        //                      V                        |
         // start --> step1 --> step 2 --> step 3 -->  step 4 -->  step 5
 
         Diagram diagram = Diagram.builder()
-                .node(step1)
-                .node(step3)
-                .node(step2)
-                .node(step5)
-                .node(step4)
-                .node(start)
+                .shape(step1)
+                .shape(step3)
+                .shape(step2)
+                .shape(step5)
+                .shape(step4)
+                .shape(start)
                 .edge(edge(start, step1))
                 .edge(edge(step1, step2))
                 .edge(edge(step2, step3))
@@ -105,7 +105,7 @@ class NodeSorterTest {
 
         Diagram sorted = nodeSorter.sort(diagram);
 
-        assertThat(sorted.getNodes()).containsExactly(start, step1, step2, step3, step4, step5);
+        assertThat(sorted.getShapes()).containsExactly(start, step1, step2, step3, step4, step5);
     }
 
 }

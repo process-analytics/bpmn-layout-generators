@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
-public class Node {
+public class Shape {
 
     private final UUID uuid = UUID.randomUUID();
     private final String name;
