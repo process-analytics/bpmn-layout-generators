@@ -33,29 +33,27 @@ public class ShapeLayouter {
                     throw new UnsupportedOperationException("Positioning a Node that is splitting is not yet supported");
                 }
             } else {
-                throw new UnsupportedOperationException("Positioning a Node that is splitting is not yet supported");
+                addJoin(grid, shape, incomingEdges);
             }
         }
         return grid;
     }
 
-    // TODO this is the next thing to implement: adding shapes that have more than one incomming edge
     private void addJoin(Grid grid, Shape shape, List<Edge> incomingEdges) {
         //first implementation: middle of elements it joins
         // later we should also try yo find the split to align it to that if possible
+        List<Position> positions = incomingEdges.stream().map(Edge::getFrom).map(grid::getPosition).collect(Collectors.toList());
+        int xMax = positions.stream().map(Position::getX).reduce(0, Math::max);
+        int yMax = positions.stream().map(Position::getY).reduce(0, Math::max);
+        int yMin = positions.stream().map(Position::getY).reduce(Integer.MAX_VALUE, Math::min);
 
-        int xMax = 0;
-        int ySum = 0;
-        for (Position position : incomingEdges.stream().map(e -> grid.getPosition(e.getFrom())).collect(Collectors.toList())) {
-            xMax = Math.max(xMax, position.getX());
-            ySum += position.getY();
+        int xElement = xMax + 1;
+        int yElement = (yMin + yMax) / 2;
+        if ((yMin + yMax) % 2 != 0) {
+            grid.addRowAfter(yElement);
+            yElement++;
         }
-        int y = ySum / incomingEdges.size();
-        if (ySum % incomingEdges.size() != 0) {
-            // division is not and integer, add a row to add this elements
-            grid.addRowAfter(y);// might not be useful, rows are added when handlit the 'split'
-        }
-        grid.add(position(shape, xMax + 1, y));
+        grid.add(position(shape, xElement, yElement));
     }
 
     private void addDirectlyNextTo(Grid grid, Shape shapeToAdd, UUID rightTo) {
