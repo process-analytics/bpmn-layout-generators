@@ -1,6 +1,5 @@
 package io.process.analytics.tools.bpmn.generator.model;
 
-import java.util.List;
 import java.util.Set;
 
 import lombok.Builder;
@@ -12,7 +11,7 @@ import lombok.Singular;
 public class Diagram {
 
     @Singular
-    private List<Shape> shapes;
+    private Set<Shape> shapes;
     @Singular
     private Set<Edge> edges;
 }

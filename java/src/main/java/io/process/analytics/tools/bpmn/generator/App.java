@@ -24,7 +24,7 @@ import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefin
 
 public class App {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         validate(args);
         String inputBpmnFilePath = args[0];
         log("Loading bpmn file: " + inputBpmnFilePath);
@@ -38,6 +38,48 @@ public class App {
         File outputBpmnFile = new File(args[1]);
         bpmnInOut.writeToBpmnFile(builtDefinitions, outputBpmnFile);
         log("New file with bpmn diagram generated to " + outputBpmnFile.getAbsolutePath());
+
+
+
+
+//        // This is an example usage of sort/layout algorithm + export to svg for testing purpose
+//        Shape start = shape("start");
+//        Shape step1 = shape("step1");
+//        Shape step2 = shape("step2");
+//        Shape step3 = shape("step3");
+//        Shape step4 = shape("step4");
+//        Shape step5 = shape("step5");
+//        Shape end = shape("end");
+//        Diagram diagram = Diagram.builder()
+//                .shape(step1)
+//                .shape(step3)
+//                .shape(step2)
+//                .shape(end)
+//                .shape(step4)
+//                .shape(step5)
+//                .shape(start)
+//                .edge(edge(start, step1))
+//                .edge(edge(step1, step2))
+//                .edge(edge(step3, step4))
+//                .edge(edge(step5, step4))
+//                .edge(edge(step2, step4))
+//                .edge(edge(step4, end))
+//                .build();
+//
+//
+//
+//        ShapeSorter shapeSorter = new ShapeSorter();
+//        ShapeLayouter shapeLayouter = new ShapeLayouter();
+//
+//        SortedDiagram sortedDiagram = shapeSorter.sort(diagram);
+//        Grid grid = shapeLayouter.layout(sortedDiagram);
+//
+//        SVGExporter svgExporter = new SVGExporter();
+//
+//        byte[] exportedFile = svgExporter.export(grid, sortedDiagram);
+//
+//        Files.write(Path.of("target", "test.svg"), exportedFile);
+
     }
 
     private static void validate(String[] args) {

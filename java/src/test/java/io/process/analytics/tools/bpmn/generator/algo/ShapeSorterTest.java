@@ -5,11 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import io.process.analytics.tools.bpmn.generator.model.Edge;
 import io.process.analytics.tools.bpmn.generator.model.Shape;
+import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
 import org.junit.jupiter.api.Test;
 
-class NodeSorterTest {
+class ShapeSorterTest {
 
-    private NodeSorter nodeSorter = new NodeSorter();
+    private ShapeSorter shapeSorter = new ShapeSorter();
 
     Shape start = new Shape("start");
     Shape step1 = new Shape("step1");
@@ -26,7 +27,7 @@ class NodeSorterTest {
                 .edge(edge(start, step1))
                 .build();
 
-        Diagram sorted = nodeSorter.sort(diagram);
+        SortedDiagram sorted = shapeSorter.sort(diagram);
 
         assertThat(sorted.getShapes()).containsExactly(start, step1);
     }
@@ -40,13 +41,13 @@ class NodeSorterTest {
                 .edge(edge(step1, step2))
                 .build();
 
-        Diagram sorted = nodeSorter.sort(diagram);
+        SortedDiagram sorted = shapeSorter.sort(diagram);
 
         assertThat(sorted.getShapes()).containsExactly(start, step1, step2);
     }
 
     private Edge edge(Shape step1, Shape step2) {
-        return new Edge(step1.getUuid(), step2.getUuid());
+        return new Edge(step1.getId(), step2.getId());
     }
 
     @Test
@@ -72,7 +73,7 @@ class NodeSorterTest {
                 .edge(edge(step4, step5))
                 .build();
 
-        Diagram sorted = nodeSorter.sort(diagram);
+        SortedDiagram sorted = shapeSorter.sort(diagram);
 
         assertThat(sorted.getShapes()).startsWith(start, step1);
         assertThat(sorted.getShapes()).contains(step2, step3);
@@ -103,7 +104,7 @@ class NodeSorterTest {
                 .edge(edge(step4, step5))
                 .build();
 
-        Diagram sorted = nodeSorter.sort(diagram);
+        SortedDiagram sorted = shapeSorter.sort(diagram);
 
         assertThat(sorted.getShapes()).containsExactly(start, step1, step2, step3, step4, step5);
     }
