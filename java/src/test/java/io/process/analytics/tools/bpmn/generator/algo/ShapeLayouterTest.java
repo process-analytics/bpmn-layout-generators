@@ -88,4 +88,89 @@ class ShapeLayouterTest {
         assertThat(grid.getPositions()).isNull();
 
     }
+
+    @Test
+    public void should_layout_a_diagram_that_have_join() {
+        SortedDiagram diagram = SortedDiagram.builder()
+                .shape(step1)
+                .shape(step2)
+                .shape(step3)
+                .edge(edge(step1, step3))
+                .edge(edge(step2, step3))
+                .build();
+
+
+        Grid grid = shapeLayouter.layout(diagram);
+
+        assertThat(grid.getPositions()).containsOnly(
+                position(step1, 0, 0),
+                position(step2, 0, 2),
+                position(step3, 1, 1));
+    }
+
+    @Test
+    public void should_layout_a_diagram_that_have_join_with_element_not_in_the_same_column() {
+        SortedDiagram diagram = SortedDiagram.builder()
+                .shape(step1)
+                .shape(step2)
+                .shape(step4)
+                .shape(step3)
+                .edge(edge(step1, step2))
+                .edge(edge(step2, step3))
+                .edge(edge(step4, step3))
+                .build();
+
+
+        Grid grid = shapeLayouter.layout(diagram);
+
+        assertThat(grid.getPositions()).containsOnly(
+                position(step1, 0, 0),
+                position(step2, 1, 0),
+                position(step4, 0, 2),
+                position(step3, 2, 1));
+    }
+
+    @Test
+    public void should_layout_a_diagram_that_have_join_three_element() {
+        SortedDiagram diagram = SortedDiagram.builder()
+                .shape(step1)
+                .shape(step2)
+                .shape(step3)
+                .shape(step4)
+                .edge(edge(step1, step4))
+                .edge(edge(step2, step4))
+                .edge(edge(step3, step4))
+                .build();
+
+
+        Grid grid = shapeLayouter.layout(diagram);
+
+        assertThat(grid.getPositions()).containsOnly(
+                position(step1, 0, 0),
+                position(step2, 0, 1),
+                position(step3, 0, 2),
+                position(step4, 1, 1));
+    }
+
+    @Test
+    public void should_layout_a_diagram_that_have_join_only_two_elements_of_three() {
+        SortedDiagram diagram = SortedDiagram.builder()
+                .shape(step1)
+                .shape(step2)
+                .shape(step3)
+                .shape(step4)
+                .edge(edge(step2, step4))
+                .edge(edge(step3, step4))
+                .build();
+
+
+        Grid grid = shapeLayouter.layout(diagram);
+
+        assertThat(grid.getPositions()).containsOnly(
+                position(step1, 0, 0),
+                position(step2, 0, 1),
+                position(step3, 0, 3),
+                position(step4, 1, 2));
+    }
+
 }
