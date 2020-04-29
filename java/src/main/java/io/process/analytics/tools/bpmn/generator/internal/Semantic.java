@@ -22,10 +22,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBElement;
 
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TCollaboration;
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TParticipant;
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TProcess;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -70,4 +67,21 @@ public class Semantic {
                 .collect(Collectors.toList());
     }
 
+    public List<String> getBpmnElements(TProcess process) {
+        // TODO manage TLaneSet
+//        List<TLaneSet> laneSet = process.getLaneSet();
+//        // there is always a TLaneSet (see BPMN spec)
+//        List<TLane> lanes = laneSet.get(0).getLane();
+//        // TODO do this for all lanes
+//        // TODO have a look at childLaneSet
+//        List<JAXBElement<Object>> flowNodeRef = lanes.get(0).getFlowNodeRef();
+
+
+        List<JAXBElement<? extends TFlowElement>> flowElements = process.getFlowElement();
+        // TODO filter nodes and edges
+
+
+
+        return null;
+    }
 }

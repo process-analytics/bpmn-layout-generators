@@ -49,6 +49,18 @@ class SemanticTest {
                 .extracting(TProcess::getId).containsExactly("Process_1duwsyj");
     }
 
+    @Test
+    public void detect_bpmn_elements_in_bpmn_file() {
+        Semantic semantic = semanticFromBpmnFile("src/test/resources/bpmn/01-startEvent.bpmn.xml");
+        // we know that there is a process (see other tests)
+        TProcess process = semantic.getProcesses().get(0);
+
+        semantic.getBpmnElements(process);
+
+
+
+    }
+
     private static Semantic semanticFromBpmnFile(String bpmnFilePath) {
         TDefinitions tDefinitions = defaultBpmnInOut().readFromBpmn(new File(bpmnFilePath));
         return new Semantic(tDefinitions);
