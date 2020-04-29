@@ -15,15 +15,13 @@
  */
 package io.process.analytics.tools.bpmn.generator.model;
 
-import java.util.UUID;
-
 import lombok.Data;
 
 @Data
 public class Edge {
 
-    private final UUID from;
-    private final UUID to;
+    private final String from;
+    private final String to;
 
     public static Edge edge(Shape from, Shape to) {
         return new Edge(from.getId(), to.getId());

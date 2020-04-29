@@ -18,7 +18,6 @@ package io.process.analytics.tools.bpmn.generator.algo;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
@@ -112,7 +111,7 @@ public class ShapeSorter {
     @Builder
     private static class Join {
         @Singular
-        private Set<UUID> incomings;
+        private Set<String> incomings;
         private final Shape to;
         private boolean wasProcessed;
 

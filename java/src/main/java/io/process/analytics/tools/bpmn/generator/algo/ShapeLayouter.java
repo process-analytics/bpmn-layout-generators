@@ -3,7 +3,6 @@ package io.process.analytics.tools.bpmn.generator.algo;
 import static io.process.analytics.tools.bpmn.generator.model.Position.position;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import io.process.analytics.tools.bpmn.generator.model.Edge;
@@ -24,7 +23,7 @@ public class ShapeLayouter {
                 grid.add(position(shape, 0, grid.getLastColumnIndex() + 1));
             } else if (incomingEdges.size() == 1) {
                 //find the previous node position
-                UUID previousShapeID = incomingEdges.get(0).getFrom();
+                String previousShapeID = incomingEdges.get(0).getFrom();
                 List<Edge> outgoingEdgesOfPreviousShape = diagram.getOutgoingEdges(previousShapeID);
                 if (outgoingEdgesOfPreviousShape.size() == 1) {
                     addDirectlyNextTo(grid, shape, previousShapeID);
@@ -56,7 +55,7 @@ public class ShapeLayouter {
         grid.add(position(shape, xElement, yElement));
     }
 
-    private void addDirectlyNextTo(Grid grid, Shape shapeToAdd, UUID rightTo) {
+    private void addDirectlyNextTo(Grid grid, Shape shapeToAdd, String rightTo) {
         Position previous = grid.getPosition(rightTo);
         grid.add(position(shapeToAdd, previous.getX() + 1, previous.getY()));
     }
