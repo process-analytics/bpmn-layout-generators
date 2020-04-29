@@ -2,7 +2,7 @@
 
 ## Requirements
 
-> JDK 11 only
+> JDK 8 (may work with higher versions, but this is not tested)
 >
 
 ## Build

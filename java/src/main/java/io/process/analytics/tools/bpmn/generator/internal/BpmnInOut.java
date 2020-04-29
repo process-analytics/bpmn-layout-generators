@@ -15,9 +15,10 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
+import static io.process.analytics.tools.bpmn.generator.internal.FileUtils.fileContent;
+
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
 
@@ -39,13 +40,12 @@ public class BpmnInOut {
 
     public TDefinitions readFromBpmn(File bpmn) {
         try {
-            String xml = Files.readString(bpmn.toPath());
+            String xml = fileContent(bpmn);
             return readFromBpmn(xml);
         } catch (IOException e) {
             throw new RuntimeException("Error while reading file " + bpmn.getName(), e);
         }
     }
-
 
     public void writeToBpmnFile(TDefinitions definitions, File file) {
         // TODO file/folder creation
