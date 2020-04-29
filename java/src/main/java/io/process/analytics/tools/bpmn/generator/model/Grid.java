@@ -2,7 +2,6 @@ package io.process.analytics.tools.bpmn.generator.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -45,7 +44,7 @@ public class Grid {
         return positions;
     }
 
-    public Position getPosition(UUID node) {
+    public Position getPosition(String node) {
         return positions.stream().filter(position -> position.getShape().equals(node)).findFirst().orElseThrow(() -> new IllegalStateException("Node not yet positionned in grid:" + node));
     }
 
