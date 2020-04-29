@@ -15,11 +15,11 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
+import static io.process.analytics.tools.bpmn.generator.internal.FileUtils.fileContent;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
@@ -34,7 +34,7 @@ public class XmlParserTest {
 
     @Test
     public void unmarshall() throws IOException {
-        String bpmnAsXml = fileContent("src/test/resources/bpmn/01-startEvent.bpmn.xml");
+        String bpmnAsXml = fileContent(new File("src/test/resources/bpmn/01-startEvent.bpmn.xml"));
 
         TDefinitions definitions = xmlParser.unmarshall(bpmnAsXml);
 
@@ -54,10 +54,6 @@ public class XmlParserTest {
                 .extracting(BPMNDiagram::getId).containsOnly("BPMNDiagram_1");
         BPMNPlane plane = diagram.get(0).getBPMNPlane();
         assertThat(plane.getId()).isEqualTo("BPMNPlane_1");
-    }
-
-    private static String fileContent(String filePath) throws IOException {
-        return Files.readString(new File(filePath).toPath());
     }
 
 }
