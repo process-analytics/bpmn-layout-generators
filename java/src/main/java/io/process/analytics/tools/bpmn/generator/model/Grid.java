@@ -68,4 +68,8 @@ public class Grid {
             positions.add(cellToMove.toBuilder().y(cellToMove.getY() + 1).build());
         }
     }
+
+    public void addRowBefore(int y) {
+        addRowAfter(y - 1);
+    }
 }

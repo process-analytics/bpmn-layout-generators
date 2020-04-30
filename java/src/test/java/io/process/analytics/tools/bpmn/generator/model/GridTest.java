@@ -13,7 +13,7 @@ class GridTest {
     private Shape nodeC = Shape.shape("c");
 
     @Test
-    public void should_move_element_when_adding_row() {
+    public void should_move_element_when_adding_row_after() {
         grid.add(position(nodeA, 0, 0));
         grid.add(position(nodeB, 0, 1));
         grid.add(position(nodeC, 0, 2));
@@ -24,6 +24,21 @@ class GridTest {
         assertThat(grid.getPositions()).containsExactly(
                 position(nodeA, 0, 0),
                 position(nodeB, 0, 1),
+                position(nodeC, 0, 3)
+        );
+    }
+    @Test
+    public void should_move_element_when_adding_row_before() {
+        grid.add(position(nodeA, 0, 0));
+        grid.add(position(nodeB, 0, 1));
+        grid.add(position(nodeC, 0, 2));
+
+
+        grid.addRowBefore(1);
+
+        assertThat(grid.getPositions()).containsExactly(
+                position(nodeA, 0, 0),
+                position(nodeB, 0, 2),
                 position(nodeC, 0, 3)
         );
     }
