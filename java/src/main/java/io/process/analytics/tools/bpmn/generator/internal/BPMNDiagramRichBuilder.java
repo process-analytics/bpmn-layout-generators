@@ -16,6 +16,7 @@
 package io.process.analytics.tools.bpmn.generator.internal;
 
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayDimension;
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayEdge;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayFlowNode;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import lombok.NonNull;
@@ -39,6 +40,7 @@ public class BPMNDiagramRichBuilder {
     private final TDefinitions definitions;
 
     private final List<BPMNShape> bpmnShapes = new ArrayList<>();
+    private final List<BPMNEdge> bpmnEdges = new ArrayList<>();
 
     // visible for testing
     BPMNDiagram initializeBPMNDiagram() {
@@ -54,12 +56,6 @@ public class BPMNDiagramRichBuilder {
     }
 
     public void addFlowNode(DisplayFlowNode flowNode) {
-//            <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_05jmofc">
-//                <dc:Bounds x="206" y="81" width="36" height="36" />
-//                <bpmndi:BPMNLabel>
-//                    <dc:Bounds x="210" y="124" width="28" height="14" />
-//                </bpmndi:BPMNLabel>
-//            </bpmndi:BPMNShape>
         BPMNShape bpmnShape = new BPMNShape();
         bpmnShape.setId("Shape_" + generateRandomId());
         putBpmnElement(bpmnShape, flowNode.bpmnElementId);
@@ -72,6 +68,14 @@ public class BPMNDiagramRichBuilder {
         bpmnShape.setBPMNLabel(label);
 
         bpmnShapes.add(bpmnShape);
+    }
+
+    public void addEdge(DisplayEdge edge) {
+        BPMNEdge bpmnEdge = new BPMNEdge();
+        bpmnEdge.setId("Edge_" + generateRandomId());
+        putBpmnElement(bpmnEdge, edge.bpmnElementId);
+
+        bpmnEdges.add(bpmnEdge);
     }
 
     private static Bounds bounds(DisplayDimension dimension) {
@@ -93,6 +97,10 @@ public class BPMNDiagramRichBuilder {
         bpmnShape.setBpmnElement(qName);
     }
 
+    private static void putBpmnElement(BPMNEdge bpmnEdge, String bpmnElementRef) {
+        QName qName = new QName(XMLConstants.NULL_NS_URI, bpmnElementRef);
+        bpmnEdge.setBpmnElement(qName);
+    }
 
     public TDefinitions build() {
         // TODO it should be better to clone the initial definitions
@@ -110,6 +118,10 @@ public class BPMNDiagramRichBuilder {
                 .map(s -> new JAXBElement<>(bpmnShapeQname, BPMNShape.class, null, s))
                 .forEach(diagramElements::add);
 
+        QName bpmnEdgeQname = new QName("http://www.omg.org/spec/BPMN/20100524/DI", "BPMNEdge", "");
+        bpmnEdges.stream()
+                .map(s -> new JAXBElement<>(bpmnEdgeQname, BPMNEdge.class, null, s))
+                .forEach(diagramElements::add);
 
         return definitions;
     }

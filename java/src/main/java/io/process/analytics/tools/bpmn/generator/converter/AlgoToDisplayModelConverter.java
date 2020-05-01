@@ -15,10 +15,7 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter;
 
-import io.process.analytics.tools.bpmn.generator.model.Grid;
-import io.process.analytics.tools.bpmn.generator.model.Position;
-import io.process.analytics.tools.bpmn.generator.model.Shape;
-import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
+import io.process.analytics.tools.bpmn.generator.model.*;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Singular;
@@ -64,6 +61,9 @@ public class AlgoToDisplayModelConverter {
                     .label(label)
                     .rx(y(10)).strokeWidth(y(5)).build());
         }
+
+        diagram.getEdges().stream().map(edge -> new DisplayEdge(edge.getId())).forEach(model::edge);
+
         return model.build();
     }
 
@@ -84,6 +84,8 @@ public class AlgoToDisplayModelConverter {
 
         @Singular
         public final List<DisplayFlowNode> flowNodes;
+        @Singular
+        public final List<DisplayEdge> edges;
 
     }
 
@@ -97,6 +99,14 @@ public class AlgoToDisplayModelConverter {
         // for non BPMN exporters only
         public final int rx;
         public final int strokeWidth;
+
+    }
+
+    @RequiredArgsConstructor
+    @Builder
+    public static class DisplayEdge {
+
+        public final String bpmnElementId;
 
     }
 

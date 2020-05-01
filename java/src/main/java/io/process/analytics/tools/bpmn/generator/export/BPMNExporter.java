@@ -32,6 +32,7 @@ public class BPMNExporter {
         BPMNDiagramRichBuilder builder = new BPMNDiagramRichBuilder(originalBpmnDefinitions);
         DisplayModel displayModel = converter.convert(grid, diagram);
         displayModel.flowNodes.forEach(builder::addFlowNode);
+        displayModel.edges.forEach(builder::addEdge);
         return builder.build();
     }
 
