@@ -15,10 +15,9 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import static io.process.analytics.tools.bpmn.generator.internal.BpmnInOut.defaultBpmnInOut;
+import static io.process.analytics.tools.bpmn.generator.internal.SemanticTest.definitionsFromBpmnFile;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.File;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -88,10 +87,6 @@ class BPMNDiagramRichBuilderTest {
 
     private static BPMNDiagramRichBuilder newBuildFromBpmnFile(String bpmnFilePath) {
         return new BPMNDiagramRichBuilder(definitionsFromBpmnFile(bpmnFilePath));
-    }
-
-    private static TDefinitions definitionsFromBpmnFile(String bpmnFilePath) {
-        return defaultBpmnInOut().readFromBpmn(new File(bpmnFilePath));
     }
 
 }

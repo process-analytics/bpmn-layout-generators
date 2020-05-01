@@ -20,9 +20,7 @@ import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-
-import static io.process.analytics.tools.bpmn.generator.internal.BpmnInOut.defaultBpmnInOut;
+import static io.process.analytics.tools.bpmn.generator.internal.SemanticTest.definitionsFromBpmnFile;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class BpmnToAlgoModelConverterTest {
@@ -41,17 +39,12 @@ class BpmnToAlgoModelConverterTest {
 //        </semantic:endEvent>
 //        <semantic:sequenceFlow sourceRef="startEvent_1" targetRef="task_1" name="" id="sequenceFlow_1"/>
 //        <semantic:sequenceFlow sourceRef="task_1" targetRef="endEvent_1" name="" id="sequenceFlow_2"/>
-        TDefinitions definitions = fromBpmnFile("src/test/resources/bpmn/02-startEvent_task_endEvent-without-collaboration.bpmn.xml");
+        TDefinitions definitions = definitionsFromBpmnFile("src/test/resources/bpmn/02-startEvent_task_endEvent-without-collaboration.bpmn.xml");
 
         Diagram diagram = new BpmnToAlgoModelConverter().toAlgoModel(definitions);
 
         assertThat(diagram).isNull();
 //        assertThat(diagram.getShapes()).hasSize(2);
-    }
-
-
-    private static TDefinitions fromBpmnFile(String bpmnFilePath) {
-        return defaultBpmnInOut().readFromBpmn(new File(bpmnFilePath));
     }
 
 }

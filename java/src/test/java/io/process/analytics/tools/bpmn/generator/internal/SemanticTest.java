@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.TProcess;
 
-class SemanticTest {
+public class SemanticTest {
 
     @Test
     public void detect_collaboration_when_exist_in_bpmn_file() {
@@ -61,9 +61,12 @@ class SemanticTest {
 
     }
 
+    public static TDefinitions definitionsFromBpmnFile(String bpmnFilePath) {
+        return defaultBpmnInOut().readFromBpmn(new File(bpmnFilePath));
+    }
+
     private static Semantic semanticFromBpmnFile(String bpmnFilePath) {
-        TDefinitions tDefinitions = defaultBpmnInOut().readFromBpmn(new File(bpmnFilePath));
-        return new Semantic(tDefinitions);
+        return new Semantic(definitionsFromBpmnFile(bpmnFilePath));
     }
 
 }
