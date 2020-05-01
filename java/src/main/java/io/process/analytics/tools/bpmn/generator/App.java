@@ -44,8 +44,17 @@ public class App {
 
         App app = new App();
         LayoutSortedDiagram diagram = app.loadAndLayout(bpmnInputFile);
-        app.exportToSvg(diagram, outputFile);
-//        app.exportToAsciiTxt(diagram, outputFile);
+        
+        // TODO implement export type selection in a better way
+        if (args.length > 2 && !"bpmn".equals(args[2])) {
+            if ("svg".equals(args[2])) {
+                app.exportToSvg(diagram, outputFile);
+            } else {
+                app.exportToAscii(diagram, outputFile);
+            }
+        } else {
+            app.exportToBpmn(null);
+        }
     }
 
     private static void validate(String[] args) {
@@ -84,14 +93,15 @@ public class App {
         return new LayoutSortedDiagram(grid, sortedDiagram);
     }
 
-    //    private void exportBpmn(TDefinitions tDefinitions) {
-    //        log("Building bpmn diagram elements");
-    //        TDefinitions builtDefinitions = new BPMNDiagramRichBuilder(tDefinitions).build();
-    //        log("Bpmn diagram elements have been built");
-    //        File outputBpmnFile = new File(args[1]);
-    //        bpmnInOut.writeToBpmnFile(builtDefinitions, outputBpmnFile);
-    //        log("New file with bpmn diagram generated to " + outputBpmnFile.getAbsolutePath());
-    //    }
+    private void exportToBpmn(TDefinitions tDefinitions) {
+        log("export to bpmn NOT IMPLEMENTED");
+//        log("Building bpmn diagram elements");
+//        TDefinitions builtDefinitions = new BPMNDiagramRichBuilder(tDefinitions).build();
+//        log("Bpmn diagram elements have been built");
+//        File outputBpmnFile = new File(args[1]);
+//        bpmnInOut.writeToBpmnFile(builtDefinitions, outputBpmnFile);
+//        log("New file with bpmn diagram generated to " + outputBpmnFile.getAbsolutePath());
+    }
 
     private void exportToSvg(LayoutSortedDiagram diagram, File outputFile) throws IOException {
         log("Exporting to SVG");
@@ -101,11 +111,11 @@ public class App {
         log("SVG exported to " + outputFile);
     }
 
-    private void exportToAsciiTxt(LayoutSortedDiagram diagram, File outputFile) throws IOException {
-        log("Exporting to ASCII text file");
+    private void exportToAscii(LayoutSortedDiagram diagram, File outputFile) throws IOException {
+        log("Exporting to ASCII file");
         String asciiContent = new ASCIIExporter().export(diagram.getGrid());
         Files.write(outputFile.toPath(), asciiContent.getBytes(StandardCharsets.UTF_8));
-        log("ASCII text exported to " + outputFile);
+        log("ASCII exported to " + outputFile);
     }
 
 }
