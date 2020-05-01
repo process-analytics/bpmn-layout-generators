@@ -17,14 +17,22 @@ package io.process.analytics.tools.bpmn.generator.model;
 
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 public class Edge {
 
+    private final String id; // the bpmnElement id
     private final String from;
     private final String to;
 
     public static Edge edge(Shape from, Shape to) {
-        return new Edge(from.getId(), to.getId());
+        return new Edge(generateRandomId(), from.getId(), to.getId());
+    }
+
+    // TODO duplicated with Shape#generateRandomId
+    private static String generateRandomId() {
+        return UUID.randomUUID().toString();
     }
 
 }

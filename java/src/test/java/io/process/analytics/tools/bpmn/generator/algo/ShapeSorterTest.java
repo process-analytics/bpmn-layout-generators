@@ -1,5 +1,6 @@
 package io.process.analytics.tools.bpmn.generator.algo;
 
+import static io.process.analytics.tools.bpmn.generator.model.Edge.edge;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
@@ -44,10 +45,6 @@ class ShapeSorterTest {
         SortedDiagram sorted = shapeSorter.sort(diagram);
 
         assertThat(sorted.getShapes()).containsExactly(start, step1, step2);
-    }
-
-    private Edge edge(Shape step1, Shape step2) {
-        return new Edge(step1.getId(), step2.getId());
     }
 
     @Test

@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Shape {
 
-    private final String id;
+    private final String id; // the bpmnElement id
     private final String name;
 
     public Shape(String name) {

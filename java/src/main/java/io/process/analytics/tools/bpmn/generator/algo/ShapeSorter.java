@@ -66,7 +66,7 @@ public class ShapeSorter {
                 edges = edges.stream().map(edge -> {
                     if (join.contains(edge)) {
                         //revert the edge
-                        return new Edge(edge.getTo(), edge.getFrom());
+                        return new Edge(edge.getId(), edge.getTo(), edge.getFrom());
                     } else {
                         return edge;
                     }
