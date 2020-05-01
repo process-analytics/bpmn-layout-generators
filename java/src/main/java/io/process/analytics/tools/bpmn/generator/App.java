@@ -44,16 +44,22 @@ public class App {
 
         App app = new App();
         LayoutSortedDiagram diagram = app.loadAndLayout(bpmnInputFile);
-        
-        // TODO implement export type selection in a better way
-        if (args.length > 2 && !"bpmn".equals(args[2])) {
-            if ("svg".equals(args[2])) {
-                app.exportToSvg(diagram, outputFile);
-            } else {
+
+        FileUtils.touch(outputFile);
+        String exportType = exportType(args);
+        log("Requested Export Type: " + exportType);
+        switch (exportType) {
+            case "ascii":
                 app.exportToAscii(diagram, outputFile);
-            }
-        } else {
-            app.exportToBpmn(null);
+                break;
+            case "bpmn":
+                app.exportToBpmn(null);
+                break;
+            case "svg":
+                app.exportToSvg(diagram, outputFile);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected Export Type: " + exportType);
         }
     }
 
@@ -61,6 +67,14 @@ public class App {
         if (args.length <= 1) {
             throw new IllegalArgumentException("You must pass at least 2 arguments.");
         }
+    }
+
+    private static String exportType(String[] args) {
+        String type = "bpmn";
+        if (args.length > 2) {
+            type = args[2];
+        }
+        return type;
     }
 
     private static void log(String message) {
@@ -106,7 +120,6 @@ public class App {
     private void exportToSvg(LayoutSortedDiagram diagram, File outputFile) throws IOException {
         log("Exporting to SVG");
         byte[] svgContent = new SVGExporter().export(diagram.getGrid(), diagram.getSortedDiagram());
-        FileUtils.touch(outputFile);
         Files.write(outputFile.toPath(), svgContent);
         log("SVG exported to " + outputFile);
     }

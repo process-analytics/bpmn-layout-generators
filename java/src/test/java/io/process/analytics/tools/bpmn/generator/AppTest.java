@@ -70,15 +70,19 @@ public class AppTest {
     }
 
     private static void generateToBpmn(String input, String output) throws Exception {
-        App.main(new String[] { input, output });
+        App.main(new String[] { input, output});
+    }
+
+    private static void generate(String input, String output, String exportType) throws Exception {
+        App.main(new String[] { input, output, exportType });
     }
 
     private static void generateToSvg(String input, String output) throws Exception {
-        App.main(new String[] { input, output, "svg" });
+        generate(input, output, "svg");
     }
 
     private static void generateToAscii(String input, String output) throws Exception {
-        App.main(new String[] { input, output, "ascii" });
+        generate(input, output, "ascii");
     }
 
 }
