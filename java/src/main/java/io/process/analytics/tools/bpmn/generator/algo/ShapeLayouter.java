@@ -44,7 +44,37 @@ public class ShapeLayouter {
                 }
             }
         }
+        compactGrid(grid);
         return grid;
+    }
+
+    private void compactGrid(Grid grid) {
+        int i = 0;
+        while (i < grid.getLastRowIndex()) {
+            List<Integer> currentRow = grid.getRow(i).stream().map(Position::getX).collect(Collectors.toList());
+            List<Integer> nextRow = grid.getRow(i + 1).stream().map(Position::getX).collect(Collectors.toList());
+
+            boolean currentRowCanBeMovedBelow = true;
+            for (Integer shapeIndexInCurrentRow : currentRow) {
+                int index = shapeIndexInCurrentRow;
+                //we can move the current row below if each element have all adjacent cells free in the row below
+                if (nextRow.stream().anyMatch(s -> s == index || s == index + 1 || s == index - 1)) {
+                    currentRowCanBeMovedBelow = false;
+                    break;
+                }
+            }
+
+            if (currentRowCanBeMovedBelow) {
+                final int finalI = i+1;
+                for (Position position : grid.getRow(i)) {
+                    grid.remove(position);
+                    grid.add(position.toBuilder().y(finalI).build());
+                }
+                grid.removeEmptyRow(i);
+            }else{
+                i++;
+            }
+        }
     }
 
     private Position addStartShape(Grid grid, Shape shape) {
