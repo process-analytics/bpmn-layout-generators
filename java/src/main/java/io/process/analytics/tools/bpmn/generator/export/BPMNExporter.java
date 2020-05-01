@@ -21,10 +21,12 @@ import io.process.analytics.tools.bpmn.generator.internal.BPMNDiagramRichBuilder
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class BPMNExporter {
 
-    private final AlgoToDisplayModelConverter converter = new AlgoToDisplayModelConverter();
+    private final AlgoToDisplayModelConverter converter;
 
     public TDefinitions export(TDefinitions originalBpmnDefinitions, Grid grid, SortedDiagram diagram) {
         BPMNDiagramRichBuilder builder = new BPMNDiagramRichBuilder(originalBpmnDefinitions);

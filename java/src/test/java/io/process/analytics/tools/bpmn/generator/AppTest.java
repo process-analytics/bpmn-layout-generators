@@ -26,15 +26,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AppTest {
 
     @Test
-    @Disabled("not implemented yet")
     public void main_generates_xml_output_file() throws Exception {
         String outputPath = outputPath("A.2.0_with_diagram.bpmn.xml");
         generateToBpmn(inputPath("A.2.0.bpmn.xml"), outputPath);
 
         File bpmnFile = new File(outputPath);
         assertThat(bpmnFile).exists().isFile();
-        // TODO add xml assertions (assertj and/or xmlunit)
-        assertThat(fileContent(bpmnFile)).contains("BPMN Baby!!");
+        assertThat(fileContent(bpmnFile)).contains("<definitions xmlns=\"http://www.omg.org/spec/BPMN/20100524/MODEL\"");
     }
 
     @Test
