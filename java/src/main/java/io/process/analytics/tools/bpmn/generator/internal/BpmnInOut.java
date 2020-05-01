@@ -15,6 +15,7 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
+import static io.process.analytics.tools.bpmn.generator.internal.FileUtils.createParents;
 import static io.process.analytics.tools.bpmn.generator.internal.FileUtils.fileContent;
 
 import java.io.File;
@@ -48,9 +49,7 @@ public class BpmnInOut {
     }
 
     public void writeToBpmnFile(TDefinitions definitions, File file) {
-        // TODO file/folder creation
-        file.getParentFile().mkdirs();
-
+        createParents(file);
         xmlParser.marshal(definitions, file);
     }
 

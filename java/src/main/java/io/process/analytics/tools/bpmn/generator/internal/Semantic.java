@@ -22,10 +22,7 @@ import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBElement;
 
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TCollaboration;
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TParticipant;
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TProcess;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +47,7 @@ public class Semantic {
         List<TCollaboration> collaborations = definitions.getRootElement().stream()
                 .map(JAXBElement::getValue)
                 .filter(TCollaboration.class::isInstance)
-                .map(o -> (TCollaboration) o)
+                .map(TCollaboration.class::cast)
                 .collect(Collectors.toList());
 
         // TODO check at most 1 otherwise error
@@ -66,8 +63,43 @@ public class Semantic {
         return definitions.getRootElement().stream()
                 .map(JAXBElement::getValue)
                 .filter(TProcess.class::isInstance)
-                .map(o -> (TProcess) o)
+                .map(TProcess.class::cast)
                 .collect(Collectors.toList());
+    }
+
+    // TODO manage lanes
+    public BpmnElements getBpmnElements(TProcess process) {
+        // TODO manage TLaneSet
+//        List<TLaneSet> laneSet = process.getLaneSet();
+//        // there is always a TLaneSet (see BPMN spec)
+//        List<TLane> lanes = laneSet.get(0).getLane();
+//        // TODO do this for all lanes
+//        // TODO have a look at childLaneSet
+//        List<JAXBElement<Object>> flowNodeRef = lanes.get(0).getFlowNodeRef();
+
+
+        List<JAXBElement<? extends TFlowElement>> flowElements = process.getFlowElement();
+        List<? extends TFlowElement> flowNodes = flowElements.stream()
+                .map(JAXBElement::getValue)
+                .filter(TFlowNode.class::isInstance)
+                .map(TFlowNode.class::cast)
+                .collect(Collectors.toList());
+
+        List<? extends TSequenceFlow> sequenceFlows = flowElements.stream()
+                .map(JAXBElement::getValue)
+                .filter(TSequenceFlow.class::isInstance)
+                .map(TSequenceFlow.class::cast)
+                .collect(Collectors.toList());
+
+        return new BpmnElements(flowNodes, sequenceFlows);
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    public static class BpmnElements {
+
+        private final List<? extends TFlowElement> flowNodes;
+        private final List<? extends TSequenceFlow> sequenceFlows;
     }
 
 }

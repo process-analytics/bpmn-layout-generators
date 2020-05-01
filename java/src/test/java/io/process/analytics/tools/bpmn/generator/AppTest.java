@@ -15,29 +15,74 @@
  */
 package io.process.analytics.tools.bpmn.generator;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
+import static io.process.analytics.tools.bpmn.generator.internal.FileUtils.fileContent;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AppTest {
 
     @Test
+    @Disabled("not implemented yet")
     public void main_generates_xml_output_file() throws Exception {
-        String output = "target/test/output/AppTest/A.2.0_with_diagram.bpmn.xml";
-        generate("src/test/resources/bpmn/A.2.0.bpmn.xml", output);
+        String outputPath = outputPath("A.2.0_with_diagram.bpmn.xml");
+        generateToBpmn(inputPath("A.2.0.bpmn.xml"), outputPath);
 
-        assertThat(new File(output)).exists();
+        File bpmnFile = new File(outputPath);
+        assertThat(bpmnFile).exists().isFile();
         // TODO add xml assertions (assertj and/or xmlunit)
+        assertThat(fileContent(bpmnFile)).contains("BPMN Baby!!");
+    }
+
+    @Test
+    public void main_generates_svg_output_file() throws Exception {
+        String outputPath = outputPath("A.2.0_with_diagram.bpmn.svg");
+        generateToSvg(inputPath("A.2.0.bpmn.xml"), outputPath);
+
+        File svgFile = new File(outputPath);
+        assertThat(svgFile).exists().isFile();
+        assertThat(fileContent(svgFile)).contains("<svg xmlns=\"http://www.w3.org/2000/svg\"");
+    }
+
+    @Test
+    public void main_generates_ascii_output_file() throws Exception {
+        String outputPath = outputPath("02-startEvent_task_endEvent-without-collaboration.bpmn.txt");
+        generateToAscii(inputPath("02-startEvent_task_endEvent-without-collaboration.bpmn.xml"), outputPath);
+
+        File asciiFile = new File(outputPath);
+        assertThat(asciiFile).exists().isFile();
+        assertThat(fileContent(asciiFile)).contains("+---");
     }
 
     // =================================================================================================================
     // UTILS
     // =================================================================================================================
 
-    private static void generate(String input, String output) throws Exception {
-        App.main(new String[] { input, output });
+    private static String inputPath(String fileName) {
+        return "src/test/resources/bpmn/" + fileName;
+    }
+
+    private static String outputPath(String fileName) {
+        return "target/test/output/AppTest/" + fileName;
+    }
+
+    private static void generateToBpmn(String input, String output) throws Exception {
+        App.main(new String[] { input, output});
+    }
+
+    private static void generate(String input, String output, String exportType) throws Exception {
+        App.main(new String[] { input, output, exportType });
+    }
+
+    private static void generateToSvg(String input, String output) throws Exception {
+        generate(input, output, "svg");
+    }
+
+    private static void generateToAscii(String input, String output) throws Exception {
+        generate(input, output, "ascii");
     }
 
 }

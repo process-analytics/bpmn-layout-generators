@@ -29,4 +29,14 @@ public class FileUtils {
         return String.join("\n", strings);
     }
 
+    public static void createParents(File file) {
+        // TODO throw IOException if failure like commons-io
+        file.getParentFile().mkdirs();
+    }
+
+    public static void touch(File file) throws IOException {
+        createParents(file);
+        file.createNewFile();
+    }
+
 }
