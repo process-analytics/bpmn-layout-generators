@@ -17,69 +17,35 @@ package io.process.analytics.tools.bpmn.generator;
 import static io.process.analytics.tools.bpmn.generator.internal.BpmnInOut.defaultBpmnInOut;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
-import io.process.analytics.tools.bpmn.generator.internal.BPMNDiagramRichBuilder;
+import io.process.analytics.tools.bpmn.generator.algo.ShapeLayouter;
+import io.process.analytics.tools.bpmn.generator.algo.ShapeSorter;
+import io.process.analytics.tools.bpmn.generator.converter.BpmnToAlgoModelConverter;
+import io.process.analytics.tools.bpmn.generator.export.ASCIIExporter;
+import io.process.analytics.tools.bpmn.generator.export.SVGExporter;
 import io.process.analytics.tools.bpmn.generator.internal.BpmnInOut;
+import io.process.analytics.tools.bpmn.generator.internal.FileUtils;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
+import io.process.analytics.tools.bpmn.generator.model.Diagram;
+import io.process.analytics.tools.bpmn.generator.model.Grid;
+import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 public class App {
 
     public static void main(String[] args) throws Exception {
         validate(args);
-        String inputBpmnFilePath = args[0];
-        log("Loading bpmn file: " + inputBpmnFilePath);
-        BpmnInOut bpmnInOut = defaultBpmnInOut();
-        TDefinitions tDefinitions = bpmnInOut.readFromBpmn(new File(inputBpmnFilePath));
-        log("Loaded " + tDefinitions);
+        File bpmnInputFile = new File(args[0]);
+        File outputFile = new File(args[1]);
 
-        log("Building bpmn diagram elements");
-        TDefinitions builtDefinitions = new BPMNDiagramRichBuilder(tDefinitions).build();
-        log("Bpmn diagram elements have been built");
-        File outputBpmnFile = new File(args[1]);
-        bpmnInOut.writeToBpmnFile(builtDefinitions, outputBpmnFile);
-        log("New file with bpmn diagram generated to " + outputBpmnFile.getAbsolutePath());
-
-
-
-
-//        // This is an example usage of sort/layout algorithm + export to svg for testing purpose
-//        Shape start = shape("start");
-//        Shape step1 = shape("step1");
-//        Shape step2 = shape("step2");
-//        Shape step3 = shape("step3");
-//        Shape step4 = shape("step4");
-//        Shape step5 = shape("step5");
-//        Shape end = shape("end");
-//        Diagram diagram = Diagram.builder()
-//                .shape(step1)
-//                .shape(step3)
-//                .shape(step2)
-//                .shape(end)
-//                .shape(step4)
-//                .shape(step5)
-//                .shape(start)
-//                .edge(edge(start, step1))
-//                .edge(edge(step1, step2))
-//                .edge(edge(step3, step4))
-//                .edge(edge(step5, step4))
-//                .edge(edge(step2, step4))
-//                .edge(edge(step4, end))
-//                .build();
-//
-//
-//
-//        ShapeSorter shapeSorter = new ShapeSorter();
-//        ShapeLayouter shapeLayouter = new ShapeLayouter();
-//
-//        SortedDiagram sortedDiagram = shapeSorter.sort(diagram);
-//        Grid grid = shapeLayouter.layout(sortedDiagram);
-//
-//        SVGExporter svgExporter = new SVGExporter();
-//
-//        byte[] exportedFile = svgExporter.export(grid, sortedDiagram);
-//
-//        Files.write(Path.of("target", "test.svg"), exportedFile);
-
+        App app = new App();
+        LayoutSortedDiagram diagram = app.loadAndLayout(bpmnInputFile);
+        app.exportToSvg(diagram, outputFile);
+//        app.exportToAsciiTxt(diagram, outputFile);
     }
 
     private static void validate(String[] args) {
@@ -90,6 +56,56 @@ public class App {
 
     private static void log(String message) {
         System.out.println(message);
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    private static class LayoutSortedDiagram {
+
+        private final Grid grid;
+        private final SortedDiagram sortedDiagram;
+    }
+
+    public LayoutSortedDiagram loadAndLayout(File bpmnInputFile) {
+        log("Loading bpmn file: " + bpmnInputFile);
+        BpmnInOut bpmnInOut = defaultBpmnInOut();
+        TDefinitions definitions = bpmnInOut.readFromBpmn(bpmnInputFile);
+        log("Loaded " + definitions);
+
+        log("Converting BPMN into internal model");
+        Diagram diagram = new BpmnToAlgoModelConverter().toAlgoModel(definitions);
+        log("Conversion done");
+
+        log("Sorting and generating Layout");
+        SortedDiagram sortedDiagram = new ShapeSorter().sort(diagram);
+        Grid grid = new ShapeLayouter().layout(sortedDiagram);
+        log("Sort and Layout done");
+
+        return new LayoutSortedDiagram(grid, sortedDiagram);
+    }
+
+    //    private void exportBpmn(TDefinitions tDefinitions) {
+    //        log("Building bpmn diagram elements");
+    //        TDefinitions builtDefinitions = new BPMNDiagramRichBuilder(tDefinitions).build();
+    //        log("Bpmn diagram elements have been built");
+    //        File outputBpmnFile = new File(args[1]);
+    //        bpmnInOut.writeToBpmnFile(builtDefinitions, outputBpmnFile);
+    //        log("New file with bpmn diagram generated to " + outputBpmnFile.getAbsolutePath());
+    //    }
+
+    private void exportToSvg(LayoutSortedDiagram diagram, File outputFile) throws IOException {
+        log("Exporting to SVG");
+        byte[] svgContent = new SVGExporter().export(diagram.getGrid(), diagram.getSortedDiagram());
+        FileUtils.touch(outputFile);
+        Files.write(outputFile.toPath(), svgContent);
+        log("SVG exported to " + outputFile);
+    }
+
+    private void exportToAsciiTxt(LayoutSortedDiagram diagram, File outputFile) throws IOException {
+        log("Exporting to ASCII text file");
+        String asciiContent = new ASCIIExporter().export(diagram.getGrid());
+        Files.write(outputFile.toPath(), asciiContent.getBytes(StandardCharsets.UTF_8));
+        log("ASCII text exported to " + outputFile);
     }
 
 }
