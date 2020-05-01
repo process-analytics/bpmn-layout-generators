@@ -16,9 +16,6 @@ public class ShapeLayouter {
 
     public Grid layout(SortedDiagram diagram) {
         Grid grid = new Grid();
-        for (int i = 0; i < diagram.getShapes().size(); i++) {
-
-        }
         for (Shape shape : diagram.getShapes()) {
             Position positionOfCurrentShape;
             List<Edge> incomingEdges = diagram.getIncomingEdges(shape.getId());
