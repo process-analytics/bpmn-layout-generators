@@ -7,10 +7,11 @@ import lombok.Data;
 @Builder(toBuilder = true)
 public class Position {
     private final String shape;
+    private final String shapeName;
     private final int x;
     private final int y;
 
     public static Position position(Shape shape, int x, int y) {
-        return new Position(shape.getId(), x, y);
+        return new Position(shape.getId(), shape.getName(), x, y);
     }
 }

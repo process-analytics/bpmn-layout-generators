@@ -1,5 +1,6 @@
 package io.process.analytics.tools.bpmn.generator.algo;
 
+import static io.process.analytics.tools.bpmn.generator.export.ASCIIExporter.toAscii;
 import static io.process.analytics.tools.bpmn.generator.model.Edge.edge;
 import static io.process.analytics.tools.bpmn.generator.model.Position.position;
 import static io.process.analytics.tools.bpmn.generator.model.Shape.shape;
@@ -8,13 +9,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.Shape;
 import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class ShapeLayouterTest {
 
-
-    private ShapeLayouter shapeLayouter = new ShapeLayouter();
+    private final ShapeLayouter shapeLayouter = new ShapeLayouter();
 
     Shape start = shape("start");
     Shape step1 = shape("step1");
@@ -45,9 +44,7 @@ class ShapeLayouterTest {
 
         Grid grid = shapeLayouter.layout(diagram);
 
-        assertThat(grid.width()).isEqualTo(2);
-        assertThat(grid.height()).isEqualTo(1);
-        assertThat(grid.getPositions()).containsExactly(position(step1, 0, 0), position(step2, 1, 0));
+        assertThat(toAscii(grid)).isEqualTo(toAscii(2, 1, position(step1, 0, 0), position(step2, 1, 0)));
     }
 
     @Test
@@ -59,14 +56,16 @@ class ShapeLayouterTest {
 
         Grid grid = shapeLayouter.layout(diagram);
 
-        assertThat(grid.width()).isEqualTo(1);
-        assertThat(grid.height()).isEqualTo(2);
-        assertThat(grid.getPositions()).containsExactly(position(step1, 0, 0), position(step2, 0, 1));
+        assertThat(toAscii(grid)).isEqualTo(toAscii(1, 2, position(step1, 0, 0), position(step2, 0, 1)));
     }
 
     @Test
-    @Disabled("Not yet implemented")
     public void should_layout_a_diagram_that_have_2_branches() {
+        //  +---------------------------------+
+        //  |              step2              |
+        //  |start  step1         step4  end  |
+        //  |              step3              |
+        //  +---------------------------------+
         SortedDiagram diagram = SortedDiagram.builder()
                 .shape(start)
                 .shape(step1)
@@ -85,12 +84,23 @@ class ShapeLayouterTest {
 
         Grid grid = shapeLayouter.layout(diagram);
 
-        assertThat(grid.getPositions()).isNull();
-
+        assertThat(toAscii(grid)).isEqualTo(toAscii(5, 3,
+                position(start, 0, 1),
+                position(step1, 1, 1),
+                position(step2, 2, 0),
+                position(step3, 2, 2),
+                position(step4, 3, 1),
+                position(end, 4, 1)
+        ));
     }
 
     @Test
     public void should_layout_a_diagram_that_have_join() {
+        //  +--------------+
+        //  |step1         |
+        //  |       step3  |
+        //  |step2         |
+        //  +--------------+
         SortedDiagram diagram = SortedDiagram.builder()
                 .shape(step1)
                 .shape(step2)
@@ -109,7 +119,64 @@ class ShapeLayouterTest {
     }
 
     @Test
+    public void should_layout_a_diagram_with_a_split_of_2_elements() {
+        //  +--------------+
+        //  |       step2  |
+        //  |step1         |
+        //  |       step3  |
+        //  +--------------+
+        SortedDiagram diagram = SortedDiagram.builder()
+                .shape(step1)
+                .shape(step2)
+                .shape(step3)
+                .edge(edge(step1, step2))
+                .edge(edge(step1, step3))
+                .build();
+
+
+        Grid grid = shapeLayouter.layout(diagram);
+
+        assertThat(grid.getPositions()).as(toAscii(grid)).containsOnly(
+                position(step1, 0, 1),
+                position(step2, 1, 0),
+                position(step3, 1, 2));
+    }
+
+    @Test
+    public void should_layout_a_diagram_with_a_split_of_3_elements() {
+        //  +--------------+
+        //  |       step2  |
+        //  |step1  step3  |
+        //  |       step4  |
+        //  +--------------+
+        SortedDiagram diagram = SortedDiagram.builder()
+                .shape(step1)
+                .shape(step2)
+                .shape(step3)
+                .shape(step4)
+                .edge(edge(step1, step2))
+                .edge(edge(step1, step3))
+                .edge(edge(step1, step4))
+                .build();
+
+
+        Grid grid = shapeLayouter.layout(diagram);
+
+
+        assertThat(toAscii(grid)).isEqualTo(toAscii(2, 3,
+                position(step1, 0, 1),
+                position(step2, 1, 0),
+                position(step3, 1, 1),
+                position(step4, 1, 2)));
+    }
+
+    @Test
     public void should_layout_a_diagram_that_have_join_with_element_not_in_the_same_column() {
+        //  +---------------------+
+        //  |step1  step2         |
+        //  |              step3  |
+        //  |step4                |
+        //  +---------------------+
         SortedDiagram diagram = SortedDiagram.builder()
                 .shape(step1)
                 .shape(step2)
@@ -132,6 +199,11 @@ class ShapeLayouterTest {
 
     @Test
     public void should_layout_a_diagram_that_have_join_three_element() {
+        // +--------------+
+        // |step1         |
+        // |step2  step4  |
+        // |step3         |
+        // +--------------+
         SortedDiagram diagram = SortedDiagram.builder()
                 .shape(step1)
                 .shape(step2)
@@ -154,6 +226,12 @@ class ShapeLayouterTest {
 
     @Test
     public void should_layout_a_diagram_that_have_join_only_two_elements_of_three() {
+        //  +--------------+
+        //  |step1         |
+        //  |step2         |
+        //  |       step4  |
+        //  |step3         |
+        //  +--------------+
         SortedDiagram diagram = SortedDiagram.builder()
                 .shape(step1)
                 .shape(step2)
