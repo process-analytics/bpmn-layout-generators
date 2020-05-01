@@ -17,6 +17,7 @@ package io.process.analytics.tools.bpmn.generator.converter;
 
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.Position;
+import io.process.analytics.tools.bpmn.generator.model.Shape;
 import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -44,15 +45,19 @@ public class AlgoToDisplayModelConverter {
             int y = yOffset + (CELL_HEIGHT - nodeHeight) / 2;
             DisplayDimension flowNodeDimension = new DisplayDimension(x, y, nodeWidth, nodeHeight);
 
-            // TODO manage empty name
-            String name = diagram.getShapes().stream().filter(n -> n.getId().equals(position.getShape())).findFirst().get().getName();
+            // TODO manage when not found (should not occur)
+            Shape shape = diagram.getShapes().stream().filter(s -> s.getId().equals(position.getShape())).findFirst().get();
+            String name = shape.getName();
             int labelX = xOffset + x(50);
             int labelY = yOffset + y(50);
 
             DisplayDimension labelDimension = new DisplayDimension(labelX, labelY, -1, -1);
             DisplayLabel label = new DisplayLabel(name, y(16), labelDimension);
 
-            model.flowNode(new DisplayFlowNode(flowNodeDimension, label, y(10), y(5)));
+            model.flowNode(DisplayFlowNode.builder().bpmnElementId(shape.getId())
+                    .dimension(flowNodeDimension)
+                    .label(label)
+                    .rx(y(10)).strokeWidth(y(5)).build());
         }
         return model.build();
     }
@@ -78,8 +83,10 @@ public class AlgoToDisplayModelConverter {
     }
 
     @RequiredArgsConstructor
+    @Builder
     public static class DisplayFlowNode {
 
+        public final String bpmnElementId;
         public final DisplayDimension dimension;
         public final DisplayLabel label;
         // for non BPMN exporters only

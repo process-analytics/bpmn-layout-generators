@@ -15,14 +15,17 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayFlowNode;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Helper to build a BPMNDiagram based on existing TDefinitions semantic part
@@ -33,8 +36,10 @@ public class BPMNDiagramRichBuilder {
     @NonNull
     private final TDefinitions definitions;
 
-    // TODO make this internal and set the diagram to a field of this class
-    public BPMNDiagram initializeBPMNDiagram() {
+    private final List<BPMNShape> bpmnShapes = new ArrayList<>();
+
+    // visible for testing
+    BPMNDiagram initializeBPMNDiagram() {
         BPMNDiagram bpmnDiagram = new BPMNDiagram();
         bpmnDiagram.setId("BPMNDiagram_1");
 
@@ -46,24 +51,43 @@ public class BPMNDiagramRichBuilder {
         return bpmnDiagram;
     }
 
-    public void addNode() {
-        // TODO add node as bpmn shape to the initialized bpmn diagram
+    public void addFlowNode(DisplayFlowNode flowNode) {
+//            <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_05jmofc">
+//                <dc:Bounds x="206" y="81" width="36" height="36" />
+//                <bpmndi:BPMNLabel>
+//                    <dc:Bounds x="210" y="124" width="28" height="14" />
+//                </bpmndi:BPMNLabel>
+//            </bpmndi:BPMNShape>
+        BPMNShape bpmnShape = new BPMNShape();
+        bpmnShape.setId("Shape_" + generateRandomId());
+        putBpmnElement(bpmnShape, flowNode.bpmnElementId);
+
+        bpmnShapes.add(bpmnShape);
     }
 
-    public void addEdge() {
-        // TODO add edge as bpmn edge to the initialized bpmn diagram
+// TODO duplicated with Shape
+    private static String generateRandomId() {
+        return UUID.randomUUID().toString();
     }
+
+    private static void putBpmnElement(BPMNShape bpmnShape, String bpmnElementRef) {
+        QName qName = new QName(XMLConstants.NULL_NS_URI, bpmnElementRef);
+        bpmnShape.setBpmnElement(qName);
+    }
+
 
     public TDefinitions build() {
         // TODO it should be better to clone the initial definitions
         List<BPMNDiagram> diagrams = definitions.getBPMNDiagram();
         diagrams.clear();
-        diagrams.add(initializeBPMNDiagram());
+        BPMNDiagram bpmnDiagram = initializeBPMNDiagram();
+        diagrams.add(bpmnDiagram);
+//        bpmnDiagram.getBPMNPlane()
         return definitions;
     }
 
-    // TODO we need to know if this is a process or a collaboration to set the actual qname
-    private void putBpmnElement(BPMNPlane bpmnPlane, String bpmnElementRef) {
+    // TODO we need to know if this is a process or a collaboration to set the actual QName
+    private static void putBpmnElement(BPMNPlane bpmnPlane, String bpmnElementRef) {
         QName qName = new QName(XMLConstants.NULL_NS_URI, bpmnElementRef);
         bpmnPlane.setBpmnElement(qName);
     }
