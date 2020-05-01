@@ -38,6 +38,9 @@ public class AlgoToDisplayModelConverter {
         for (Position position : grid.getPositions()) {
             int xOffset = position.getX() * CELL_WIDTH;
             int yOffset = position.getY() * CELL_HEIGHT;
+            // TODO adjust node dimensions depending on the shape type
+            // this works well for activities, but no for events or gateways. For same, we need width=height
+            // and for event a smaller circle, probably also for gateways
             int nodeWidth = x(60);
             int nodeHeight = y(60);
 
@@ -48,10 +51,12 @@ public class AlgoToDisplayModelConverter {
             // TODO manage when not found (should not occur)
             Shape shape = diagram.getShapes().stream().filter(s -> s.getId().equals(position.getShape())).findFirst().get();
             String name = shape.getName();
+            // TODO adjust label coordinates depending on the shape type
+            //  this works well for activities, but no for events or gateways (here, the label is centered on the shape)
             int labelX = xOffset + x(50);
             int labelY = yOffset + y(50);
 
-            DisplayDimension labelDimension = new DisplayDimension(labelX, labelY, -1, -1);
+            DisplayDimension labelDimension = new DisplayDimension(labelX, labelY, nodeWidth, nodeHeight);
             DisplayLabel label = new DisplayLabel(name, y(16), labelDimension);
 
             model.flowNode(DisplayFlowNode.builder().bpmnElementId(shape.getId())
