@@ -13,8 +13,7 @@ import org.junit.jupiter.api.Test;
 
 class ShapeLayouterTest {
 
-
-    private ShapeLayouter shapeLayouter = new ShapeLayouter();
+    private final ShapeLayouter shapeLayouter = new ShapeLayouter();
 
     Shape start = shape("start");
     Shape step1 = shape("step1");
@@ -62,6 +61,11 @@ class ShapeLayouterTest {
 
     @Test
     public void should_layout_a_diagram_that_have_2_branches() {
+        //  +---------------------------------+
+        //  |              step2              |
+        //  |start  step1         step4  end  |
+        //  |              step3              |
+        //  +---------------------------------+
         SortedDiagram diagram = SortedDiagram.builder()
                 .shape(start)
                 .shape(step1)
@@ -92,6 +96,11 @@ class ShapeLayouterTest {
 
     @Test
     public void should_layout_a_diagram_that_have_join() {
+        //  +--------------+
+        //  |step1         |
+        //  |       step3  |
+        //  |step2         |
+        //  +--------------+
         SortedDiagram diagram = SortedDiagram.builder()
                 .shape(step1)
                 .shape(step2)
@@ -111,6 +120,11 @@ class ShapeLayouterTest {
 
     @Test
     public void should_layout_a_diagram_with_a_split_of_2_elements() {
+        //  +--------------+
+        //  |       step2  |
+        //  |step1         |
+        //  |       step3  |
+        //  +--------------+
         SortedDiagram diagram = SortedDiagram.builder()
                 .shape(step1)
                 .shape(step2)
@@ -130,6 +144,11 @@ class ShapeLayouterTest {
 
     @Test
     public void should_layout_a_diagram_with_a_split_of_3_elements() {
+        //  +--------------+
+        //  |       step2  |
+        //  |step1  step3  |
+        //  |       step4  |
+        //  +--------------+
         SortedDiagram diagram = SortedDiagram.builder()
                 .shape(step1)
                 .shape(step2)
@@ -153,6 +172,11 @@ class ShapeLayouterTest {
 
     @Test
     public void should_layout_a_diagram_that_have_join_with_element_not_in_the_same_column() {
+        //  +---------------------+
+        //  |step1  step2         |
+        //  |              step3  |
+        //  |step4                |
+        //  +---------------------+
         SortedDiagram diagram = SortedDiagram.builder()
                 .shape(step1)
                 .shape(step2)
@@ -175,6 +199,11 @@ class ShapeLayouterTest {
 
     @Test
     public void should_layout_a_diagram_that_have_join_three_element() {
+        // +--------------+
+        // |step1         |
+        // |step2  step4  |
+        // |step3         |
+        // +--------------+
         SortedDiagram diagram = SortedDiagram.builder()
                 .shape(step1)
                 .shape(step2)
@@ -197,6 +226,12 @@ class ShapeLayouterTest {
 
     @Test
     public void should_layout_a_diagram_that_have_join_only_two_elements_of_three() {
+        //  +--------------+
+        //  |step1         |
+        //  |step2         |
+        //  |       step4  |
+        //  |step3         |
+        //  +--------------+
         SortedDiagram diagram = SortedDiagram.builder()
                 .shape(step1)
                 .shape(step2)
