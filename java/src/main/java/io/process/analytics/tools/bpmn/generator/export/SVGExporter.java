@@ -15,17 +15,17 @@
  */
 package io.process.analytics.tools.bpmn.generator.export;
 
-import io.process.analytics.tools.bpmn.generator.converter.DisplayModelConverter;
-import io.process.analytics.tools.bpmn.generator.converter.DisplayModelConverter.DisplayDimension;
-import io.process.analytics.tools.bpmn.generator.converter.DisplayModelConverter.DisplayFlowNode;
-import io.process.analytics.tools.bpmn.generator.converter.DisplayModelConverter.DisplayLabel;
-import io.process.analytics.tools.bpmn.generator.converter.DisplayModelConverter.DisplayModel;
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter;
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayDimension;
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayFlowNode;
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayLabel;
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayModel;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
 
 public class SVGExporter {
 
-    private final DisplayModelConverter converter = new DisplayModelConverter();
+    private final AlgoToDisplayModelConverter converter = new AlgoToDisplayModelConverter();
 
     public byte[] export(Grid grid, SortedDiagram diagram) {
         DisplayModel model = converter.convert(grid, diagram);
