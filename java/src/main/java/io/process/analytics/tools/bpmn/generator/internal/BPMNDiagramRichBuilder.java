@@ -21,6 +21,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +83,17 @@ public class BPMNDiagramRichBuilder {
         diagrams.clear();
         BPMNDiagram bpmnDiagram = initializeBPMNDiagram();
         diagrams.add(bpmnDiagram);
-//        bpmnDiagram.getBPMNPlane()
+        
+        BPMNPlane bpmnPlane = bpmnDiagram.getBPMNPlane();
+        List<JAXBElement<? extends DiagramElement>> diagramElements = bpmnPlane.getDiagramElement();
+
+
+        QName bpmnShapeQname = new QName("http://www.omg.org/spec/BPMN/20100524/DI", "BPMNShape", "");
+        bpmnShapes.stream()
+                .map(s -> new JAXBElement<>(bpmnShapeQname, BPMNShape.class, null, s))
+                .forEach(diagramElements::add);
+
+
         return definitions;
     }
 
