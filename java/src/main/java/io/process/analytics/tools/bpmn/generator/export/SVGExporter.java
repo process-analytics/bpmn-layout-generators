@@ -50,7 +50,7 @@ public class SVGExporter {
             DisplayDimension labelDimension = new DisplayDimension(labelX, labelY, -1, -1);
             DisplayLabel label = new DisplayLabel(name, y(16), labelDimension);
 
-            DisplayFlowNode flowNode = new DisplayFlowNode(flowNodeDimension, label);
+            DisplayFlowNode flowNode = new DisplayFlowNode(flowNodeDimension, label, y(10), y(5));
 
 
             content.append("<rect ");
@@ -58,23 +58,14 @@ public class SVGExporter {
             content.append("y=\"").append(flowNodeDimension.y).append("\" ");
             content.append("width=\"").append(flowNodeDimension.width).append("\" ");
             content.append("height=\"").append(flowNodeDimension.height).append("\" ");
-//            content.append("x=\"").append(x).append("\" ");
-//            content.append("y=\"").append(y).append("\" ");
-//            content.append("width=\"").append(nodeWidth).append("\" ");
-//            content.append("height=\"").append(nodeHeight).append("\" ");
-            content.append("rx=\"").append(y(10)).append("\" "); // TODO manage this internally
+            content.append("rx=\"").append(flowNode.rx).append("\" ");
             content.append("fill=\"#E3E3E3\" stroke=\"#92ADC8\" ");
-            content.append("stroke-width=\"").append(y(5)).append("\"/>\n");
+            content.append("stroke-width=\"").append(flowNode.strokeWidth).append("\"/>\n");
             content.append("<text x=\"").append(labelDimension.x);
             content.append("\" y=\"").append(labelDimension.y);
             content.append("\" text-anchor=\"middle\" font-size=\"").append(label.fontSize);
-//            content.append("<text x=\"").append(labelX);
-//            content.append("\" y=\"").append(labelY);
-//            content.append("\" text-anchor=\"middle\" font-size=\"").append(y(16));
             content.append("\" fill=\"#374962\">");
             content.append(label.text).append("</text>\n");
-//            content.append(name).append("</text>\n");
-
         }
         content.append("</svg>");
         return content.toString().getBytes();
@@ -107,13 +98,18 @@ public class SVGExporter {
 
     @RequiredArgsConstructor
     private static class DisplayFlowNode {
+
         public final DisplayDimension dimension;
         public final DisplayLabel label;
+        // for non BPMN exporters only
+        public final int rx;
+        public final int strokeWidth;
 
     }
 
     @RequiredArgsConstructor
     private static class DisplayDimension {
+
         public final int x;
         public final int y;
         public final int width;
@@ -122,13 +118,10 @@ public class SVGExporter {
 
     @RequiredArgsConstructor
     private static class DisplayLabel {
-        public final String text;
+
+        public final String text; // for non BPMN exporters only
         public final int fontSize;
         public final DisplayDimension dimension;
     }
-
-
-
-
 
 }
