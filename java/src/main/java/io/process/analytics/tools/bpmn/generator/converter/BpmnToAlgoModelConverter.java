@@ -15,14 +15,40 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter;
 
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
+import io.process.analytics.tools.bpmn.generator.internal.Semantic;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
+import io.process.analytics.tools.bpmn.generator.model.Diagram.DiagramBuilder;
+import io.process.analytics.tools.bpmn.generator.model.Edge;
+import io.process.analytics.tools.bpmn.generator.model.Shape;
+
+import java.util.List;
 
 public class BpmnToAlgoModelConverter {
 
     public Diagram toAlgoModel(TDefinitions definitions) {
+        Semantic semantic = new Semantic(definitions);
+        DiagramBuilder diagram = Diagram.builder();
 
-        return null;
+        List<TProcess> processes = semantic.getProcesses();
+        for (TProcess process : processes) {
+            Semantic.BpmnElements bpmnElements = semantic.getBpmnElements(process);
+
+            bpmnElements.getFlowNodes().stream()
+                    .map(flowNode -> new Shape(flowNode.getId(), flowNode.getName()))
+                    .forEach(diagram::shape);
+
+            bpmnElements.getSequenceFlows().stream()
+                    .map(seqFlow -> new Edge(getId(seqFlow.getSourceRef()), getId(seqFlow.getTargetRef())))
+                    .forEach(diagram::edge);
+        }
+
+        return diagram.build();
+    }
+
+    // assuming this is a TBaseElement
+    private static String getId(Object object) {
+        return ((TBaseElement) object).getId();
     }
 
 }
