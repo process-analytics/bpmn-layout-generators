@@ -15,6 +15,7 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayDimension;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayFlowNode;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import lombok.NonNull;
@@ -63,7 +64,23 @@ public class BPMNDiagramRichBuilder {
         bpmnShape.setId("Shape_" + generateRandomId());
         putBpmnElement(bpmnShape, flowNode.bpmnElementId);
 
+        bpmnShape.setBounds(bounds(flowNode.dimension));
+
+        BPMNLabel label = new BPMNLabel();
+        label.setBounds(bounds(flowNode.label.dimension));
+        // TODO add label style
+        bpmnShape.setBPMNLabel(label);
+
         bpmnShapes.add(bpmnShape);
+    }
+
+    private static Bounds bounds(DisplayDimension dimension) {
+        Bounds bounds = new Bounds();
+        bounds.setX(dimension.x);
+        bounds.setY(dimension.y);
+        bounds.setWidth(dimension.width);
+        bounds.setHeight(dimension.height);
+        return bounds;
     }
 
 // TODO duplicated with Shape
