@@ -1,8 +1,25 @@
+/*
+ * Copyright 2020 Bonitasoft S.A.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.process.analytics.tools.bpmn.generator.export;
 
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.Position;
 import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 public class SVGExporter {
 
@@ -20,20 +37,43 @@ public class SVGExporter {
             int yOffset = position.getY() * CELL_HEIGHT;
             int nodeWidth = x(60);
             int nodeHeight = y(60);
+
+            int x = xOffset + (CELL_WIDTH - nodeWidth) / 2;
+            int y = yOffset + (CELL_HEIGHT - nodeHeight) / 2;
+            DisplayDimension flowNodeDimension = new DisplayDimension(x, y, nodeWidth, nodeHeight);
+
+            // TODO manage empty name
+            String name = diagram.getShapes().stream().filter(n -> n.getId().equals(position.getShape())).findFirst().get().getName();
+            int labelX = xOffset + x(50);
+            int labelY = yOffset + y(50);
+
+            DisplayDimension labelDimension = new DisplayDimension(labelX, labelY, -1, -1);
+            DisplayLabel label = new DisplayLabel(name, y(16), labelDimension);
+
+            DisplayFlowNode flowNode = new DisplayFlowNode(flowNodeDimension, label);
+
+
             content.append("<rect ");
-            content.append("x=\"").append(xOffset + (CELL_WIDTH - nodeWidth) / 2).append("\" ");
-            content.append("y=\"").append(yOffset + (CELL_HEIGHT - nodeHeight) / 2).append("\" ");
-            content.append("width=\"").append(nodeWidth).append("\" ");
-            content.append("height=\"").append(nodeHeight).append("\" ");
-            content.append("rx=\"").append(y(10)).append("\" ");
+            content.append("x=\"").append(flowNodeDimension.x).append("\" ");
+            content.append("y=\"").append(flowNodeDimension.y).append("\" ");
+            content.append("width=\"").append(flowNodeDimension.width).append("\" ");
+            content.append("height=\"").append(flowNodeDimension.height).append("\" ");
+//            content.append("x=\"").append(x).append("\" ");
+//            content.append("y=\"").append(y).append("\" ");
+//            content.append("width=\"").append(nodeWidth).append("\" ");
+//            content.append("height=\"").append(nodeHeight).append("\" ");
+            content.append("rx=\"").append(y(10)).append("\" "); // TODO manage this internally
             content.append("fill=\"#E3E3E3\" stroke=\"#92ADC8\" ");
             content.append("stroke-width=\"").append(y(5)).append("\"/>\n");
-            String name = diagram.getShapes().stream().filter(n -> n.getId().equals(position.getShape())).findFirst().get().getName();
-            content.append("<text x=\"").append(xOffset + x(50));
-            content.append("\" y=\"").append(yOffset + y(50));
-            content.append("\" text-anchor=\"middle\" font-size=\"").append(y(16));
+            content.append("<text x=\"").append(labelDimension.x);
+            content.append("\" y=\"").append(labelDimension.y);
+            content.append("\" text-anchor=\"middle\" font-size=\"").append(label.fontSize);
+//            content.append("<text x=\"").append(labelX);
+//            content.append("\" y=\"").append(labelY);
+//            content.append("\" text-anchor=\"middle\" font-size=\"").append(y(16));
             content.append("\" fill=\"#374962\">");
-            content.append(name).append("</text>\n");
+            content.append(label.text).append("</text>\n");
+//            content.append(name).append("</text>\n");
 
         }
         content.append("</svg>");
@@ -47,4 +87,48 @@ public class SVGExporter {
     private int y(int percentage) {
         return CELL_HEIGHT * percentage / 100;
     }
+
+
+
+
+
+    private static class DisplayModelConverter {
+
+        // TODO this should be fields of the class and configured by the client code
+        private static final int CELL_WIDTH = 200;
+        private static final int CELL_HEIGHT = 100;
+
+        public void compute(Grid grid, SortedDiagram diagram) {
+
+        }
+
+
+    }
+
+    @RequiredArgsConstructor
+    private static class DisplayFlowNode {
+        public final DisplayDimension dimension;
+        public final DisplayLabel label;
+
+    }
+
+    @RequiredArgsConstructor
+    private static class DisplayDimension {
+        public final int x;
+        public final int y;
+        public final int width;
+        public final int height;
+    }
+
+    @RequiredArgsConstructor
+    private static class DisplayLabel {
+        public final String text;
+        public final int fontSize;
+        public final DisplayDimension dimension;
+    }
+
+
+
+
+
 }
