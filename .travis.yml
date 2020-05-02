@@ -15,4 +15,4 @@ branches:
     - master
 
 install: skip
-script: cd java; ./mvnw verify
+script: cd java; ./mvnw -V verify
