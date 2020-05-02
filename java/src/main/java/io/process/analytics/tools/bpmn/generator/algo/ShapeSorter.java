@@ -15,6 +15,8 @@
  */
 package io.process.analytics.tools.bpmn.generator.algo;
 
+import static io.process.analytics.tools.bpmn.generator.model.Edge.revertedEdge;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,40 +47,46 @@ public class ShapeSorter {
      */
     public SortedDiagram sort(Diagram diagram) {
         Set<Shape> nodesToSort = new HashSet<>(diagram.getShapes());
-        Set<Edge> edges = new HashSet<>(diagram.getEdges());
-        List<Join> joins = findAllJoins(nodesToSort, edges);
+        Set<Edge> remainingEdges = new HashSet<>(diagram.getEdges());
+        Set<Edge> finalEdges = new HashSet<>(diagram.getEdges());
+        List<Join> joins = findAllJoins(nodesToSort, remainingEdges);
 
         SortedDiagram.SortedDiagramBuilder sortedDiagram = SortedDiagram.builder();
 
         while (!nodesToSort.isEmpty()) {
-            Set<Shape> startShapes = getStartNodes(nodesToSort, edges);
+            Set<Shape> startShapes = getStartNodes(nodesToSort, remainingEdges);
             if (!startShapes.isEmpty()) {
                 for (Shape startShape : startShapes) {
                     nodesToSort.remove(startShape);
                     sortedDiagram.shape(startShape);
-                    edges = removeEdgesStartingWithNode(edges, startShape);
-                    joins.stream().filter(j -> j.isJoining(startShape)).forEach(Join::markProcessed);
+                    remainingEdges = removeEdgesStartingWithNode(remainingEdges, startShape);
+                    joins.stream().filter(j -> j.isJoining(startShape)).forEach(j -> j.markProcessed(startShape));
                 }
             } else {
                 //retrieve a join that we "entered", i.e. we processed an element that has an edge going to this join.
                 Join join = getAJoinThatWasProcessed(joins);
                 //revert all edges from this join to remove the cycle
-                edges = edges.stream().map(edge -> {
-                    if (join.contains(edge)) {
-                        //revert the edge
-                        return new Edge(edge.getId(), edge.getTo(), edge.getFrom());
-                    } else {
-                        return edge;
-                    }
-                }).collect(Collectors.toSet());
+                remainingEdges = revertNonProcessedEdgeOfTheJoin(remainingEdges, join);
+                finalEdges = revertNonProcessedEdgeOfTheJoin(finalEdges, join);
             }
         }
-        return sortedDiagram.edges(diagram.getEdges()).build();
+        return sortedDiagram.edges(finalEdges).build();
+    }
+
+    private Set<Edge> revertNonProcessedEdgeOfTheJoin(Set<Edge> remainingEdges, Join join) {
+        return remainingEdges.stream().map(edge -> {
+            if (join.contains(edge) && !join.wasProcessed(edge.getFrom())) {
+                //revert the edge
+                return revertedEdge(edge);
+            } else {
+                return edge;
+            }
+        }).collect(Collectors.toSet());
     }
 
     private Join getAJoinThatWasProcessed(List<Join> joins) {
-        // we should always have a join that was processed when we don't have a start node
-        return joins.stream().filter(j -> j.wasProcessed).findFirst().get();
+        // we should always have a join that was processed at least once when we don't have a start node
+        return joins.stream().filter(j -> !j.getProcessedEdges().isEmpty()).findFirst().get();
     }
 
     private Set<Edge> removeEdgesStartingWithNode(Set<Edge> edges, Shape startShape) {
@@ -113,14 +121,19 @@ public class ShapeSorter {
         @Singular
         private Set<String> incomings;
         private final Shape to;
-        private boolean wasProcessed;
+        @Builder.Default
+        private Set<String> processedEdges = new HashSet<>();
 
         boolean isJoining(Shape shape) {
             return incomings.contains(shape.getId());
         }
 
-        void markProcessed() {
-            setWasProcessed(true);
+        void markProcessed(Shape shape) {
+            processedEdges.add(shape.getId());
+        }
+
+        boolean wasProcessed(String shapeId) {
+            return processedEdges.contains(shapeId);
         }
 
         boolean contains(Edge edge) {

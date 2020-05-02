@@ -15,8 +15,6 @@
  */
 package io.process.analytics.tools.bpmn.generator.model;
 
-import static io.process.analytics.tools.bpmn.generator.internal.IdUtils.generateRandomId;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +28,7 @@ public class Shape {
     private final String name;
 
     public Shape(String name) {
-        this(generateRandomId(), name);
+        this(name, name);
     }
 
     public static Shape shape(String name) {
