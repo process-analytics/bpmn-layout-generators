@@ -15,11 +15,15 @@
 package io.process.analytics.tools.bpmn.generator;
 
 import static io.process.analytics.tools.bpmn.generator.internal.BpmnInOut.defaultBpmnInOut;
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.List;
+import java.util.Optional;
 
 import io.process.analytics.tools.bpmn.generator.algo.ShapeLayouter;
 import io.process.analytics.tools.bpmn.generator.algo.ShapeSorter;
@@ -68,8 +72,26 @@ public class App {
 
     private static void validate(String[] args) {
         if (args.length <= 1) {
-            throw new IllegalArgumentException("You must pass at least 2 arguments.");
+            throw new IllegalArgumentException("You must pass at least 2 arguments");
         }
+        getExportTypeArgument(args).ifPresent(t -> {
+            List<String> validExportTypes = exportTypes();
+            if (!validExportTypes.contains(t)) {
+                throw new IllegalArgumentException(
+                        format("Invalid export type: %s. Must be one of %s", t, validExportTypes));
+            }
+        });
+    }
+
+    private static List<String> exportTypes() {
+        return asList("ascii", "bpmn", "svg");
+    }
+
+    private static Optional<String> getExportTypeArgument(String[] args) {
+        if (args.length > 2) {
+            return Optional.ofNullable(args[2]);
+        }
+        return Optional.empty();
     }
 
     private static String exportType(String[] args) {
