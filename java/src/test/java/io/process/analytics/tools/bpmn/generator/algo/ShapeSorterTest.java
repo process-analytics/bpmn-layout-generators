@@ -1,5 +1,7 @@
 package io.process.analytics.tools.bpmn.generator.algo;
 
+import static io.process.analytics.tools.bpmn.generator.model.Edge.edge;
+import static io.process.analytics.tools.bpmn.generator.model.Edge.revertedEdge;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
@@ -18,6 +20,7 @@ class ShapeSorterTest {
     Shape step3 = new Shape("step3");
     Shape step4 = new Shape("step4");
     Shape step5 = new Shape("step5");
+    Shape end = new Shape("end");
 
     @Test
     void should_sort_2_shapes() {
@@ -44,10 +47,6 @@ class ShapeSorterTest {
         SortedDiagram sorted = shapeSorter.sort(diagram);
 
         assertThat(sorted.getShapes()).containsExactly(start, step1, step2);
-    }
-
-    private Edge edge(Shape step1, Shape step2) {
-        return new Edge(step1.getId(), step2.getId());
     }
 
     @Test
@@ -81,7 +80,7 @@ class ShapeSorterTest {
     }
 
     @Test
-    void should_sort_shapes_with_loop() {
+    void should_sort_shapes_with_cycle() {
         // loop between step2, step3, step4
         //
         //                      -------------------------
@@ -107,6 +106,31 @@ class ShapeSorterTest {
         SortedDiagram sorted = shapeSorter.sort(diagram);
 
         assertThat(sorted.getShapes()).containsExactly(start, step1, step2, step3, step4, step5);
+    }
+
+    @Test
+    public void should_revert_one_edge_of_a_cycle() {
+        Diagram diagram = Diagram.builder()
+                .shape(start)
+                .shape(step1)
+                .shape(step2)
+                .shape(step3)
+                .shape(end)
+                .edge(edge(start, step1))
+                .edge(edge(step1, step2))
+                .edge(edge(step2, step3))
+                .edge(edge(step3, step1))
+                .edge(edge(step2, end))
+                .build();
+
+        SortedDiagram sorted = shapeSorter.sort(diagram);
+
+        assertThat(sorted.getEdges()).containsOnly(
+                edge(start, step1),
+                edge(step1, step2),
+                edge(step2, step3),
+                revertedEdge(step1.getId(), step3.getId()),
+                edge(step2, end));
     }
 
 }

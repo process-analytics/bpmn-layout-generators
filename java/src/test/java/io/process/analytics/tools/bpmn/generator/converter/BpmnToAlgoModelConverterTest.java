@@ -12,16 +12,16 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter;
 
+
+
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
-import io.process.analytics.tools.bpmn.generator.model.Edge;
 import io.process.analytics.tools.bpmn.generator.model.Shape;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static io.process.analytics.tools.bpmn.generator.internal.SemanticTest.definitionsFromBpmnFile;
+import static io.process.analytics.tools.bpmn.generator.model.Edge.edge;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 class BpmnToAlgoModelConverterTest {
 
@@ -49,8 +49,8 @@ class BpmnToAlgoModelConverterTest {
                 new Shape("task_1", "Task 1"),
                 new Shape("endEvent_1", "End Event"));
         assertThat(diagram.getEdges()).containsOnly(
-                new Edge("startEvent_1", "task_1"),
-                new Edge("task_1", "endEvent_1"));
+                edge("startEvent_1", "task_1"),
+                edge("task_1", "endEvent_1"));
     }
 
 }

@@ -15,8 +15,6 @@
  */
 package io.process.analytics.tools.bpmn.generator.model;
 
-import java.util.UUID;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -30,15 +28,11 @@ public class Shape {
     private final String name;
 
     public Shape(String name) {
-        this(generateRandomId(), name);
+        this(name, name);
     }
 
     public static Shape shape(String name) {
         return new Shape(name);
-    }
-
-    private static String generateRandomId() {
-        return UUID.randomUUID().toString();
     }
 
 }

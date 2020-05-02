@@ -22,9 +22,24 @@ public class Edge {
 
     private final String from;
     private final String to;
+    /**
+     * This property helps to break cycles
+     *
+     * `true` when the original edge is in the opposite direction
+     *
+     * When drown, it should be drown in the opposite direction.
+     * When positioning shapes, it should be kept reverted
+     */
+    private final boolean reverted;
 
     public static Edge edge(Shape from, Shape to) {
-        return new Edge(from.getId(), to.getId());
+        return new Edge(from.getId(), to.getId(), false);
+    }
+    public static Edge edge(String from, String to) {
+        return new Edge(from, to, false);
+    }
+    public static Edge revertedEdge(String from, String to) {
+        return new Edge(from, to, true);
     }
 
 }
