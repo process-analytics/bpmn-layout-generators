@@ -78,7 +78,7 @@ public class ShapeLayouter {
     }
 
     private Position addStartShape(Grid grid, Shape shape) {
-        Position position = position(shape, 0, grid.getLastColumnIndex() + 1);
+        Position position = position(shape, 0, grid.getLastRowIndex() + 1);
         grid.add(position);
         return position;
     }

@@ -45,7 +45,7 @@ class ShapeLayouterTest {
 
         Grid grid = shapeLayouter.layout(diagram);
 
-        assertThat(toAscii(grid)).isEqualTo(toAscii(2, 1, position(step1, 0, 0), position(step2, 1, 0)));
+        assertThat(toAscii(grid)).isEqualTo(toAscii(Grid.of(position(step1, 0, 0), position(step2, 1, 0))));
     }
 
     @Test
@@ -57,7 +57,7 @@ class ShapeLayouterTest {
 
         Grid grid = shapeLayouter.layout(diagram);
 
-        assertThat(toAscii(grid)).isEqualTo(toAscii(1, 2, position(step1, 0, 0), position(step2, 0, 1)));
+        assertThat(toAscii(grid)).isEqualTo(toAscii(Grid.of(position(step1, 0, 0), position(step2, 0, 1))));
     }
 
     @Test
@@ -85,14 +85,14 @@ class ShapeLayouterTest {
 
         Grid grid = shapeLayouter.layout(diagram);
 
-        assertThat(toAscii(grid)).isEqualTo(toAscii(5, 3,
+        assertThat(toAscii(grid)).isEqualTo(toAscii(Grid.of(
                 position(start, 0, 1),
                 position(step1, 1, 1),
                 position(step2, 2, 0),
                 position(step3, 2, 2),
                 position(step4, 3, 1),
                 position(end, 4, 1)
-        ));
+        )));
     }
 
     @Test
@@ -113,10 +113,10 @@ class ShapeLayouterTest {
 
         Grid grid = shapeLayouter.layout(diagram);
 
-        assertThat(grid.getPositions()).containsOnly(
+        assertThat(toAscii(grid)).isEqualTo(toAscii(Grid.of(
                 position(step1, 0, 0),
                 position(step2, 0, 2),
-                position(step3, 1, 1));
+                position(step3, 1, 1))));
     }
 
     @Test
@@ -164,25 +164,29 @@ class ShapeLayouterTest {
         Grid grid = shapeLayouter.layout(diagram);
 
 
-        assertThat(toAscii(grid)).isEqualTo(toAscii(2, 3,
+        assertThat(toAscii(grid)).isEqualTo(toAscii(Grid.of(
                 position(step1, 0, 1),
                 position(step2, 1, 0),
                 position(step3, 1, 1),
-                position(step4, 1, 2)));
+                position(step4, 1, 2))));
     }
 
     @Test
     public void should_layout_a_diagram_that_have_join_with_element_not_in_the_same_column() {
-        //  +---------------------+
-        //  |step1  step2         |
-        //  |              step3  |
-        //  |step4                |
-        //  +---------------------+
+        //+----------------------------+
+        //|       step1  step2         |
+        //|start                step3  |
+        //|       step4                |
+        //+----------------------------+
+        //
         SortedDiagram diagram = SortedDiagram.builder()
+                .shape(start)
                 .shape(step1)
                 .shape(step2)
                 .shape(step4)
                 .shape(step3)
+                .edge(edge(start, step1))
+                .edge(edge(start, step4))
                 .edge(edge(step1, step2))
                 .edge(edge(step2, step3))
                 .edge(edge(step4, step3))
@@ -191,11 +195,12 @@ class ShapeLayouterTest {
 
         Grid grid = shapeLayouter.layout(diagram);
 
-        assertThat(grid.getPositions()).containsOnly(
-                position(step1, 0, 0),
-                position(step2, 1, 0),
-                position(step4, 0, 2),
-                position(step3, 2, 1));
+        assertThat(toAscii(grid)).isEqualTo(toAscii(Grid.of(
+                position(start, 0, 1),
+                position(step1, 1, 0),
+                position(step2, 2, 0),
+                position(step4, 1, 2),
+                position(step3, 3, 1))));
     }
 
     @Test
@@ -218,11 +223,11 @@ class ShapeLayouterTest {
 
         Grid grid = shapeLayouter.layout(diagram);
 
-        assertThat(grid.getPositions()).containsOnly(
+        assertThat(toAscii(grid)).isEqualTo(toAscii(Grid.of(
                 position(step1, 0, 0),
                 position(step2, 0, 1),
                 position(step3, 0, 2),
-                position(step4, 1, 1));
+                position(step4, 1, 1))));
     }
 
     @Test
@@ -245,11 +250,11 @@ class ShapeLayouterTest {
 
         Grid grid = shapeLayouter.layout(diagram);
 
-        assertThat(grid.getPositions()).containsOnly(
+        assertThat(toAscii(grid)).isEqualTo(toAscii(Grid.of(
                 position(step1, 0, 0),
                 position(step2, 0, 1),
                 position(step3, 0, 3),
-                position(step4, 1, 2));
+                position(step4, 1, 2))));
     }
 
 
@@ -291,14 +296,14 @@ class ShapeLayouterTest {
 
         Grid grid = shapeLayouter.layout(diagram);
 
-        assertThat(toAscii(grid)).isEqualTo(toAscii(5, 3,
+        assertThat(toAscii(grid)).isEqualTo(toAscii(Grid.of(
                 position(start, 0, 1),
                 position(step1, 1, 0),
                 position(step2, 1, 2),
                 position(step3, 2, 1),
                 position(step4, 3, 0),
                 position(step5, 3, 2),
-                position(end, 4, 1)));
+                position(end, 4, 1))));
     }
 
 }

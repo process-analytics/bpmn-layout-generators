@@ -1,6 +1,7 @@
 package io.process.analytics.tools.bpmn.generator.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,14 @@ import java.util.stream.Collectors;
 public class Grid {
 
     private final List<Position> positions = new ArrayList<>();
+
+    public static Grid of(Position... positions) {
+        Grid grid = new Grid();
+        for (Position position : positions) {
+            grid.add(position);
+        }
+        return grid;
+    }
 
     /**
      * @return the width of the grid
