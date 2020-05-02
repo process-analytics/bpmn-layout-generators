@@ -15,20 +15,22 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
+import static io.process.analytics.tools.bpmn.generator.internal.IdUtils.generateRandomId;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
+
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayDimension;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayEdge;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayFlowNode;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBElement;
-import javax.xml.namespace.QName;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Helper to build a BPMNDiagram based on existing TDefinitions semantic part
@@ -85,11 +87,6 @@ public class BPMNDiagramRichBuilder {
         bounds.setWidth(dimension.width);
         bounds.setHeight(dimension.height);
         return bounds;
-    }
-
-// TODO duplicated with Shape
-    private static String generateRandomId() {
-        return UUID.randomUUID().toString();
     }
 
     private static void putBpmnElement(BPMNShape bpmnShape, String bpmnElementRef) {

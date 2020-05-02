@@ -15,9 +15,9 @@
  */
 package io.process.analytics.tools.bpmn.generator.model;
 
-import lombok.Data;
+import static io.process.analytics.tools.bpmn.generator.internal.IdUtils.generateRandomId;
 
-import java.util.UUID;
+import lombok.Data;
 
 @Data
 public class Edge {
@@ -28,11 +28,6 @@ public class Edge {
 
     public static Edge edge(Shape from, Shape to) {
         return new Edge(generateRandomId(), from.getId(), to.getId());
-    }
-
-    // TODO duplicated with Shape#generateRandomId
-    private static String generateRandomId() {
-        return UUID.randomUUID().toString();
     }
 
 }
