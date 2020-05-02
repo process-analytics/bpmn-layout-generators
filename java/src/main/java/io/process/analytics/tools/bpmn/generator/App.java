@@ -48,56 +48,26 @@ public class App {
         validate(args);
         File bpmnInputFile = new File(args[0]);
         File outputFile = new File(args[1]);
-
-        App app = new App(defaultBpmnInOut());
-        LayoutSortedDiagram diagram = app.loadAndLayout(bpmnInputFile);
-
-        FileUtils.touch(outputFile);
         String exportType = exportType(args);
-        log("Requested Export Type: " + exportType);
-        switch (exportType) {
-            case "ascii":
-                app.exportToAscii(diagram, outputFile);
-                break;
-            case "bpmn":
-                app.exportToBpmn(diagram, outputFile);
-                break;
-            case "svg":
-                app.exportToSvg(diagram, outputFile);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected Export Type: " + exportType);
-        }
+
+        new App(defaultBpmnInOut()).process(bpmnInputFile, outputFile, exportType);
     }
 
     private static void validate(String[] args) {
         if (args.length <= 1) {
             throw new IllegalArgumentException("You must pass at least 2 arguments");
         }
-        getExportTypeArgument(args).ifPresent(t -> {
-            List<String> validExportTypes = exportTypes();
-            if (!validExportTypes.contains(t)) {
-                throw new IllegalArgumentException(
-                        format("Invalid export type: %s. Must be one of %s", t, validExportTypes));
-            }
-        });
-    }
-
-    private static List<String> exportTypes() {
-        return asList("ascii", "bpmn", "svg");
-    }
-
-    private static Optional<String> getExportTypeArgument(String[] args) {
-        if (args.length > 2) {
-            return Optional.ofNullable(args[2]);
-        }
-        return Optional.empty();
     }
 
     private static String exportType(String[] args) {
         String type = "bpmn";
         if (args.length > 2) {
             type = args[2];
+            List<String> validExportTypes = asList("ascii", "bpmn", "svg");
+            if (!validExportTypes.contains(type)) {
+                throw new IllegalArgumentException(
+                        format("Invalid export type: %s. Must be one of %s", type, validExportTypes));
+            }
         }
         return type;
     }
@@ -119,6 +89,26 @@ public class App {
         private final TDefinitions originalDefinitions;
         private final Grid grid;
         private final SortedDiagram sortedDiagram;
+    }
+
+    private void process(File bpmnInputFile, File outputFile, String exportType) throws IOException {
+        LayoutSortedDiagram diagram = loadAndLayout(bpmnInputFile);
+
+        FileUtils.touch(outputFile);
+        log("Requested Export Type: " + exportType);
+        switch (exportType) {
+            case "ascii":
+                exportToAscii(diagram, outputFile);
+                break;
+            case "bpmn":
+                exportToBpmn(diagram, outputFile);
+                break;
+            case "svg":
+                exportToSvg(diagram, outputFile);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected Export Type: " + exportType);
+        }
     }
 
     public LayoutSortedDiagram loadAndLayout(File bpmnInputFile) {
@@ -153,7 +143,7 @@ public class App {
         log("SVG exported to " + outputFile);
     }
 
-    private void exportToAscii(LayoutSortedDiagram diagram, File outputFile) throws IOException {
+    private static void exportToAscii(LayoutSortedDiagram diagram, File outputFile) throws IOException {
         log("Exporting to ASCII file");
         String asciiContent = new ASCIIExporter().export(diagram.getGrid());
         Files.write(outputFile.toPath(), asciiContent.getBytes(StandardCharsets.UTF_8));
