@@ -37,6 +37,7 @@ import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public class App {
 
     public static void main(String[] args) throws Exception {
@@ -44,7 +45,7 @@ public class App {
         File bpmnInputFile = new File(args[0]);
         File outputFile = new File(args[1]);
 
-        App app = new App();
+        App app = new App(defaultBpmnInOut());
         LayoutSortedDiagram diagram = app.loadAndLayout(bpmnInputFile);
 
         FileUtils.touch(outputFile);
@@ -88,10 +89,6 @@ public class App {
     // =================================================================================================================
 
     private final BpmnInOut bpmnInOut;
-
-    public App() {
-        bpmnInOut = defaultBpmnInOut();
-    }
 
     @RequiredArgsConstructor
     @Getter
