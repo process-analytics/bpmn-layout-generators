@@ -90,13 +90,15 @@ public class BPMNDiagramRichBuilder {
     }
 
     private static void putBpmnElement(BPMNShape bpmnShape, String bpmnElementRef) {
-        QName qName = new QName(XMLConstants.NULL_NS_URI, bpmnElementRef);
-        bpmnShape.setBpmnElement(qName);
+        bpmnShape.setBpmnElement(noNamespaceQName(bpmnElementRef));
+    }
+
+    private static QName noNamespaceQName(String bpmnElementRef) {
+        return new QName(XMLConstants.NULL_NS_URI, bpmnElementRef);
     }
 
     private static void putBpmnElement(BPMNEdge bpmnEdge, String bpmnElementRef) {
-        QName qName = new QName(XMLConstants.NULL_NS_URI, bpmnElementRef);
-        bpmnEdge.setBpmnElement(qName);
+        bpmnEdge.setBpmnElement(noNamespaceQName(bpmnElementRef));
     }
 
     public TDefinitions build() {
@@ -109,24 +111,24 @@ public class BPMNDiagramRichBuilder {
         BPMNPlane bpmnPlane = bpmnDiagram.getBPMNPlane();
         List<JAXBElement<? extends DiagramElement>> diagramElements = bpmnPlane.getDiagramElement();
 
-
-        QName bpmnShapeQname = new QName("http://www.omg.org/spec/BPMN/20100524/DI", "BPMNShape", "");
         bpmnShapes.stream()
-                .map(s -> new JAXBElement<>(bpmnShapeQname, BPMNShape.class, null, s))
+                .map(s -> new JAXBElement<>(bpmnElementQName("BPMNShape"), BPMNShape.class, null, s))
                 .forEach(diagramElements::add);
 
-        QName bpmnEdgeQname = new QName("http://www.omg.org/spec/BPMN/20100524/DI", "BPMNEdge", "");
         bpmnEdges.stream()
-                .map(s -> new JAXBElement<>(bpmnEdgeQname, BPMNEdge.class, null, s))
+                .map(s -> new JAXBElement<>(bpmnElementQName("BPMNEdge"), BPMNEdge.class, null, s))
                 .forEach(diagramElements::add);
 
         return definitions;
     }
 
+    private static QName bpmnElementQName(String bpmnElement) {
+        return new QName("http://www.omg.org/spec/BPMN/20100524/DI", bpmnElement, "");
+    }
+
     // TODO we need to know if this is a process or a collaboration to set the actual QName
     private static void putBpmnElement(BPMNPlane bpmnPlane, String bpmnElementRef) {
-        QName qName = new QName(XMLConstants.NULL_NS_URI, bpmnElementRef);
-        bpmnPlane.setBpmnElement(qName);
+        bpmnPlane.setBpmnElement(noNamespaceQName(bpmnElementRef));
     }
 
     // TODO move to the Semantic class?
