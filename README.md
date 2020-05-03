@@ -1,4 +1,4 @@
-# bpmn-layout-generators
+# bpmn-layout-generators [![Build Status](https://travis-ci.com/process-analytics/bpmn-layout-generators.svg?branch=master)](https://travis-ci.com/process-analytics/bpmn-layout-generators)
 
 Tools for generating missing BPMNDiagram elements in BPMN files
 

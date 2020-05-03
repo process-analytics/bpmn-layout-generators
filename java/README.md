@@ -2,12 +2,11 @@
 
 ## Requirements
 
-> JDK 8 (may work with higher versions, but this is not tested)
->
+> JDK 8 or JDK 11
 
 ## Build
 
-The project bundle a Maven Wrapper, so just run
+The project bundles a Maven Wrapper, so just run
 ``` bash
 ./mvnw package
 ```

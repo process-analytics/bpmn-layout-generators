@@ -1,7 +1,9 @@
 language: java
-jdk: openjdk8
 os: linux
 dist: xenial
+jdk:
+  - openjdk8
+  - openjdk11
 
 cache:
   directories:
@@ -13,4 +15,4 @@ branches:
     - master
 
 install: skip
-script: cd java; ./mvnw verify
+script: cd java; ./mvnw -V verify
