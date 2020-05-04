@@ -306,4 +306,40 @@ class ShapeLayouterTest {
                 position(end, 4, 1))));
     }
 
+
+    @Test
+    public void should_not_overlap_joins() {
+        //+---------------------+
+        //|step1                |
+        //|step2  step4         |
+        //|              end    |
+        //|       step5         |
+        //|step3                |
+        //+---------------------+
+        SortedDiagram diagram = SortedDiagram.builder()
+                .shape(step1)
+                .shape(step2)
+                .shape(step3)
+                .shape(step4)
+                .shape(step5)
+                .shape(end)
+                .edge(edge(step1, step4))
+                .edge(edge(step2, step5))
+                .edge(edge(step3, step4))
+                .edge(edge(step4, end))
+                .edge(edge(step5, end))
+                .build();
+
+
+        Grid grid = shapeLayouter.layout(diagram);
+
+        assertThat(toAscii(grid)).isEqualTo(toAscii(Grid.of(
+                position(step1, 0, 0),
+                position(step2, 0, 1),
+                position(step3, 0, 4),
+                position(step4, 1, 1),
+                position(step5, 1, 3),
+                position(end, 2, 2))));
+    }
+
 }
