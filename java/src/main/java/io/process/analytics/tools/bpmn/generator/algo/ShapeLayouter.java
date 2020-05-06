@@ -21,12 +21,22 @@ public class ShapeLayouter {
         Grid grid = new Grid();
         for (Shape shape : diagram.getShapes()) {
             Position positionOfCurrentShape = positionShape(diagram, grid, shape);
-            grid.add(positionOfCurrentShape);
+            putOnGrid(grid, positionOfCurrentShape);
             log.debug("Adding {}:\n{}", shape::getName, () -> toAscii(grid));
             addRowsWhenShapeIsASplit(diagram, grid, shape, positionOfCurrentShape);
         }
         compactGrid(grid);
         return grid;
+    }
+
+    private void putOnGrid(Grid grid, Position positionOfCurrentShape) {
+        if (grid.isFilled(positionOfCurrentShape)) {
+            //never overlap an element
+            grid.addRowAfter(positionOfCurrentShape.getY());
+            grid.add(positionOfCurrentShape.toBuilder().y(positionOfCurrentShape.getY() + 1).build());
+        } else {
+            grid.add(positionOfCurrentShape);
+        }
     }
 
     private void addRowsWhenShapeIsASplit(SortedDiagram diagram, Grid grid, Shape shape, Position positionOfCurrentShape) {

@@ -108,4 +108,8 @@ public class Grid {
             positions.add(cellToMove.toBuilder().y(cellToMove.getY() - 1).build());
         }
     }
+
+    public boolean isFilled(Position position) {
+        return positions.stream().anyMatch(p -> p.getX() == position.getX() && p.getY() == position.getY());
+    }
 }
