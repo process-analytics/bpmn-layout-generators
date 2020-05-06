@@ -46,11 +46,4 @@ public class ASCIIExporter {
     public static String toAscii(Grid grid) {
         return new ASCIIExporter().export(grid);
     }
-
-    public static String toAscii(int width, int height, List<Position> positions) {
-        return new ASCIIExporter().export(width, height, positions);
-    }
-    public static String toAscii(int width, int height, Position... positions) {
-        return toAscii(width, height, Arrays.asList(positions));
-    }
 }

@@ -17,40 +17,78 @@ public class ShapeLayouter {
     public Grid layout(SortedDiagram diagram) {
         Grid grid = new Grid();
         for (Shape shape : diagram.getShapes()) {
-            Position positionOfCurrentShape;
-            List<Edge> incomingEdges = diagram.getIncomingEdges(shape.getId());
-            if (incomingEdges.isEmpty()) {
-                //This is a start node, insert it in a new column
-                positionOfCurrentShape = addStartShape(grid, shape);
-            } else if (incomingEdges.size() == 1) {
-                //find the previous node position
-                String previousShapeID = incomingEdges.get(0).getFrom();
-                List<Edge> outgoingEdgesOfPreviousShape = diagram.getOutgoingEdges(previousShapeID);
-                if (outgoingEdgesOfPreviousShape.size() == 1) {
-                    positionOfCurrentShape = addDirectlyNextTo(grid, shape, previousShapeID);
-                } else {
-                    positionOfCurrentShape = addSplit(grid, shape, previousShapeID, outgoingEdgesOfPreviousShape);
-                }
-            } else {
-                positionOfCurrentShape = addJoin(grid, shape, incomingEdges);
-            }
-            List<Edge> outgoingEdges = diagram.getOutgoingEdges(shape.getId());
-            if (outgoingEdges.size() > 1) {
-                //add rows to place elements of this split
-                int rowsToAddBeforeAndAfter = outgoingEdges.size() / 2;
-                for (int i = 0; i < rowsToAddBeforeAndAfter; i++) {
-                    grid.addRowAfter(positionOfCurrentShape.getY());
-                    grid.addRowBefore(positionOfCurrentShape.getY());
-                }
-            }
+            Position positionOfCurrentShape = positionShape(diagram, grid, shape);
+            grid.add(positionOfCurrentShape);
+            addRowsWhenShapeIsASplit(diagram, grid, shape, positionOfCurrentShape);
         }
+        compactGrid(grid);
         return grid;
     }
 
+    private void addRowsWhenShapeIsASplit(SortedDiagram diagram, Grid grid, Shape shape, Position positionOfCurrentShape) {
+        List<Edge> outgoingEdges = diagram.getOutgoingEdges(shape.getId());
+        if (outgoingEdges.size() > 1) {
+            //add rows to place elements of this split
+            int rowsToAddBeforeAndAfter = outgoingEdges.size() / 2;
+            for (int i = 0; i < rowsToAddBeforeAndAfter; i++) {
+                grid.addRowAfter(positionOfCurrentShape.getY());
+                grid.addRowBefore(positionOfCurrentShape.getY());
+            }
+        }
+    }
+
+    private Position positionShape(SortedDiagram diagram, Grid grid, Shape shape) {
+        Position positionOfCurrentShape;
+        List<Edge> incomingEdges = diagram.getIncomingEdges(shape.getId());
+        if (incomingEdges.isEmpty()) {
+            //This is a start node, insert it in a new column
+            positionOfCurrentShape = addStartShape(grid, shape);
+        } else if (incomingEdges.size() == 1) {
+            //find the previous node position
+            String previousShapeID = incomingEdges.get(0).getFrom();
+            List<Edge> outgoingEdgesOfPreviousShape = diagram.getOutgoingEdges(previousShapeID);
+            if (outgoingEdgesOfPreviousShape.size() == 1) {
+                positionOfCurrentShape = addDirectlyNextTo(grid, shape, previousShapeID);
+            } else {
+                positionOfCurrentShape = addSplit(grid, shape, previousShapeID, outgoingEdgesOfPreviousShape);
+            }
+        } else {
+            positionOfCurrentShape = addJoin(grid, shape, incomingEdges);
+        }
+        return positionOfCurrentShape;
+    }
+
+    private void compactGrid(Grid grid) {
+        int i = 0;
+        while (i < grid.getLastRowIndex()) {
+            List<Integer> currentRow = grid.getRow(i).stream().map(Position::getX).collect(Collectors.toList());
+            List<Integer> nextRow = grid.getRow(i + 1).stream().map(Position::getX).collect(Collectors.toList());
+
+            boolean currentRowCanBeMovedBelow = true;
+            for (Integer shapeIndexInCurrentRow : currentRow) {
+                int index = shapeIndexInCurrentRow;
+                //we can move the current row below if each element have all adjacent cells free in the row below
+                if (nextRow.stream().anyMatch(s -> s == index || s == index + 1 || s == index - 1)) {
+                    currentRowCanBeMovedBelow = false;
+                    break;
+                }
+            }
+
+            if (currentRowCanBeMovedBelow) {
+                final int finalI = i+1;
+                for (Position position : grid.getRow(i)) {
+                    grid.remove(position);
+                    grid.add(position.toBuilder().y(finalI).build());
+                }
+                grid.removeEmptyRow(i);
+            }else{
+                i++;
+            }
+        }
+    }
+
     private Position addStartShape(Grid grid, Shape shape) {
-        Position position = position(shape, 0, grid.getLastColumnIndex() + 1);
-        grid.add(position);
-        return position;
+        return position(shape, 0, grid.getLastRowIndex() + 1);
     }
 
     private Position addSplit(Grid grid, Shape shape, String previousShapeID, List<Edge> outgoingEdgesOfPreviousShape) {
@@ -65,9 +103,7 @@ public class ShapeLayouter {
         } else {
             relativeYPosition = indexOfCurrentShape - numberOfShapesInTheSplit / 2;
         }
-        Position position = position(shape, previousShapePosition.getX() + 1, previousShapePosition.getY() + relativeYPosition);
-        grid.add(position);
-        return position;
+        return position(shape, previousShapePosition.getX() + 1, previousShapePosition.getY() + relativeYPosition);
     }
 
     private Position addJoin(Grid grid, Shape shape, List<Edge> incomingEdges) {
@@ -84,16 +120,12 @@ public class ShapeLayouter {
             grid.addRowAfter(yElement);
             yElement++;
         }
-        Position position = position(shape, xElement, yElement);
-        grid.add(position);
-        return position;
+        return position(shape, xElement, yElement);
     }
 
     private Position addDirectlyNextTo(Grid grid, Shape shapeToAdd, String rightTo) {
         Position previous = grid.getPosition(rightTo);
-        Position position = position(shapeToAdd, previous.getX() + 1, previous.getY());
-        grid.add(position);
-        return position;
+        return position(shapeToAdd, previous.getX() + 1, previous.getY());
     }
 
 
