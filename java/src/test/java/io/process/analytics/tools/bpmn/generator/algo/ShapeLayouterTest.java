@@ -257,6 +257,24 @@ class ShapeLayouterTest {
                 position(step4, 1, 2))));
     }
 
+    @Test
+    public void toto() {
+        SortedDiagram diagram = SortedDiagram.builder()
+                .shape(step1)
+                .shape(step2)
+                .shape(step3)
+                .shape(step4)
+                .edge(edge(step2, step4))
+                .edge(edge(step3, step4))
+                .build();
+
+
+        Grid grid = shapeLayouter.layout(diagram);
+
+        assertThat(toAscii(grid)).isEqualTo(toAscii(Grid.of(
+                position(step1, 0, 0))));
+    }
+
 
     @Test
     public void should_compact_grid_in_order_to_remove_extra_space() {
