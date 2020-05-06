@@ -49,8 +49,8 @@ class BpmnToAlgoModelConverterTest {
                 new Shape("task_1", "Task 1"),
                 new Shape("endEvent_1", "End Event"));
         assertThat(diagram.getEdges()).containsOnly(
-                new Edge("startEvent_1", "task_1"),
-                new Edge("task_1", "endEvent_1"));
+                new Edge("sequenceFlow_1","startEvent_1", "task_1"),
+                new Edge("sequenceFlow_2","task_1", "endEvent_1"));
     }
 
 }

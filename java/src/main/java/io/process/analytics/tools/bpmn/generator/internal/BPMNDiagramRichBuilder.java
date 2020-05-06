@@ -15,14 +15,22 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
+import static io.process.analytics.tools.bpmn.generator.internal.IdUtils.generateRandomId;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
+
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayDimension;
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayEdge;
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayFlowNode;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-
-import javax.xml.XMLConstants;
-import javax.xml.namespace.QName;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Helper to build a BPMNDiagram based on existing TDefinitions semantic part
@@ -33,8 +41,11 @@ public class BPMNDiagramRichBuilder {
     @NonNull
     private final TDefinitions definitions;
 
-    // TODO make this internal and set the diagram to a field of this class
-    public BPMNDiagram initializeBPMNDiagram() {
+    private final List<BPMNShape> bpmnShapes = new ArrayList<>();
+    private final List<BPMNEdge> bpmnEdges = new ArrayList<>();
+
+    // visible for testing
+    BPMNDiagram initializeBPMNDiagram() {
         BPMNDiagram bpmnDiagram = new BPMNDiagram();
         bpmnDiagram.setId("BPMNDiagram_1");
 
@@ -46,26 +57,78 @@ public class BPMNDiagramRichBuilder {
         return bpmnDiagram;
     }
 
-    public void addNode() {
-        // TODO add node as bpmn shape to the initialized bpmn diagram
+    public void addFlowNode(DisplayFlowNode flowNode) {
+        BPMNShape bpmnShape = new BPMNShape();
+        bpmnShape.setId("Shape_" + generateRandomId());
+        putBpmnElement(bpmnShape, flowNode.bpmnElementId);
+
+        bpmnShape.setBounds(bounds(flowNode.dimension));
+
+        BPMNLabel label = new BPMNLabel();
+        label.setBounds(bounds(flowNode.label.dimension));
+        // TODO add label style
+        bpmnShape.setBPMNLabel(label);
+
+        bpmnShapes.add(bpmnShape);
     }
 
-    public void addEdge() {
-        // TODO add edge as bpmn edge to the initialized bpmn diagram
+    public void addEdge(DisplayEdge edge) {
+        BPMNEdge bpmnEdge = new BPMNEdge();
+        bpmnEdge.setId("Edge_" + generateRandomId());
+        putBpmnElement(bpmnEdge, edge.bpmnElementId);
+
+        bpmnEdges.add(bpmnEdge);
+    }
+
+    private static Bounds bounds(DisplayDimension dimension) {
+        Bounds bounds = new Bounds();
+        bounds.setX(dimension.x);
+        bounds.setY(dimension.y);
+        bounds.setWidth(dimension.width);
+        bounds.setHeight(dimension.height);
+        return bounds;
+    }
+
+    private static void putBpmnElement(BPMNShape bpmnShape, String bpmnElementRef) {
+        bpmnShape.setBpmnElement(noNamespaceQName(bpmnElementRef));
+    }
+
+    private static QName noNamespaceQName(String bpmnElementRef) {
+        return new QName(XMLConstants.NULL_NS_URI, bpmnElementRef);
+    }
+
+    private static void putBpmnElement(BPMNEdge bpmnEdge, String bpmnElementRef) {
+        bpmnEdge.setBpmnElement(noNamespaceQName(bpmnElementRef));
     }
 
     public TDefinitions build() {
         // TODO it should be better to clone the initial definitions
         List<BPMNDiagram> diagrams = definitions.getBPMNDiagram();
         diagrams.clear();
-        diagrams.add(initializeBPMNDiagram());
+        BPMNDiagram bpmnDiagram = initializeBPMNDiagram();
+        diagrams.add(bpmnDiagram);
+        
+        BPMNPlane bpmnPlane = bpmnDiagram.getBPMNPlane();
+        List<JAXBElement<? extends DiagramElement>> diagramElements = bpmnPlane.getDiagramElement();
+
+        bpmnShapes.stream()
+                .map(s -> new JAXBElement<>(bpmnElementQName("BPMNShape"), BPMNShape.class, null, s))
+                .forEach(diagramElements::add);
+
+        bpmnEdges.stream()
+                .map(s -> new JAXBElement<>(bpmnElementQName("BPMNEdge"), BPMNEdge.class, null, s))
+                .forEach(diagramElements::add);
+
         return definitions;
     }
 
-    // TODO we need to know if this is a process or a collaboration to set the actual qname
-    private void putBpmnElement(BPMNPlane bpmnPlane, String bpmnElementRef) {
-        QName qName = new QName(XMLConstants.NULL_NS_URI, bpmnElementRef);
-        bpmnPlane.setBpmnElement(qName);
+    private static QName bpmnElementQName(String bpmnElement) {
+        return new QName("http://www.omg.org/spec/BPMN/20100524/DI", bpmnElement, "");
+    }
+
+    // TODO we need to know if this is a process or a collaboration to set the actual QName
+    private static void putBpmnElement(BPMNPlane bpmnPlane, String bpmnElementRef) {
+        bpmnPlane.setBpmnElement(noNamespaceQName(bpmnElementRef));
     }
 
     // TODO move to the Semantic class?

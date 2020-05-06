@@ -15,16 +15,19 @@
  */
 package io.process.analytics.tools.bpmn.generator.model;
 
+import static io.process.analytics.tools.bpmn.generator.internal.IdUtils.generateRandomId;
+
 import lombok.Data;
 
 @Data
 public class Edge {
 
+    private final String id; // the bpmnElement id
     private final String from;
     private final String to;
 
     public static Edge edge(Shape from, Shape to) {
-        return new Edge(from.getId(), to.getId());
+        return new Edge(generateRandomId(), from.getId(), to.getId());
     }
 
 }

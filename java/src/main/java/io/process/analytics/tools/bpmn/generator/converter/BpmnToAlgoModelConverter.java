@@ -39,7 +39,7 @@ public class BpmnToAlgoModelConverter {
                     .forEach(diagram::shape);
 
             bpmnElements.getSequenceFlows().stream()
-                    .map(seqFlow -> new Edge(getId(seqFlow.getSourceRef()), getId(seqFlow.getTargetRef())))
+                    .map(seqFlow -> new Edge(seqFlow.getId(), getId(seqFlow.getSourceRef()), getId(seqFlow.getTargetRef())))
                     .forEach(diagram::edge);
         }
 

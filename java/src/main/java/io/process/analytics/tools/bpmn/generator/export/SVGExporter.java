@@ -1,50 +1,62 @@
+/*
+ * Copyright 2020 Bonitasoft S.A.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.process.analytics.tools.bpmn.generator.export;
 
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter;
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayDimension;
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayFlowNode;
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayLabel;
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayModel;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
-import io.process.analytics.tools.bpmn.generator.model.Position;
 import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
 
 public class SVGExporter {
 
-    private static final int CELL_WIDTH = 200;
-    private static final int CELL_HEIGHT = 100;
+    private final AlgoToDisplayModelConverter converter = new AlgoToDisplayModelConverter();
 
     public byte[] export(Grid grid, SortedDiagram diagram) {
+        DisplayModel model = converter.convert(grid, diagram);
+
         StringBuilder content = new StringBuilder();
         content.append("<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"")
-                .append(grid.width() * CELL_WIDTH)
+                .append(model.width)
                 .append("\" height=\"")
-                .append(grid.height() * CELL_HEIGHT).append("\">\n");
-        for (Position position : grid.getPositions()) {
-            int xOffset = position.getX() * CELL_WIDTH;
-            int yOffset = position.getY() * CELL_HEIGHT;
-            int nodeWidth = x(60);
-            int nodeHeight = y(60);
-            content.append("<rect ");
-            content.append("x=\"").append(xOffset + (CELL_WIDTH - nodeWidth) / 2).append("\" ");
-            content.append("y=\"").append(yOffset + (CELL_HEIGHT - nodeHeight) / 2).append("\" ");
-            content.append("width=\"").append(nodeWidth).append("\" ");
-            content.append("height=\"").append(nodeHeight).append("\" ");
-            content.append("rx=\"").append(y(10)).append("\" ");
-            content.append("fill=\"#E3E3E3\" stroke=\"#92ADC8\" ");
-            content.append("stroke-width=\"").append(y(5)).append("\"/>\n");
-            String name = diagram.getShapes().stream().filter(n -> n.getId().equals(position.getShape())).findFirst().get().getName();
-            content.append("<text x=\"").append(xOffset + x(50));
-            content.append("\" y=\"").append(yOffset + y(50));
-            content.append("\" text-anchor=\"middle\" font-size=\"").append(y(16));
-            content.append("\" fill=\"#374962\">");
-            content.append(name).append("</text>\n");
+                .append(model.height).append("\">\n");
 
+        for (DisplayFlowNode flowNode : model.flowNodes) {
+            DisplayDimension flowNodeDimension = flowNode.dimension;
+            DisplayLabel label = flowNode.label;
+            DisplayDimension labelDimension = label.dimension;
+
+            content.append("<rect ");
+            content.append("x=\"").append(flowNodeDimension.x).append("\" ");
+            content.append("y=\"").append(flowNodeDimension.y).append("\" ");
+            content.append("width=\"").append(flowNodeDimension.width).append("\" ");
+            content.append("height=\"").append(flowNodeDimension.height).append("\" ");
+            content.append("rx=\"").append(flowNode.rx).append("\" ");
+            content.append("fill=\"#E3E3E3\" stroke=\"#92ADC8\" ");
+            content.append("stroke-width=\"").append(flowNode.strokeWidth).append("\"/>\n");
+            content.append("<text x=\"").append(labelDimension.x);
+            content.append("\" y=\"").append(labelDimension.y);
+            content.append("\" text-anchor=\"middle\" font-size=\"").append(label.fontSize);
+            content.append("\" fill=\"#374962\">");
+            content.append(label.text).append("</text>\n");
         }
         content.append("</svg>");
         return content.toString().getBytes();
     }
 
-    private int x(int percentage) {
-        return CELL_WIDTH * percentage / 100;
-    }
-
-    private int y(int percentage) {
-        return CELL_HEIGHT * percentage / 100;
-    }
 }

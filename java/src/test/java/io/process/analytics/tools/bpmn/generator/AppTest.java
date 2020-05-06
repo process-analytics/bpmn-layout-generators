@@ -15,26 +15,38 @@
  */
 package io.process.analytics.tools.bpmn.generator;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import static io.process.analytics.tools.bpmn.generator.App.main;
+import static io.process.analytics.tools.bpmn.generator.internal.FileUtils.fileContent;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 
-import static io.process.analytics.tools.bpmn.generator.internal.FileUtils.fileContent;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 public class AppTest {
 
     @Test
-    @Disabled("not implemented yet")
+    public void main_fail_on_missing_argument() throws Exception {
+        assertThatThrownBy(() -> { main(new String[] { "input" }); }).isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("You must pass at least 2 arguments");
+    }
+
+    @Test
+    public void main_fail_on_wrong_export_type() throws Exception {
+        assertThatThrownBy(() -> { generate("input", "output", "unknown_export_type" ); })
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Invalid export type: unknown_export_type. Must be one of [ascii, bpmn, svg]");
+    }
+
+    @Test
     public void main_generates_xml_output_file() throws Exception {
         String outputPath = outputPath("A.2.0_with_diagram.bpmn.xml");
         generateToBpmn(inputPath("A.2.0.bpmn.xml"), outputPath);
 
         File bpmnFile = new File(outputPath);
         assertThat(bpmnFile).exists().isFile();
-        // TODO add xml assertions (assertj and/or xmlunit)
-        assertThat(fileContent(bpmnFile)).contains("BPMN Baby!!");
+        assertThat(fileContent(bpmnFile)).contains("<definitions xmlns=\"http://www.omg.org/spec/BPMN/20100524/MODEL\"");
     }
 
     @Test
@@ -70,11 +82,11 @@ public class AppTest {
     }
 
     private static void generateToBpmn(String input, String output) throws Exception {
-        App.main(new String[] { input, output});
+        main(new String[] { input, output});
     }
 
     private static void generate(String input, String output, String exportType) throws Exception {
-        App.main(new String[] { input, output, exportType });
+        main(new String[] { input, output, exportType });
     }
 
     private static void generateToSvg(String input, String output) throws Exception {
