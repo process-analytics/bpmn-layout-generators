@@ -1,6 +1,8 @@
 package io.process.analytics.tools.bpmn.generator.algo;
 
 import static io.process.analytics.tools.bpmn.generator.model.Edge.edge;
+import static io.process.analytics.tools.bpmn.generator.model.Edge.revertedEdge;
+import static io.process.analytics.tools.bpmn.generator.model.Edge.edge;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
@@ -19,6 +21,7 @@ class ShapeSorterTest {
     Shape step3 = new Shape("step3");
     Shape step4 = new Shape("step4");
     Shape step5 = new Shape("step5");
+    Shape end = new Shape("end");
 
     @Test
     void should_sort_2_shapes() {
@@ -78,7 +81,7 @@ class ShapeSorterTest {
     }
 
     @Test
-    void should_sort_shapes_with_loop() {
+    void should_sort_shapes_with_cycle() {
         // loop between step2, step3, step4
         //
         //                      -------------------------
@@ -104,6 +107,36 @@ class ShapeSorterTest {
         SortedDiagram sorted = shapeSorter.sort(diagram);
 
         assertThat(sorted.getShapes()).containsExactly(start, step1, step2, step3, step4, step5);
+    }
+
+    @Test
+    public void should_revert_one_edge_of_a_cycle() {
+        Edge t1 = Edge.builder().id("t1").from(start.getId()).to(step1.getId()).build();
+        Edge t2 = Edge.builder().id("t2").from(step1.getId()).to(step2.getId()).build();
+        Edge t3 = Edge.builder().id("t3").from(step2.getId()).to(step3.getId()).build();
+        Edge t4 = Edge.builder().id("t4").from(step3.getId()).to(step1.getId()).build();
+        Edge t5 = Edge.builder().id("t5").from(step2.getId()).to(end.getId()).build();
+        Diagram diagram = Diagram.builder()
+                .shape(start)
+                .shape(step1)
+                .shape(step2)
+                .shape(step3)
+                .shape(end)
+                .edge(t1)
+                .edge(t2)
+                .edge(t3)
+                .edge(t4)
+                .edge(t5)
+                .build();
+
+        SortedDiagram sorted = shapeSorter.sort(diagram);
+
+        assertThat(sorted.getEdges()).containsOnly(
+                t1,
+                t2,
+                t3,
+                revertedEdge(t4),
+                t5);
     }
 
 }

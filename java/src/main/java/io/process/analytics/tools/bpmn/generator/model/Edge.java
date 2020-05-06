@@ -17,17 +17,34 @@ package io.process.analytics.tools.bpmn.generator.model;
 
 import static io.process.analytics.tools.bpmn.generator.internal.IdUtils.generateRandomId;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder( toBuilder = true)
 public class Edge {
 
     private final String id; // the bpmnElement id
     private final String from;
     private final String to;
+    /**
+     * This property helps to break cycles
+     *
+     * `true` when the original edge is in the opposite direction
+     *
+     * When drown, it should be drown in the opposite direction.
+     * When positioning shapes, it should be kept reverted
+     */
+    private final boolean reverted;
 
+    public static Edge edge(String id, String from, String to) {
+        return new Edge(id, from, to, false);
+    }
     public static Edge edge(Shape from, Shape to) {
-        return new Edge(generateRandomId(), from.getId(), to.getId());
+        return new Edge(generateRandomId(), from.getId(), to.getId(), false);
+    }
+    public static Edge revertedEdge(Edge original) {
+        return original.toBuilder().from(original.getTo()).to(original.getFrom()).reverted(true).build();
     }
 
 }
