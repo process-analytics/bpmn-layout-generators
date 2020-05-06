@@ -1,5 +1,6 @@
 package io.process.analytics.tools.bpmn.generator.algo;
 
+import static io.process.analytics.tools.bpmn.generator.export.ASCIIExporter.toAscii;
 import static io.process.analytics.tools.bpmn.generator.model.Position.position;
 
 import java.util.List;
@@ -10,7 +11,9 @@ import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.Shape;
 import io.process.analytics.tools.bpmn.generator.model.Position;
 import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class ShapeLayouter {
 
 
@@ -19,6 +22,7 @@ public class ShapeLayouter {
         for (Shape shape : diagram.getShapes()) {
             Position positionOfCurrentShape = positionShape(diagram, grid, shape);
             grid.add(positionOfCurrentShape);
+            log.debug("Adding {}:\n{}", shape::getName, () -> toAscii(grid));
             addRowsWhenShapeIsASplit(diagram, grid, shape, positionOfCurrentShape);
         }
         compactGrid(grid);
