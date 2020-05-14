@@ -67,7 +67,9 @@ public class SVGExporter {
                         .append(" stroke=\"").append(colorActivityStroke).append("\"")
                         .append(" stroke-width=\"").append(strokeWidth).append("\"")
                         .append(" />\n");
-            } else if (flowNode.type == ShapeType.EVENT) {
+            }
+            // draw circle (with an eclipse because we like complicated things!)
+            else if (flowNode.type == ShapeType.EVENT) {
                 log.debug("Exporting event {}", flowNode.bpmnElementId);
                 int rx = flowNodeDimension.width / 2;
                 int ry = flowNodeDimension.height / 2;
@@ -83,18 +85,30 @@ public class SVGExporter {
                         .append(" stroke-width=\"").append(strokeWidth).append("\"")
                         .append(" pointer-events=\"all\"")
                         .append(" />\n");
-            } else if (flowNode.type == ShapeType.GATEWAY) {
+            }
+            // draw rhombus/diamond
+            else if (flowNode.type == ShapeType.GATEWAY) {
                 log.debug("Exporting gateway {}", flowNode.bpmnElementId);
-                // TODO gateway should be a rhombus/diamond instead of a rectangle
-                content.append("<rect")
-                        .append(" x=\"").append(flowNodeDimension.x).append("\"")
-                        .append(" y=\"").append(flowNodeDimension.y).append("\"")
-                        .append(" width=\"").append(flowNodeDimension.width).append("\"")
-                        .append(" height=\"").append(flowNodeDimension.height).append("\"")
-                        .append(" rx=\"").append(flowNode.rx).append("\"")
-                        .append(" fill=\"").append(colorGatewayFill).append("\"")
-                        .append(" stroke=\"").append(colorGatewayStroke).append("\"")
-                        .append(" stroke-width=\"").append(strokeWidth).append("\"")
+                int x = flowNodeDimension.x;
+                int y = flowNodeDimension.y;
+                int width = flowNodeDimension.width;
+                int height = flowNodeDimension.height;
+
+                int midWidth = width / 2;
+                int midHeight = height / 2;
+
+                content.append("<polygon")
+                        .append(" points=\"")
+                        .append(x + midWidth).append(",").append(y)
+                        .append(" ").append(x + width).append(",").append(y + midHeight)
+                        .append(" ").append(x + midWidth).append(",").append(y + height)
+                        .append(" ").append(x).append(",").append(y + midHeight)
+                        .append("\"")
+                        .append(" style=\"")
+                        .append("fill:").append(colorGatewayFill)
+                        .append(";stroke:").append(colorGatewayStroke)
+                        .append(";stroke-width:").append(strokeWidth)
+                        .append("\"")
                         .append(" />\n");
             }
 
