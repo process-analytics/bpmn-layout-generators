@@ -10,14 +10,14 @@ import io.process.analytics.tools.bpmn.generator.model.Edge;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.Shape;
 import io.process.analytics.tools.bpmn.generator.model.Position;
-import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
+import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 public class ShapeLayouter {
 
 
-    public Grid layout(SortedDiagram diagram) {
+    public Grid layout(Diagram diagram) {
         Grid grid = new Grid();
         for (Shape shape : diagram.getShapes()) {
             Position positionOfCurrentShape = positionShape(diagram, grid, shape);
@@ -39,7 +39,7 @@ public class ShapeLayouter {
         }
     }
 
-    private void addRowsWhenShapeIsASplit(SortedDiagram diagram, Grid grid, Shape shape, Position positionOfCurrentShape) {
+    private void addRowsWhenShapeIsASplit(Diagram diagram, Grid grid, Shape shape, Position positionOfCurrentShape) {
         List<Edge> outgoingEdges = diagram.getOutgoingEdges(shape.getId());
         if (outgoingEdges.size() > 1) {
             //add rows to place elements of this split
@@ -51,7 +51,7 @@ public class ShapeLayouter {
         }
     }
 
-    private Position positionShape(SortedDiagram diagram, Grid grid, Shape shape) {
+    private Position positionShape(Diagram diagram, Grid grid, Shape shape) {
         Position positionOfCurrentShape;
         List<Edge> incomingEdges = diagram.getIncomingEdges(shape.getId());
         if (incomingEdges.isEmpty()) {

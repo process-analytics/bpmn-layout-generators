@@ -34,9 +34,8 @@ import io.process.analytics.tools.bpmn.generator.export.SVGExporter;
 import io.process.analytics.tools.bpmn.generator.internal.BpmnInOut;
 import io.process.analytics.tools.bpmn.generator.internal.FileUtils;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
-import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
-import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
+import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -89,7 +88,7 @@ public class App {
 
         private final TDefinitions originalDefinitions;
         private final Grid grid;
-        private final SortedDiagram sortedDiagram;
+        private final Diagram diagram;
     }
 
     private void process(File bpmnInputFile, File outputFile, String exportType) throws IOException {
@@ -122,7 +121,7 @@ public class App {
         log("Conversion done");
 
         log("Sorting and generating Layout");
-        SortedDiagram sortedDiagram = new ShapeSorter().sort(diagram);
+        Diagram sortedDiagram = new ShapeSorter().sort(diagram);
         Grid grid = new ShapeLayouter().layout(sortedDiagram);
         log("Sort and Layout done");
 
@@ -132,14 +131,14 @@ public class App {
     private void exportToBpmn(LayoutSortedDiagram diagram, File outputFile) {
         log("Exporting to BPMN");
         BPMNExporter bpmnExporter = new BPMNExporter(new AlgoToDisplayModelConverter());
-        TDefinitions newDefinitions = bpmnExporter.export(diagram.originalDefinitions, diagram.grid, diagram.sortedDiagram);
+        TDefinitions newDefinitions = bpmnExporter.export(diagram.originalDefinitions, diagram.grid, diagram.diagram);
         this.bpmnInOut.writeToBpmnFile(newDefinitions, outputFile);
         log("BPMN exported to " + outputFile);
     }
 
     private void exportToSvg(LayoutSortedDiagram diagram, File outputFile) throws IOException {
         log("Exporting to SVG");
-        byte[] svgContent = new SVGExporter().export(diagram.getGrid(), diagram.getSortedDiagram());
+        byte[] svgContent = new SVGExporter().export(diagram.getGrid(), diagram.getDiagram());
         Files.write(outputFile.toPath(), svgContent);
         log("SVG exported to " + outputFile);
     }

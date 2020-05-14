@@ -22,10 +22,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import io.process.analytics.tools.bpmn.generator.model.Edge;
 import io.process.analytics.tools.bpmn.generator.model.Shape;
-import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
+import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Singular;
@@ -45,13 +44,13 @@ public class ShapeSorter {
      * @param diagram to sort
      * @return a diagram with same nodes but sorted
      */
-    public SortedDiagram sort(Diagram diagram) {
+    public Diagram sort(Diagram diagram) {
         Set<Shape> nodesToSort = new HashSet<>(diagram.getShapes());
         Set<Edge> remainingEdges = new HashSet<>(diagram.getEdges());
         Set<Edge> finalEdges = new HashSet<>(diagram.getEdges());
         List<Join> joins = findAllJoins(nodesToSort, remainingEdges);
 
-        SortedDiagram.SortedDiagramBuilder sortedDiagram = SortedDiagram.builder();
+        Diagram.DiagramBuilder sortedDiagram = Diagram.builder();
 
         while (!nodesToSort.isEmpty()) {
             Set<Shape> startShapes = getStartNodes(nodesToSort, remainingEdges);
