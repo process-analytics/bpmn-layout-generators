@@ -35,19 +35,30 @@ public class AlgoToDisplayModelConverter {
         for (Position position : grid.getPositions()) {
             int xOffset = position.getX() * CELL_WIDTH;
             int yOffset = position.getY() * CELL_HEIGHT;
-            // TODO adjust node dimensions depending on the shape type
-            // this works well for activities, but no for events or gateways. For same, we need width=height
-            // and for event a smaller circle, probably also for gateways
             int nodeWidth = x(60);
             int nodeHeight = y(60);
+
+            // TODO manage when not found (should not occur)
+            Shape shape = diagram.getShapes().stream()
+                    .filter(s -> s.getId().equals(position.getShape()))
+                    .findFirst().get();
+            String name = shape.getName();
+
+            // ensure to have a square shape (i.e. same width and height) for non activity elements
+            ShapeType shapeType = shape.getType();
+            if (shapeType == ShapeType.EVENT || shapeType == ShapeType.GATEWAY) {
+                int nodeDimension = Math.min(nodeWidth, nodeHeight);
+                if (shapeType == ShapeType.EVENT) {
+                    nodeDimension /= 2;
+                }
+                nodeWidth = nodeDimension;
+                nodeHeight = nodeDimension;
+            }
 
             int x = xOffset + (CELL_WIDTH - nodeWidth) / 2;
             int y = yOffset + (CELL_HEIGHT - nodeHeight) / 2;
             DisplayDimension flowNodeDimension = new DisplayDimension(x, y, nodeWidth, nodeHeight);
 
-            // TODO manage when not found (should not occur)
-            Shape shape = diagram.getShapes().stream().filter(s -> s.getId().equals(position.getShape())).findFirst().get();
-            String name = shape.getName();
             // TODO adjust label coordinates depending on the shape type
             //  this works well for activities, but no for events or gateways (here, the label is centered on the shape)
             int labelX = xOffset + x(50);
@@ -59,7 +70,7 @@ public class AlgoToDisplayModelConverter {
             model.flowNode(DisplayFlowNode.builder().bpmnElementId(shape.getId())
                     .dimension(flowNodeDimension)
                     .label(label)
-                    .type(shape.getType())
+                    .type(shapeType)
                     .rx(y(10)).strokeWidth(y(5)).build());
         }
 
