@@ -1,25 +1,42 @@
+/*
+ * Copyright 2020 Bonitasoft S.A.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.process.analytics.tools.bpmn.generator.algo;
 
 import static io.process.analytics.tools.bpmn.generator.model.Edge.edge;
 import static io.process.analytics.tools.bpmn.generator.model.Edge.revertedEdge;
+import static io.process.analytics.tools.bpmn.generator.model.Shape.shape;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.Test;
+
+import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import io.process.analytics.tools.bpmn.generator.model.Edge;
 import io.process.analytics.tools.bpmn.generator.model.Shape;
-import io.process.analytics.tools.bpmn.generator.model.Diagram;
-import org.junit.jupiter.api.Test;
 
 class ShapeSorterTest {
 
-    private ShapeSorter shapeSorter = new ShapeSorter();
+    private final ShapeSorter shapeSorter = new ShapeSorter();
 
-    Shape start = new Shape("start");
-    Shape step1 = new Shape("step1");
-    Shape step2 = new Shape("step2");
-    Shape step3 = new Shape("step3");
-    Shape step4 = new Shape("step4");
-    Shape step5 = new Shape("step5");
-    Shape end = new Shape("end");
+    private final Shape start = shape("start");
+    private final Shape step1 = shape("step1");
+    private final Shape step2 = shape("step2");
+    private final Shape step3 = shape("step3");
+    private final Shape step4 = shape("step4");
+    private final Shape step5 = shape("step5");
+    private final Shape end = shape("end");
 
     @Test
     void should_sort_2_shapes() {

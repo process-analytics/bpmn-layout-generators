@@ -13,14 +13,15 @@
 package io.process.analytics.tools.bpmn.generator.converter;
 
 
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
-import io.process.analytics.tools.bpmn.generator.model.Shape;
-import io.process.analytics.tools.bpmn.generator.model.Diagram;
-import org.junit.jupiter.api.Test;
-
 import static io.process.analytics.tools.bpmn.generator.internal.SemanticTest.definitionsFromBpmnFile;
 import static io.process.analytics.tools.bpmn.generator.model.Edge.edge;
+import static io.process.analytics.tools.bpmn.generator.model.Shape.shape;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
+
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
+import io.process.analytics.tools.bpmn.generator.model.Diagram;
 
 class BpmnToAlgoModelConverterTest {
 
@@ -44,9 +45,9 @@ class BpmnToAlgoModelConverterTest {
         Diagram diagram = new BpmnToAlgoModelConverter().toAlgoModel(definitions);
 
         assertThat(diagram.getShapes()).containsOnly(
-                new Shape("startEvent_1", "Start Event"),
-                new Shape("task_1", "Task 1"),
-                new Shape("endEvent_1", "End Event"));
+                shape("startEvent_1", "Start Event"),
+                shape("task_1", "Task 1"),
+                shape("endEvent_1", "End Event"));
         assertThat(diagram.getEdges()).containsOnly(
                 edge("sequenceFlow_1", "startEvent_1", "task_1"),
                 edge("sequenceFlow_2", "task_1", "endEvent_1"));

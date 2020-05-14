@@ -30,12 +30,12 @@ public class Shape {
     private final String name;
     private final ShapeType type;
 
-    public Shape(String name) {
-        this(name, name, ACTIVITY);
+    public static Shape shape(String name) {
+        return new Shape(name, name, ACTIVITY);
     }
 
-    public static Shape shape(String name) {
-        return new Shape(name);
+    public static Shape shape(String id, String name) {
+        return new Shape(id, name, ACTIVITY);
     }
 
 }
