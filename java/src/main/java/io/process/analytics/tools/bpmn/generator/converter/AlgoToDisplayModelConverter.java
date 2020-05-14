@@ -59,6 +59,7 @@ public class AlgoToDisplayModelConverter {
             model.flowNode(DisplayFlowNode.builder().bpmnElementId(shape.getId())
                     .dimension(flowNodeDimension)
                     .label(label)
+                    .type(shape.getType())
                     .rx(y(10)).strokeWidth(y(5)).build());
         }
 
@@ -97,6 +98,7 @@ public class AlgoToDisplayModelConverter {
         public final DisplayDimension dimension;
         public final DisplayLabel label;
         // for non BPMN exporters only
+        public final ShapeType type;
         public final int rx;
         public final int strokeWidth;
 

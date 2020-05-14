@@ -21,8 +21,11 @@ import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelCon
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayLabel;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayModel;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
+import io.process.analytics.tools.bpmn.generator.model.ShapeType;
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class SVGExporter {
 
     private final AlgoToDisplayModelConverter converter = new AlgoToDisplayModelConverter();
@@ -30,6 +33,7 @@ public class SVGExporter {
     public byte[] export(Grid grid, Diagram diagram) {
         DisplayModel model = converter.convert(grid, diagram);
 
+        // TODO introduce a method to generate escaped double quote and avoid double quote escaping when writing xml
         StringBuilder content = new StringBuilder();
         content.append("<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"")
                 .append(model.width)
@@ -41,14 +45,40 @@ public class SVGExporter {
             DisplayLabel label = flowNode.label;
             DisplayDimension labelDimension = label.dimension;
 
-            content.append("<rect ");
-            content.append("x=\"").append(flowNodeDimension.x).append("\" ");
-            content.append("y=\"").append(flowNodeDimension.y).append("\" ");
-            content.append("width=\"").append(flowNodeDimension.width).append("\" ");
-            content.append("height=\"").append(flowNodeDimension.height).append("\" ");
-            content.append("rx=\"").append(flowNode.rx).append("\" ");
-            content.append("fill=\"#E3E3E3\" stroke=\"#92ADC8\" ");
-            content.append("stroke-width=\"").append(flowNode.strokeWidth).append("\"/>\n");
+            final int strokeWidth = flowNode.strokeWidth;
+
+            if (flowNode.type == ShapeType.ACTIVITY) {
+                log.debug("Exporting activity {}", flowNode.bpmnElementId);
+                content.append("<rect ");
+                content.append("x=\"").append(flowNodeDimension.x).append("\" ");
+                content.append("y=\"").append(flowNodeDimension.y).append("\" ");
+                content.append("width=\"").append(flowNodeDimension.width).append("\" ");
+                content.append("height=\"").append(flowNodeDimension.height).append("\" ");
+                content.append("rx=\"").append(flowNode.rx).append("\" ");
+                // TODO extract colors
+                content.append("fill=\"#E3E3E3\" stroke=\"#92ADC8\" ");
+                content.append("stroke-width=\"").append(strokeWidth).append("\"/>\n");
+            } else if (flowNode.type == ShapeType.EVENT) {
+                log.debug("Exporting event {}", flowNode.bpmnElementId);
+                // TODO improve cx/cy management
+                //<ellipse cx="201" cy="291" rx="15" ry="15" fill="white" stroke="black" stroke-width="2" pointer-events="all"></ellipse>
+                //                  <ellipse cx="752" cy="260" rx="16" ry="16" fill="white" stroke="black" stroke-width="5" pointer-events="all"></ellipse>
+                content.append("<ellipse ")
+                        .append("cx=\"").append(flowNodeDimension.x).append("\" ")
+                        .append("cy=\"").append(flowNodeDimension.y).append("\" ")
+                        .append("rx=\"").append(flowNodeDimension.width).append("\" ")
+                        .append("ry=\"").append(flowNodeDimension.height).append("\" ")
+                        // TODO extract colors
+                        .append("fill=\"white\" stroke=\"black\" stroke-width=\"").append(strokeWidth).append("\" ")
+                        .append("pointer-events=\"all\" />\n")
+                //
+                ;
+
+            } else if (flowNode.type == ShapeType.GATEWAY) {
+                log.debug("Exporting gateway {}", flowNode.bpmnElementId);
+
+            }
+
             content.append("<text x=\"").append(labelDimension.x);
             content.append("\" y=\"").append(labelDimension.y);
             content.append("\" text-anchor=\"middle\" font-size=\"").append(label.fontSize);
