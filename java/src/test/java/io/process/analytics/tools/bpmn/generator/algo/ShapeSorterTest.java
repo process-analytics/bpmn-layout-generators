@@ -108,7 +108,9 @@ class ShapeSorterTest {
     }
 
     @Test
-    public void should_revert_one_edge_of_a_cycle() {
+    public void should_revert_all_edges_of_a_cycle() {
+        // start -> step1 -> step2 -> end
+        //           <- step3 <-
         Edge t1 = Edge.builder().id("t1").from(start.getId()).to(step1.getId()).build();
         Edge t2 = Edge.builder().id("t2").from(step1.getId()).to(step2.getId()).build();
         Edge t3 = Edge.builder().id("t3").from(step2.getId()).to(step3.getId()).build();
@@ -132,7 +134,7 @@ class ShapeSorterTest {
         assertThat(sorted.getEdges()).containsOnly(
                 t1,
                 t2,
-                t3,
+                revertedEdge(t3),
                 revertedEdge(t4),
                 t5);
     }

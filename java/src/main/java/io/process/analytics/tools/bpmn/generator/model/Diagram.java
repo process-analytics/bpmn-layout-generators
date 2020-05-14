@@ -18,10 +18,24 @@ public class Diagram {
     private Set<Edge> edges;
 
 
-    public List<Edge> getIncomingEdges(String node) {
-        return edges.stream().filter(e -> e.getTo().equals(node)).collect(Collectors.toList());
+    public List<Edge> getIncomingEdges(String shapeId) {
+        return edges.stream().filter(e -> e.getTo().equals(shapeId)).collect(Collectors.toList());
     }
-    public List<Edge> getOutgoingEdges(String node) {
-        return edges.stream().filter(e -> e.getFrom().equals(node)).collect(Collectors.toList());
+
+    public List<Edge> getOutgoingEdges(String shapeId) {
+        return edges.stream().filter(e -> e.getFrom().equals(shapeId)).collect(Collectors.toList());
     }
+
+    public List<Edge> getOriginalIncomingEdges(String shapeId) {
+        return edges.stream().filter(e -> (e.getTo().equals(shapeId) && !e.isReverted()) || (e.getFrom().equals(shapeId) && e.isReverted())).collect(Collectors.toList());
+    }
+
+    public List<Edge> getOriginalOutgoingEdges(String shapeId) {
+        return edges.stream().filter(e -> (e.getFrom().equals(shapeId) && !e.isReverted()) || (e.getTo().equals(shapeId) && e.isReverted())).collect(Collectors.toList());
+    }
+
+    public Shape getShape(String shapeId) {
+        return shapes.stream().filter(s -> s.getId().equals(shapeId)).findFirst().get();
+    }
+
 }

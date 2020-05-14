@@ -17,6 +17,7 @@ package io.process.analytics.tools.bpmn.generator.algo;
 
 import static io.process.analytics.tools.bpmn.generator.model.Edge.revertedEdge;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,6 +46,41 @@ public class ShapeSorter {
      * @return a diagram with same nodes but sorted
      */
     public Diagram sort(Diagram diagram) {
+        Diagram sorted = doSort(diagram);
+        Diagram sortedDiagramWithRevertedCycles = revertOtherEdgesOfCycles(sorted);
+        return doSort(sortedDiagramWithRevertedCycles);
+    }
+
+    private Diagram revertOtherEdgesOfCycles(Diagram diagram) {
+        List<Edge> edgesToRevert = new ArrayList<>();
+        diagram.getEdges().stream().filter(Edge::isReverted).forEach(e->{
+            Shape currentElement = diagram.getShape(e.getTo());
+            while (!isAJoinInOriginalDiagram(diagram, currentElement) && !isASplitInOriginalDiagram(diagram, currentElement)) {
+                List<Edge> incomingEdges = diagram.getOriginalIncomingEdges(currentElement.getId());
+                Edge currentEdge = incomingEdges.get(0);
+                edgesToRevert.add(currentEdge);
+                currentElement = diagram.getShape(currentEdge.getFrom());
+            }
+        });
+        return Diagram.builder().shapes(diagram.getShapes())
+                .edges(diagram.getEdges().stream().map(e -> {
+                    if (edgesToRevert.contains(e)) {
+                        return revertedEdge(e);
+                    } else {
+                        return e;
+                    }
+                }).collect(Collectors.toList())).build();
+    }
+
+    private boolean isASplitInOriginalDiagram(Diagram diagram, Shape currentElement) {
+        return diagram.getOriginalOutgoingEdges(currentElement.getId()).size() > 1;
+    }
+
+    private boolean isAJoinInOriginalDiagram(Diagram diagram, Shape currentElement) {
+        return diagram.getOriginalIncomingEdges(currentElement.getId()).size() > 1;
+    }
+
+    private Diagram doSort(Diagram diagram) {
         Set<Shape> nodesToSort = new HashSet<>(diagram.getShapes());
         Set<Edge> remainingEdges = new HashSet<>(diagram.getEdges());
         Set<Edge> finalEdges = new HashSet<>(diagram.getEdges());
@@ -72,8 +108,8 @@ public class ShapeSorter {
         return sortedDiagram.edges(finalEdges).build();
     }
 
-    private Set<Edge> revertNonProcessedEdgeOfTheJoin(Set<Edge> remainingEdges, Join join) {
-        return remainingEdges.stream().map(edge -> {
+    private Set<Edge> revertNonProcessedEdgeOfTheJoin(Set<Edge> edges, Join join) {
+        return edges.stream().map(edge -> {
             if (join.contains(edge) && !join.wasProcessed(edge.getFrom())) {
                 //revert the edge
                 return revertedEdge(edge);
