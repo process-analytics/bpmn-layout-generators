@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.Optional;
 
 import io.process.analytics.tools.bpmn.generator.algo.ShapeLayouter;
 import io.process.analytics.tools.bpmn.generator.algo.ShapeSorter;
@@ -40,8 +39,10 @@ import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @RequiredArgsConstructor
+@Log4j2
 public class App {
 
     public static void main(String[] args) throws Exception {
@@ -73,7 +74,7 @@ public class App {
     }
 
     private static void log(String message) {
-        System.out.println(message);
+        log.info(message);
     }
 
     // =================================================================================================================
