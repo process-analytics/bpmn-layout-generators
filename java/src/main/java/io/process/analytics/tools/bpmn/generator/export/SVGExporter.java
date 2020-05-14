@@ -41,8 +41,12 @@ public class SVGExporter {
                 .append(model.height).append("\">\n");
 
         // TODO extract colors to constant or configurable field
-        final String colorFillGateway ="gold";
-        final String colorStrokeGateway ="GoldenRod";
+        final String colorActivityFill ="#E3E3E3";
+        final String colorActivityStroke ="#92ADC8";
+        final String colorEventFill ="LightSalmon";
+        final String colorEventStroke ="FireBrick";
+        final String colorGatewayFill ="Gold";
+        final String colorGatewayStroke ="GoldenRod";
 
         for (DisplayFlowNode flowNode : model.flowNodes) {
             DisplayDimension flowNodeDimension = flowNode.dimension;
@@ -53,15 +57,16 @@ public class SVGExporter {
 
             if (flowNode.type == ShapeType.ACTIVITY) {
                 log.debug("Exporting activity {}", flowNode.bpmnElementId);
-                content.append("<rect ");
-                content.append("x=\"").append(flowNodeDimension.x).append("\" ");
-                content.append("y=\"").append(flowNodeDimension.y).append("\" ");
-                content.append("width=\"").append(flowNodeDimension.width).append("\" ");
-                content.append("height=\"").append(flowNodeDimension.height).append("\" ");
-                content.append("rx=\"").append(flowNode.rx).append("\" ");
-                // TODO extract colors
-                content.append("fill=\"#E3E3E3\" stroke=\"#92ADC8\" ");
-                content.append("stroke-width=\"").append(strokeWidth).append("\"/>\n");
+                content.append("<rect")
+                        .append(" x=\"").append(flowNodeDimension.x).append("\"")
+                        .append(" y=\"").append(flowNodeDimension.y).append("\"")
+                        .append(" width=\"").append(flowNodeDimension.width).append("\"")
+                        .append(" height=\"").append(flowNodeDimension.height).append("\"")
+                        .append(" rx=\"").append(flowNode.rx).append("\"")
+                        .append(" fill=\"").append(colorActivityFill).append("\"")
+                        .append(" stroke=\"").append(colorActivityStroke).append("\"")
+                        .append(" stroke-width=\"").append(strokeWidth).append("\"")
+                        .append(" />\n");
             } else if (flowNode.type == ShapeType.EVENT) {
                 log.debug("Exporting event {}", flowNode.bpmnElementId);
                 // TODO improve cx/cy management
@@ -72,35 +77,34 @@ public class SVGExporter {
                         .append(" cy=\"").append(flowNodeDimension.y).append("\"")
                         .append(" rx=\"").append(flowNodeDimension.width).append("\"")
                         .append(" ry=\"").append(flowNodeDimension.height).append("\"")
-                        // TODO extract colors
-                        .append(" fill=\"white\" stroke=\"black\"")
+                        .append(" fill=\"").append(colorEventFill).append("\"")
+                        .append(" stroke=\"").append(colorEventStroke).append("\"")
                         .append(" stroke-width=\"").append(strokeWidth).append("\"")
                         .append(" pointer-events=\"all\"")
-                        .append(" />\n")
-                //
-                ;
+                        .append(" />\n");
             } else if (flowNode.type == ShapeType.GATEWAY) {
                 log.debug("Exporting gateway {}", flowNode.bpmnElementId);
                 // TODO gateway should be a rhombus/diamond instead of a rectangle
-                content.append("<rect");
-                content.append(" x=\"").append(flowNodeDimension.x).append("\"");
-                content.append(" y=\"").append(flowNodeDimension.y).append("\"");
-                content.append(" width=\"").append(flowNodeDimension.width).append("\"");
-                content.append(" height=\"").append(flowNodeDimension.height).append("\"");
-                content.append(" rx=\"").append(flowNode.rx).append("\"");
-                content.append(" fill=\"").append(colorFillGateway).append("\"")
-                        .append(" stroke=\"").append(colorStrokeGateway).append("\"")
+                content.append("<rect")
+                        .append(" x=\"").append(flowNodeDimension.x).append("\"")
+                        .append(" y=\"").append(flowNodeDimension.y).append("\"")
+                        .append(" width=\"").append(flowNodeDimension.width).append("\"")
+                        .append(" height=\"").append(flowNodeDimension.height).append("\"")
+                        .append(" rx=\"").append(flowNode.rx).append("\"")
+                        .append(" fill=\"").append(colorGatewayFill).append("\"")
+                        .append(" stroke=\"").append(colorGatewayStroke).append("\"")
                         .append(" stroke-width=\"").append(strokeWidth).append("\"")
-                        .append(" />\n")
-                //
-                ;
+                        .append(" />\n");
             }
 
-            content.append("<text x=\"").append(labelDimension.x);
-            content.append("\" y=\"").append(labelDimension.y);
-            content.append("\" text-anchor=\"middle\" font-size=\"").append(label.fontSize);
-            content.append("\" fill=\"#374962\">");
-            content.append(label.text).append("</text>\n");
+            content.append("<text")
+                    .append(" x=\"").append(labelDimension.x).append("\"")
+                    .append(" y=\"").append(labelDimension.y).append("\"")
+                    .append(" text-anchor=\"middle\" font-size=\"").append(label.fontSize).append("\"")
+                    // TODO extract color
+                    .append(" fill=\"#374962\">")
+                    .append(label.text)
+                    .append("</text>\n");
         }
         content.append("</svg>");
         return content.toString().getBytes();
