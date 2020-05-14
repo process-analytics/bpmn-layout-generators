@@ -1,6 +1,7 @@
 package io.process.analytics.tools.bpmn.generator.model;
 
 import static io.process.analytics.tools.bpmn.generator.model.Position.position;
+import static io.process.analytics.tools.bpmn.generator.model.Shape.shape;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
@@ -8,9 +9,9 @@ import org.junit.jupiter.api.Test;
 class GridTest {
 
     private Grid grid = new Grid();
-    private Shape nodeA = Shape.shape("a");
-    private Shape nodeB = Shape.shape("b");
-    private Shape nodeC = Shape.shape("c");
+    private Shape nodeA = shape("a");
+    private Shape nodeB = shape("b");
+    private Shape nodeC = shape("c");
 
     @Test
     public void should_move_element_when_adding_row_after() {

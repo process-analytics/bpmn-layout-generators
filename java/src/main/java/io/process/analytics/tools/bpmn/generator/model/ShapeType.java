@@ -15,28 +15,6 @@
  */
 package io.process.analytics.tools.bpmn.generator.model;
 
-import static io.process.analytics.tools.bpmn.generator.model.ShapeType.ACTIVITY;
-
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-
-@Data
-@Builder(toBuilder = true)
-@RequiredArgsConstructor
-public class Shape {
-
-    private final String id; // the bpmnElement id
-    private final String name;
-    private final ShapeType type;
-
-    public Shape(String name) {
-        this(name, name, ACTIVITY);
-    }
-
-    public static Shape shape(String name) {
-        return new Shape(name);
-    }
-
+public enum ShapeType {
+    ACTIVITY, EVENT, GATEWAY;
 }
-
