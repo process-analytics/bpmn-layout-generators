@@ -69,14 +69,15 @@ public class SVGExporter {
                         .append(" />\n");
             } else if (flowNode.type == ShapeType.EVENT) {
                 log.debug("Exporting event {}", flowNode.bpmnElementId);
-                // TODO improve cx/cy management
-                //<ellipse cx="201" cy="291" rx="15" ry="15" fill="white" stroke="black" stroke-width="2" pointer-events="all"></ellipse>
-                //                  <ellipse cx="752" cy="260" rx="16" ry="16" fill="white" stroke="black" stroke-width="5" pointer-events="all"></ellipse>
+                int rx = flowNodeDimension.width / 2;
+                int ry = flowNodeDimension.height / 2;
+                int cx = flowNodeDimension.x + rx;
+                int cy = flowNodeDimension.y + ry;
                 content.append("<ellipse")
-                        .append(" cx=\"").append(flowNodeDimension.x).append("\"")
-                        .append(" cy=\"").append(flowNodeDimension.y).append("\"")
-                        .append(" rx=\"").append(flowNodeDimension.width).append("\"")
-                        .append(" ry=\"").append(flowNodeDimension.height).append("\"")
+                        .append(" cx=\"").append(cx).append("\"")
+                        .append(" cy=\"").append(cy).append("\"")
+                        .append(" rx=\"").append(rx).append("\"")
+                        .append(" ry=\"").append(ry).append("\"")
                         .append(" fill=\"").append(colorEventFill).append("\"")
                         .append(" stroke=\"").append(colorEventStroke).append("\"")
                         .append(" stroke-width=\"").append(strokeWidth).append("\"")
