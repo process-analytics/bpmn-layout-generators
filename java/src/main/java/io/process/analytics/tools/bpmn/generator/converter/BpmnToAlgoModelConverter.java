@@ -17,10 +17,9 @@ package io.process.analytics.tools.bpmn.generator.converter;
 
 import io.process.analytics.tools.bpmn.generator.internal.Semantic;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
-import io.process.analytics.tools.bpmn.generator.model.Diagram;
-import io.process.analytics.tools.bpmn.generator.model.Diagram.DiagramBuilder;
 import io.process.analytics.tools.bpmn.generator.model.Edge;
 import io.process.analytics.tools.bpmn.generator.model.Shape;
+import io.process.analytics.tools.bpmn.generator.model.Diagram;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class BpmnToAlgoModelConverter {
 
     public Diagram toAlgoModel(TDefinitions definitions) {
         Semantic semantic = new Semantic(definitions);
-        DiagramBuilder diagram = Diagram.builder();
+        Diagram.DiagramBuilder diagram = Diagram.builder();
 
         List<TProcess> processes = semantic.getProcesses();
         for (TProcess process : processes) {

@@ -28,7 +28,7 @@ public class AlgoToDisplayModelConverter {
     private static final int CELL_WIDTH = 200;
     private static final int CELL_HEIGHT = 100;
 
-    public DisplayModel convert(Grid grid, SortedDiagram diagram) {
+    public DisplayModel convert(Grid grid, Diagram diagram) {
         DisplayModel.DisplayModelBuilder model = DisplayModel.builder();
         model.width(grid.width() * CELL_WIDTH).height(grid.height() * CELL_HEIGHT);
         

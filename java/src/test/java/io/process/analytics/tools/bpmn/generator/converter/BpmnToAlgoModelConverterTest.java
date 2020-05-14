@@ -14,8 +14,8 @@ package io.process.analytics.tools.bpmn.generator.converter;
 
 
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
-import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import io.process.analytics.tools.bpmn.generator.model.Shape;
+import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import org.junit.jupiter.api.Test;
 
 import static io.process.analytics.tools.bpmn.generator.internal.SemanticTest.definitionsFromBpmnFile;

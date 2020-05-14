@@ -21,13 +21,13 @@ import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelCon
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayLabel;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayModel;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
-import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
+import io.process.analytics.tools.bpmn.generator.model.Diagram;
 
 public class SVGExporter {
 
     private final AlgoToDisplayModelConverter converter = new AlgoToDisplayModelConverter();
 
-    public byte[] export(Grid grid, SortedDiagram diagram) {
+    public byte[] export(Grid grid, Diagram diagram) {
         DisplayModel model = converter.convert(grid, diagram);
 
         StringBuilder content = new StringBuilder();

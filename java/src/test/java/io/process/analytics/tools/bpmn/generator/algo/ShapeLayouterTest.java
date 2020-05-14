@@ -8,7 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.Shape;
-import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
+import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import org.junit.jupiter.api.Test;
 
 class ShapeLayouterTest {
@@ -25,7 +25,7 @@ class ShapeLayouterTest {
 
     @Test
     public void should_layout_a_diagram_with_one_node_on_a_grid() {
-        SortedDiagram diagram = SortedDiagram.builder()
+        Diagram diagram = Diagram.builder()
                 .shape(step1).build();
 
         Grid grid = shapeLayouter.layout(diagram);
@@ -37,7 +37,7 @@ class ShapeLayouterTest {
 
     @Test
     public void should_layout_a_diagram_with_2_linked_node_on_a_grid() {
-        SortedDiagram diagram = SortedDiagram.builder()
+        Diagram diagram = Diagram.builder()
                 .shape(step1)
                 .shape(step2)
                 .edge(edge(step1, step2))
@@ -50,7 +50,7 @@ class ShapeLayouterTest {
 
     @Test
     public void should_layout_a_diagram_with_2_unlinked_node_on_a_grid() {
-        SortedDiagram diagram = SortedDiagram.builder()
+        Diagram diagram = Diagram.builder()
                 .shape(step1)
                 .shape(step2)
                 .build();
@@ -67,7 +67,7 @@ class ShapeLayouterTest {
         //  |start  step1         step4  end  |
         //  |              step3              |
         //  +---------------------------------+
-        SortedDiagram diagram = SortedDiagram.builder()
+        Diagram diagram = Diagram.builder()
                 .shape(start)
                 .shape(step1)
                 .shape(step2)
@@ -102,7 +102,7 @@ class ShapeLayouterTest {
         //  |       step3  |
         //  |step2         |
         //  +--------------+
-        SortedDiagram diagram = SortedDiagram.builder()
+        Diagram diagram = Diagram.builder()
                 .shape(step1)
                 .shape(step2)
                 .shape(step3)
@@ -126,7 +126,7 @@ class ShapeLayouterTest {
         //  |step1         |
         //  |       step3  |
         //  +--------------+
-        SortedDiagram diagram = SortedDiagram.builder()
+        Diagram diagram = Diagram.builder()
                 .shape(step1)
                 .shape(step2)
                 .shape(step3)
@@ -150,7 +150,7 @@ class ShapeLayouterTest {
         //  |step1  step3  |
         //  |       step4  |
         //  +--------------+
-        SortedDiagram diagram = SortedDiagram.builder()
+        Diagram diagram = Diagram.builder()
                 .shape(step1)
                 .shape(step2)
                 .shape(step3)
@@ -179,7 +179,7 @@ class ShapeLayouterTest {
         //|       step4                |
         //+----------------------------+
         //
-        SortedDiagram diagram = SortedDiagram.builder()
+        Diagram diagram = Diagram.builder()
                 .shape(start)
                 .shape(step1)
                 .shape(step2)
@@ -210,7 +210,7 @@ class ShapeLayouterTest {
         // |step2  step4  |
         // |step3         |
         // +--------------+
-        SortedDiagram diagram = SortedDiagram.builder()
+        Diagram diagram = Diagram.builder()
                 .shape(step1)
                 .shape(step2)
                 .shape(step3)
@@ -238,7 +238,7 @@ class ShapeLayouterTest {
         //  |       step4  |
         //  |step3         |
         //  +--------------+
-        SortedDiagram diagram = SortedDiagram.builder()
+        Diagram diagram = Diagram.builder()
                 .shape(step1)
                 .shape(step2)
                 .shape(step3)
@@ -275,7 +275,7 @@ class ShapeLayouterTest {
         //|start         step3         end    |
         //|       step2         step5         |
         //+-----------------------------------+
-        SortedDiagram diagram = SortedDiagram.builder()
+        Diagram diagram = Diagram.builder()
                 .shape(start)
                 .shape(step1)
                 .shape(step2)
@@ -316,7 +316,7 @@ class ShapeLayouterTest {
         //|       step5         |
         //|step3                |
         //+---------------------+
-        SortedDiagram diagram = SortedDiagram.builder()
+        Diagram diagram = Diagram.builder()
                 .shape(step1)
                 .shape(step2)
                 .shape(step3)

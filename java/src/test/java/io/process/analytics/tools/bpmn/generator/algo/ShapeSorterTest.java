@@ -2,13 +2,11 @@ package io.process.analytics.tools.bpmn.generator.algo;
 
 import static io.process.analytics.tools.bpmn.generator.model.Edge.edge;
 import static io.process.analytics.tools.bpmn.generator.model.Edge.revertedEdge;
-import static io.process.analytics.tools.bpmn.generator.model.Edge.edge;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import io.process.analytics.tools.bpmn.generator.model.Edge;
 import io.process.analytics.tools.bpmn.generator.model.Shape;
-import io.process.analytics.tools.bpmn.generator.model.SortedDiagram;
+import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import org.junit.jupiter.api.Test;
 
 class ShapeSorterTest {
@@ -31,7 +29,7 @@ class ShapeSorterTest {
                 .edge(edge(start, step1))
                 .build();
 
-        SortedDiagram sorted = shapeSorter.sort(diagram);
+        Diagram sorted = shapeSorter.sort(diagram);
 
         assertThat(sorted.getShapes()).containsExactly(start, step1);
     }
@@ -45,7 +43,7 @@ class ShapeSorterTest {
                 .edge(edge(step1, step2))
                 .build();
 
-        SortedDiagram sorted = shapeSorter.sort(diagram);
+        Diagram sorted = shapeSorter.sort(diagram);
 
         assertThat(sorted.getShapes()).containsExactly(start, step1, step2);
     }
@@ -73,7 +71,7 @@ class ShapeSorterTest {
                 .edge(edge(step4, step5))
                 .build();
 
-        SortedDiagram sorted = shapeSorter.sort(diagram);
+        Diagram sorted = shapeSorter.sort(diagram);
 
         assertThat(sorted.getShapes()).startsWith(start, step1);
         assertThat(sorted.getShapes()).contains(step2, step3);
@@ -104,7 +102,7 @@ class ShapeSorterTest {
                 .edge(edge(step4, step5))
                 .build();
 
-        SortedDiagram sorted = shapeSorter.sort(diagram);
+        Diagram sorted = shapeSorter.sort(diagram);
 
         assertThat(sorted.getShapes()).containsExactly(start, step1, step2, step3, step4, step5);
     }
@@ -129,7 +127,7 @@ class ShapeSorterTest {
                 .edge(t5)
                 .build();
 
-        SortedDiagram sorted = shapeSorter.sort(diagram);
+        Diagram sorted = shapeSorter.sort(diagram);
 
         assertThat(sorted.getEdges()).containsOnly(
                 t1,
