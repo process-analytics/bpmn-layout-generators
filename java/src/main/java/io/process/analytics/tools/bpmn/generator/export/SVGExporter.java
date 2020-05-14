@@ -40,6 +40,10 @@ public class SVGExporter {
                 .append("\" height=\"")
                 .append(model.height).append("\">\n");
 
+        // TODO extract colors to constant or configurable field
+        final String colorFillGateway ="gold";
+        final String colorStrokeGateway ="GoldenRod";
+
         for (DisplayFlowNode flowNode : model.flowNodes) {
             DisplayDimension flowNodeDimension = flowNode.dimension;
             DisplayLabel label = flowNode.label;
@@ -63,20 +67,33 @@ public class SVGExporter {
                 // TODO improve cx/cy management
                 //<ellipse cx="201" cy="291" rx="15" ry="15" fill="white" stroke="black" stroke-width="2" pointer-events="all"></ellipse>
                 //                  <ellipse cx="752" cy="260" rx="16" ry="16" fill="white" stroke="black" stroke-width="5" pointer-events="all"></ellipse>
-                content.append("<ellipse ")
-                        .append("cx=\"").append(flowNodeDimension.x).append("\" ")
-                        .append("cy=\"").append(flowNodeDimension.y).append("\" ")
-                        .append("rx=\"").append(flowNodeDimension.width).append("\" ")
-                        .append("ry=\"").append(flowNodeDimension.height).append("\" ")
+                content.append("<ellipse")
+                        .append(" cx=\"").append(flowNodeDimension.x).append("\"")
+                        .append(" cy=\"").append(flowNodeDimension.y).append("\"")
+                        .append(" rx=\"").append(flowNodeDimension.width).append("\"")
+                        .append(" ry=\"").append(flowNodeDimension.height).append("\"")
                         // TODO extract colors
-                        .append("fill=\"white\" stroke=\"black\" stroke-width=\"").append(strokeWidth).append("\" ")
-                        .append("pointer-events=\"all\" />\n")
+                        .append(" fill=\"white\" stroke=\"black\"")
+                        .append(" stroke-width=\"").append(strokeWidth).append("\"")
+                        .append(" pointer-events=\"all\"")
+                        .append(" />\n")
                 //
                 ;
-
             } else if (flowNode.type == ShapeType.GATEWAY) {
                 log.debug("Exporting gateway {}", flowNode.bpmnElementId);
-
+                // TODO gateway should be a rhombus/diamond instead of a rectangle
+                content.append("<rect");
+                content.append(" x=\"").append(flowNodeDimension.x).append("\"");
+                content.append(" y=\"").append(flowNodeDimension.y).append("\"");
+                content.append(" width=\"").append(flowNodeDimension.width).append("\"");
+                content.append(" height=\"").append(flowNodeDimension.height).append("\"");
+                content.append(" rx=\"").append(flowNode.rx).append("\"");
+                content.append(" fill=\"").append(colorFillGateway).append("\"")
+                        .append(" stroke=\"").append(colorStrokeGateway).append("\"")
+                        .append(" stroke-width=\"").append(strokeWidth).append("\"")
+                        .append(" />\n")
+                //
+                ;
             }
 
             content.append("<text x=\"").append(labelDimension.x);
