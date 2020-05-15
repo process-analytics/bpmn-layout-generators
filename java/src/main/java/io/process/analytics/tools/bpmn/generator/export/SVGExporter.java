@@ -21,8 +21,11 @@ import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelCon
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayLabel;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayModel;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
+import io.process.analytics.tools.bpmn.generator.model.ShapeType;
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class SVGExporter {
 
     private final AlgoToDisplayModelConverter converter = new AlgoToDisplayModelConverter();
@@ -30,30 +33,96 @@ public class SVGExporter {
     public byte[] export(Grid grid, Diagram diagram) {
         DisplayModel model = converter.convert(grid, diagram);
 
+        // TODO introduce a method to generate escaped double quote and avoid double quote escaping when writing xml
         StringBuilder content = new StringBuilder();
         content.append("<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"")
                 .append(model.width)
                 .append("\" height=\"")
                 .append(model.height).append("\">\n");
 
+        // TODO extract colors to constant or configurable field
+        final String colorActivityFill ="#E3E3E3";
+        final String colorActivityStroke ="#92ADC8";
+        final String colorEventFill ="LightSalmon";
+        final String colorEventStroke ="FireBrick";
+        final String colorGatewayFill ="Gold";
+        final String colorGatewayStroke ="GoldenRod";
+
         for (DisplayFlowNode flowNode : model.flowNodes) {
             DisplayDimension flowNodeDimension = flowNode.dimension;
             DisplayLabel label = flowNode.label;
             DisplayDimension labelDimension = label.dimension;
 
-            content.append("<rect ");
-            content.append("x=\"").append(flowNodeDimension.x).append("\" ");
-            content.append("y=\"").append(flowNodeDimension.y).append("\" ");
-            content.append("width=\"").append(flowNodeDimension.width).append("\" ");
-            content.append("height=\"").append(flowNodeDimension.height).append("\" ");
-            content.append("rx=\"").append(flowNode.rx).append("\" ");
-            content.append("fill=\"#E3E3E3\" stroke=\"#92ADC8\" ");
-            content.append("stroke-width=\"").append(flowNode.strokeWidth).append("\"/>\n");
-            content.append("<text x=\"").append(labelDimension.x);
-            content.append("\" y=\"").append(labelDimension.y);
-            content.append("\" text-anchor=\"middle\" font-size=\"").append(label.fontSize);
-            content.append("\" fill=\"#374962\">");
-            content.append(label.text).append("</text>\n");
+            final int strokeWidth = flowNode.strokeWidth;
+
+            if (flowNode.type == ShapeType.ACTIVITY) {
+                log.debug("Exporting activity {}", flowNode.bpmnElementId);
+                content.append("<rect")
+                        .append(" x=\"").append(flowNodeDimension.x).append("\"")
+                        .append(" y=\"").append(flowNodeDimension.y).append("\"")
+                        .append(" width=\"").append(flowNodeDimension.width).append("\"")
+                        .append(" height=\"").append(flowNodeDimension.height).append("\"")
+                        .append(" rx=\"").append(flowNode.rx).append("\"")
+                        .append(" fill=\"").append(colorActivityFill).append("\"")
+                        .append(" stroke=\"").append(colorActivityStroke).append("\"")
+                        .append(" stroke-width=\"").append(strokeWidth).append("\"")
+                        .append(" />\n");
+            }
+            // draw circle (with an eclipse to eventually detect if shape is not squared)
+            else if (flowNode.type == ShapeType.EVENT) {
+                log.debug("Exporting event {}", flowNode.bpmnElementId);
+                int rx = flowNodeDimension.width / 2;
+                int ry = flowNodeDimension.height / 2;
+                int cx = flowNodeDimension.x + rx;
+                int cy = flowNodeDimension.y + ry;
+                content.append("<ellipse")
+                        .append(" cx=\"").append(cx).append("\"")
+                        .append(" cy=\"").append(cy).append("\"")
+                        .append(" rx=\"").append(rx).append("\"")
+                        .append(" ry=\"").append(ry).append("\"")
+                        .append(" fill=\"").append(colorEventFill).append("\"")
+                        .append(" stroke=\"").append(colorEventStroke).append("\"")
+                        .append(" stroke-width=\"").append(strokeWidth).append("\"")
+                        .append(" pointer-events=\"all\"")
+                        .append(" />\n");
+            }
+            // draw rhombus/diamond
+            else if (flowNode.type == ShapeType.GATEWAY) {
+                log.debug("Exporting gateway {}", flowNode.bpmnElementId);
+                int x = flowNodeDimension.x;
+                int y = flowNodeDimension.y;
+                int width = flowNodeDimension.width;
+                int height = flowNodeDimension.height;
+
+                int midWidth = width / 2;
+                int midHeight = height / 2;
+
+                content.append("<polygon")
+                        .append(" points=\"")
+                        .append(x + midWidth).append(",").append(y)
+                        .append(" ").append(x + width).append(",").append(y + midHeight)
+                        .append(" ").append(x + midWidth).append(",").append(y + height)
+                        .append(" ").append(x).append(",").append(y + midHeight)
+                        .append("\"")
+                        .append(" style=\"")
+                        .append("fill:").append(colorGatewayFill)
+                        .append(";stroke:").append(colorGatewayStroke)
+                        .append(";stroke-width:").append(strokeWidth)
+                        .append("\"")
+                        .append(" />\n");
+            }
+
+
+            // TODO fill color depends on the shape type
+            // TODO seems not used to render the svg
+            String labelFillColor = "#374962"; // fill color for activities
+            content.append("<text")
+                    .append(" x=\"").append(labelDimension.x).append("\"")
+                    .append(" y=\"").append(labelDimension.y).append("\"")
+                    .append(" text-anchor=\"middle\" font-size=\"").append(label.fontSize).append("\"")
+                    .append(" fill=\"").append(labelFillColor).append("\">")
+                    .append(label.text)
+                    .append("</text>\n");
         }
         content.append("</svg>");
         return content.toString().getBytes();

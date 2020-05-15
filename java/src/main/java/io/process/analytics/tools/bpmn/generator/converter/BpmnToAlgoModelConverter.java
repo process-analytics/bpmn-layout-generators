@@ -15,13 +15,16 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter;
 
+import static io.process.analytics.tools.bpmn.generator.model.ShapeType.*;
+
+import java.util.List;
+
 import io.process.analytics.tools.bpmn.generator.internal.Semantic;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import io.process.analytics.tools.bpmn.generator.model.Edge;
-import io.process.analytics.tools.bpmn.generator.model.Shape;
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
-
-import java.util.List;
+import io.process.analytics.tools.bpmn.generator.model.Shape;
+import io.process.analytics.tools.bpmn.generator.model.ShapeType;
 
 public class BpmnToAlgoModelConverter {
 
@@ -34,7 +37,7 @@ public class BpmnToAlgoModelConverter {
             Semantic.BpmnElements bpmnElements = semantic.getBpmnElements(process);
 
             bpmnElements.getFlowNodes().stream()
-                    .map(flowNode -> new Shape(flowNode.getId(), flowNode.getName()))
+                    .map(BpmnToAlgoModelConverter::toShape)
                     .forEach(diagram::shape);
 
             bpmnElements.getSequenceFlows().stream()
@@ -43,6 +46,17 @@ public class BpmnToAlgoModelConverter {
         }
 
         return diagram.build();
+    }
+
+    // visible for testing
+    static Shape toShape(TFlowElement flowNode) {
+        ShapeType shapeType = ACTIVITY;
+        if (flowNode instanceof TGateway) {
+            shapeType = GATEWAY;
+        } else if (flowNode instanceof TEvent) {
+            shapeType = EVENT;
+        }
+        return new Shape(flowNode.getId(), flowNode.getName(), shapeType);
     }
 
     // assuming this is a TBaseElement
