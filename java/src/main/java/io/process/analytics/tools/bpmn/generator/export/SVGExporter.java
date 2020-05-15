@@ -68,7 +68,7 @@ public class SVGExporter {
                         .append(" stroke-width=\"").append(strokeWidth).append("\"")
                         .append(" />\n");
             }
-            // draw circle (with an eclipse because we like complicated things!)
+            // draw circle (with an eclipse to eventually detect if shape is not squared)
             else if (flowNode.type == ShapeType.EVENT) {
                 log.debug("Exporting event {}", flowNode.bpmnElementId);
                 int rx = flowNodeDimension.width / 2;
@@ -112,12 +112,15 @@ public class SVGExporter {
                         .append(" />\n");
             }
 
+
+            // TODO fill color depends on the shape type
+            // TODO seems not used to render the svg
+            String labelFillColor = "#374962"; // fill color for activities
             content.append("<text")
                     .append(" x=\"").append(labelDimension.x).append("\"")
                     .append(" y=\"").append(labelDimension.y).append("\"")
                     .append(" text-anchor=\"middle\" font-size=\"").append(label.fontSize).append("\"")
-                    // TODO extract color
-                    .append(" fill=\"#374962\">")
+                    .append(" fill=\"").append(labelFillColor).append("\">")
                     .append(label.text)
                     .append("</text>\n");
         }

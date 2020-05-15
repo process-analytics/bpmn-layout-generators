@@ -59,10 +59,14 @@ public class AlgoToDisplayModelConverter {
             int y = yOffset + (CELL_HEIGHT - nodeHeight) / 2;
             DisplayDimension flowNodeDimension = new DisplayDimension(x, y, nodeWidth, nodeHeight);
 
-            // TODO adjust label coordinates depending on the shape type
-            //  this works well for activities, but no for events or gateways (here, the label is centered on the shape)
             int labelX = xOffset + x(50);
             int labelY = yOffset + y(50);
+            if (shapeType == ShapeType.EVENT) { // put the label under the shape
+                labelY = (int) (y + nodeHeight * 1.5);
+            } else if (shapeType == ShapeType.GATEWAY) { // put the label on the top left of the shape
+                labelX = (int) (x - nodeWidth * 0.5);
+                labelY = (int) (y - nodeHeight * 0.5);
+            }
 
             DisplayDimension labelDimension = new DisplayDimension(labelX, labelY, nodeWidth, nodeHeight);
             DisplayLabel label = new DisplayLabel(name, y(16), labelDimension);
