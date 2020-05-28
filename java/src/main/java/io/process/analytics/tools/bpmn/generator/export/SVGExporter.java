@@ -15,14 +15,16 @@
  */
 package io.process.analytics.tools.bpmn.generator.export;
 
+import static io.process.analytics.tools.bpmn.generator.internal.StringUtils.defaultIfNull;
+
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayDimension;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayFlowNode;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayLabel;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayModel;
+import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.ShapeType;
-import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -123,7 +125,7 @@ public class SVGExporter {
                     .append(" fill=\"").append(labelFillColor).append("\"")
                     .append(">\n");
             // handle multi-lines label text
-            String labelText = label.text;
+            String labelText = defaultIfNull(label.text);
             boolean isFirstLabelTextLine = true;
             for (String labelTextLine : labelText.split("\n")) {
                 content.append("  <tspan")
