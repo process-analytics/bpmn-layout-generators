@@ -112,7 +112,7 @@ public class BPMNDiagramRichBuilder {
         List<JAXBElement<? extends DiagramElement>> diagramElements = bpmnPlane.getDiagramElement();
 
         bpmnShapes.stream()
-                .map(s -> new JAXBElement<>(bpmnElementQName("BPMNShape"), BPMNShape.class, null, s))
+                .map(s -> )
                 .forEach(diagramElements::add);
 
         bpmnEdges.stream()
@@ -122,7 +122,7 @@ public class BPMNDiagramRichBuilder {
         return definitions;
     }
 
-    private static QName bpmnElementQName(String bpmnElement) {
+    public static QName bpmnElementQName(String bpmnElement) {
         return new QName("http://www.omg.org/spec/BPMN/20100524/DI", bpmnElement, "");
     }
 
