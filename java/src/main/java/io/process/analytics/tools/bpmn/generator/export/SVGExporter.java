@@ -112,17 +112,31 @@ public class SVGExporter {
                         .append(" />\n");
             }
 
+            String labelFillColor = "#374962";
+            String labelTextAnchor = "middle";
 
-            // TODO fill color depends on the shape type
-            // TODO seems not used to render the svg
-            String labelFillColor = "#374962"; // fill color for activities
             content.append("<text")
                     .append(" x=\"").append(labelDimension.x).append("\"")
                     .append(" y=\"").append(labelDimension.y).append("\"")
-                    .append(" text-anchor=\"middle\" font-size=\"").append(label.fontSize).append("\"")
-                    .append(" fill=\"").append(labelFillColor).append("\">")
-                    .append(label.text)
-                    .append("</text>\n");
+                    .append(" text-anchor=\"").append(labelTextAnchor).append("\"")
+                    .append(" font-size=\"").append(label.fontSize).append("\"")
+                    .append(" fill=\"").append(labelFillColor).append("\"")
+                    .append(">\n");
+            // handle multi-lines label text
+            String labelText = label.text;
+            boolean isFirstLabelTextLine = true;
+            for (String labelTextLine : labelText.split("\n")) {
+                content.append("  <tspan")
+                        .append(" x=\"").append(labelDimension.x).append("\"");
+                if (!isFirstLabelTextLine) {
+                    content.append(" dy=\"1.2em\"");
+                }
+                content.append(">")
+                        .append(labelTextLine)
+                        .append("</tspan>\n");
+                isFirstLabelTextLine = false;
+            }
+            content.append("</text>\n");
         }
         content.append("</svg>");
         return content.toString().getBytes();
