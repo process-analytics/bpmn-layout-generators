@@ -26,7 +26,7 @@ class CSVtoBPMNTest {
         TProcess tProcess = processes.get(0);
         Semantic.BpmnElements bpmnElements = semantic.getBpmnElements(tProcess);
         assertThat(bpmnElements.getFlowNodes()).hasSize(9);
-        assertThat(bpmnElements.getSequenceFlows()).hasSize(0);
+        assertThat(bpmnElements.getSequenceFlows()).hasSize(13);
 
     }
 }
