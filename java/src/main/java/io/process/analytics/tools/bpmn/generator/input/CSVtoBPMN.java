@@ -10,32 +10,26 @@ import java.util.List;
 import static io.process.analytics.tools.bpmn.generator.internal.BPMNDiagramRichBuilder.bpmnElementQName;
 
 class CSVtoBPMN {
-    public TDefinitions readFromCSV(String nodes, String edges){
 
+    public TDefinitions readFromCSV(String nodes, String edges) {
+        TProcess process = new TProcess();
+        TDefinitions definitions = new TDefinitions();
+        definitions.getRootElement()
+                .add(new JAXBElement<>(bpmnElementQName("TProcess"), TProcess.class, null, process));
 
+        getFlowElements(nodes).stream()
+                .map(f -> new JAXBElement<>(bpmnElementQName("TFlowElement"), TFlowElement.class, null, f))
+                .forEach(f -> process.getFlowElement().add(f));
 
-        TProcess tProcess = new TProcess();
-        TDefinitions tDefinitions = new TDefinitions();
-        tDefinitions.getRootElement().add(new JAXBElement<>(bpmnElementQName("TProcess"),TProcess.class,null, tProcess));
+        getEdgeElements(edges).stream()
+                .map(e -> new JAXBElement<>(bpmnElementQName("TSequenceFlow"), TSequenceFlow.class, null, e))
+                .forEach(e -> process.getFlowElement().add(e));
 
-        List<TFlowElement> flowElements = getFlowElements(nodes);
-        for (TFlowElement flowElement : flowElements) {
-            tProcess.getFlowElement().add(new JAXBElement<>(bpmnElementQName("TFlowElement"), TFlowElement.class, null, flowElement));
-        }
-
-        List<TSequenceFlow> sequenceElements = getEdgeElements(edges);
-        for (TSequenceFlow sequenceFlow : sequenceElements) {
-            tProcess.getFlowElement().add(new JAXBElement<>(bpmnElementQName("TSequenceFlow"), TSequenceFlow.class, null, sequenceFlow));
-        }
-
-        return tDefinitions;
-
-
+        return definitions;
     }
 
     private List<TFlowElement> getFlowElements(String nodes) {
-        String[] lines = nodes.split("\n");
-        lines[0] = null;
+        String[] lines = toLinesWithoutHeader(nodes);
         List<TFlowElement> flowElements = new ArrayList<>();
         for (String line : lines) {
             if(line == null){
@@ -50,10 +44,14 @@ class CSVtoBPMN {
         return flowElements;
     }
 
+    private String[] toLinesWithoutHeader(String fileContent) {
+        String[] lines = fileContent.split("\n");
+        lines[0] = null;
+        return lines;
+    }
 
     private List<TSequenceFlow> getEdgeElements(String edges) {
-        String[] lines = edges.split("\n");
-        lines[0] = null;
+        String[] lines = toLinesWithoutHeader(edges);
         List<TSequenceFlow> flowElements = new ArrayList<>();
         for (String line : lines) {
             if(line == null){
