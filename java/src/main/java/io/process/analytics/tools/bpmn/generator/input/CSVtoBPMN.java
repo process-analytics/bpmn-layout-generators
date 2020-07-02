@@ -1,8 +1,5 @@
 package io.process.analytics.tools.bpmn.generator.input;
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.BPMNShape;
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TFlowElement;
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TUserTask;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 
 import javax.xml.bind.JAXBElement;
 import java.io.BufferedReader;
@@ -16,19 +13,24 @@ class CSVtoBPMN {
     public TDefinitions readFromCSV(String nodes, String edges){
 
         String[] lines = nodes.split("\n");
+        lines[0] = null;
         List<TFlowElement> flowElements = new ArrayList<>();
         for (String line : lines) {
+            if(line == null){
+                continue;
+            }
             String[] node = line.split(",");
             TFlowElement userTask = new TUserTask();
             userTask.setName(node[2]);
             userTask.setId(node[1]);
             flowElements.add(userTask);
         }
+        TProcess tProcess = new TProcess();
         for (TFlowElement flowElement : flowElements) {
-            new JAXBElement<>(bpmnElementQName("TFlowElement"), TFlowElement.class, null, flowElement);
+            tProcess.getFlowElement().add(new JAXBElement<>(bpmnElementQName("TFlowElement"), TFlowElement.class, null, flowElement));
         }
-
-
-        return new TDefinitions();
+        TDefinitions tDefinitions = new TDefinitions();
+        tDefinitions.getRootElement().add(new JAXBElement<>(bpmnElementQName("TProcess"),TProcess.class,null, tProcess));
+        return tDefinitions;
     }
 }
