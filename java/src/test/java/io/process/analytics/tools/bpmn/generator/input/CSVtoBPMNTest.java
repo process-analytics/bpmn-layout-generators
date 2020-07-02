@@ -1,8 +1,8 @@
 package io.process.analytics.tools.bpmn.generator.input;
 
 import io.process.analytics.tools.bpmn.generator.internal.Semantic;
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TProcess;
+import io.process.analytics.tools.bpmn.generator.internal.Semantic.BpmnElements;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -23,10 +23,23 @@ class CSVtoBPMNTest {
 
         List<TProcess> processes = semantic.getProcesses();
         assertThat(processes).hasSize(1);
-        TProcess tProcess = processes.get(0);
-        Semantic.BpmnElements bpmnElements = semantic.getBpmnElements(tProcess);
-        assertThat(bpmnElements.getFlowNodes()).hasSize(9);
-        assertThat(bpmnElements.getSequenceFlows()).hasSize(13);
+        TProcess process = processes.get(0);
+        BpmnElements bpmnElements = semantic.getBpmnElements(process);
+        List<? extends TFlowElement> flowNodes = bpmnElements.getFlowNodes();
+        assertThat(flowNodes).hasSize(9);
+        TFlowElement flowElement0 = flowNodes.get(0);
+        assertThat(flowElement0.getId()).isEqualTo("1");
+        // TODO double quote should be removed
+        assertThat(flowElement0.getName()).isEqualTo("\"End\"");
+        // TODO this should probably be TTask (BPMN abstract task)
+        assertThat(flowElement0).isExactlyInstanceOf(TUserTask.class);
+
+        List<? extends TSequenceFlow> sequenceFlows = bpmnElements.getSequenceFlows();
+        assertThat(sequenceFlows).hasSize(13);
+        TSequenceFlow sequenceFlow12 = sequenceFlows.get(12);
+        assertThat(sequenceFlow12.getId()).isEqualTo("13");
+        assertThat(sequenceFlow12.getSourceRef()).isEqualTo("9");
+        assertThat(sequenceFlow12.getTargetRef()).isEqualTo("5");
     }
 
     // TODO the underlying method read lines then join. The CSVtoBPMN spit the string into lines! Useless work!
