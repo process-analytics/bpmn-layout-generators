@@ -9,10 +9,11 @@ import java.util.List;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import io.process.analytics.tools.bpmn.generator.internal.Semantic;
 
-class CSVtoBPMN {
+public class CSVtoBPMN {
 
     public TDefinitions readFromCSV(String nodes, String edges) {
-        TProcess process = new TProcess(); // TODO set generated id
+        TProcess process = new TProcess();
+        process.setId("process_1");// TODO set generated id
         TDefinitions definitions = new TDefinitions();
         Semantic semantic = new Semantic(definitions);
         semantic.add(process);
@@ -54,9 +55,16 @@ class CSVtoBPMN {
             }
             String[] edge = line.split(",");
             TSequenceFlow tSequenceFlow = new TSequenceFlow();
-            tSequenceFlow.setSourceRef(edge[2]);
-            tSequenceFlow.setTargetRef(edge[3]);
-            tSequenceFlow.setId(edge[1]);
+
+            TUserTask value = new TUserTask();
+            value.setId(edge[2]);
+            tSequenceFlow.setSourceRef(value);
+
+            TUserTask value1 = new TUserTask();
+            value1.setId(edge[3]);
+            tSequenceFlow.setTargetRef(value1);
+
+            tSequenceFlow.setId("edge_" + edge[1]);
             flowElements.add(tSequenceFlow);
         }
         return flowElements;
