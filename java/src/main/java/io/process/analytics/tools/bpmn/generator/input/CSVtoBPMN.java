@@ -1,29 +1,24 @@
 package io.process.analytics.tools.bpmn.generator.input;
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 
-import javax.xml.bind.JAXBElement;
-import java.io.BufferedReader;
-import java.io.FileReader;
+import static io.process.analytics.tools.bpmn.generator.internal.Semantic.addFlowElements;
+import static io.process.analytics.tools.bpmn.generator.internal.Semantic.addSequenceFlowElements;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.process.analytics.tools.bpmn.generator.internal.BPMNDiagramRichBuilder.bpmnElementQName;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
+import io.process.analytics.tools.bpmn.generator.internal.Semantic;
 
 class CSVtoBPMN {
 
     public TDefinitions readFromCSV(String nodes, String edges) {
-        TProcess process = new TProcess();
+        TProcess process = new TProcess(); // TODO set generated id
         TDefinitions definitions = new TDefinitions();
-        definitions.getRootElement()
-                .add(new JAXBElement<>(bpmnElementQName("TProcess"), TProcess.class, null, process));
+        Semantic semantic = new Semantic(definitions);
+        semantic.add(process);
 
-        getFlowElements(nodes).stream()
-                .map(f -> new JAXBElement<>(bpmnElementQName("TFlowElement"), TFlowElement.class, null, f))
-                .forEach(f -> process.getFlowElement().add(f));
-
-        getEdgeElements(edges).stream()
-                .map(e -> new JAXBElement<>(bpmnElementQName("TSequenceFlow"), TSequenceFlow.class, null, e))
-                .forEach(e -> process.getFlowElement().add(e));
+        addFlowElements(process, getFlowElements(nodes));
+        addSequenceFlowElements(process, getEdgeElements(edges));
 
         return definitions;
     }

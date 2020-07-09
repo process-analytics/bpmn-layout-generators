@@ -15,6 +15,7 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +27,8 @@ import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+
+import static io.process.analytics.tools.bpmn.generator.internal.BPMNDiagramRichBuilder.bpmnElementQName;
 
 /**
  * Helper to access to the BPMN semantic part
@@ -92,6 +95,23 @@ public class Semantic {
                 .collect(Collectors.toList());
 
         return new BpmnElements(flowNodes, sequenceFlows);
+    }
+
+    public void add(TProcess process) {
+        definitions.getRootElement()
+                .add(new JAXBElement<>(bpmnElementQName("TProcess"), TProcess.class, null, process));
+    }
+
+    public static void addFlowElements(TProcess process, Collection<TFlowElement> flowElements) {
+        flowElements.stream()
+                .map(f -> new JAXBElement<>(bpmnElementQName("TFlowElement"), TFlowElement.class, null, f))
+                .forEach(f -> process.getFlowElement().add(f));
+    }
+
+    public static void addSequenceFlowElements(TProcess process, Collection<TSequenceFlow> sequenceFlowElements) {
+        sequenceFlowElements.stream()
+                .map(e -> new JAXBElement<>(bpmnElementQName("TSequenceFlow"), TSequenceFlow.class, null, e))
+                .forEach(e -> process.getFlowElement().add(e));
     }
 
     @RequiredArgsConstructor

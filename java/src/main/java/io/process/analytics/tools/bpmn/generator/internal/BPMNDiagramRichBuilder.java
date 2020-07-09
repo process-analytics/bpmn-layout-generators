@@ -122,7 +122,7 @@ public class BPMNDiagramRichBuilder {
         return definitions;
     }
 
-    public static QName bpmnElementQName(String bpmnElement) {
+    static QName bpmnElementQName(String bpmnElement) {
         return new QName("http://www.omg.org/spec/BPMN/20100524/DI", bpmnElement, "");
     }
 
