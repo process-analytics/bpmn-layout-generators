@@ -41,10 +41,14 @@ public class Edge {
         return new Edge(id, from, to, false);
     }
     public static Edge edge(Shape from, Shape to) {
-        return new Edge(generateRandomId(), from.getId(), to.getId(), false);
+        return new Edge(generateRandomId(), copy(from.getId()), copy(to.getId()), false);
     }
     public static Edge revertedEdge(Edge original) {
         return original.toBuilder().from(original.getTo()).to(original.getFrom()).reverted(true).build();
+    }
+
+    private static String copy(String s) {
+        return s + ""; // hack to ensure the returned string is equal to the provided one but doesn't have the same reference
     }
 
 }
