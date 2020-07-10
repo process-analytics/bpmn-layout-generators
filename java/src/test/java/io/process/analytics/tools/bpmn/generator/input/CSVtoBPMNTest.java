@@ -1,5 +1,6 @@
 package io.process.analytics.tools.bpmn.generator.input;
 
+import io.process.analytics.tools.bpmn.generator.converter.BpmnToAlgoModelConverter;
 import io.process.analytics.tools.bpmn.generator.internal.Semantic;
 import io.process.analytics.tools.bpmn.generator.internal.Semantic.BpmnElements;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static io.process.analytics.tools.bpmn.generator.internal.FileUtils.fileContent;
+import static io.process.analytics.tools.bpmn.generator.internal.Semantic.getId;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class CSVtoBPMNTest {
@@ -18,12 +20,14 @@ class CSVtoBPMNTest {
         String edge = readCsvFile("src/test/resources/csv/PatientsProcess/edge.csv");
         String node = readCsvFile("src/test/resources/csv/PatientsProcess/node.csv");
 
-        TDefinitions bpmn = new CSVtoBPMN().readFromCSV(node, edge);
-        Semantic semantic = new Semantic(bpmn);
+        TDefinitions definitions = new CSVtoBPMN().readFromCSV(node, edge);
+        assertThat(definitions.getId()).isNotNull();
+        Semantic semantic = new Semantic(definitions);
 
         List<TProcess> processes = semantic.getProcesses();
         assertThat(processes).hasSize(1);
         TProcess process = processes.get(0);
+        assertThat(process.getId()).isNotNull();
         BpmnElements bpmnElements = semantic.getBpmnElements(process);
         List<? extends TFlowElement> flowNodes = bpmnElements.getFlowNodes();
         assertThat(flowNodes).hasSize(9);
@@ -37,9 +41,9 @@ class CSVtoBPMNTest {
         List<? extends TSequenceFlow> sequenceFlows = bpmnElements.getSequenceFlows();
         assertThat(sequenceFlows).hasSize(13);
         TSequenceFlow sequenceFlow12 = sequenceFlows.get(12);
-        assertThat(sequenceFlow12.getId()).isEqualTo("13");
-        assertThat(sequenceFlow12.getSourceRef()).isEqualTo("9");
-        assertThat(sequenceFlow12.getTargetRef()).isEqualTo("5");
+        assertThat(sequenceFlow12.getId()).isEqualTo("edge_13");
+        assertThat(getId(sequenceFlow12.getSourceRef())).isEqualTo("9");
+        assertThat(getId(sequenceFlow12.getTargetRef())).isEqualTo("5");
     }
 
     // TODO the underlying method read lines then join. The CSVtoBPMN spit the string into lines! Useless work!

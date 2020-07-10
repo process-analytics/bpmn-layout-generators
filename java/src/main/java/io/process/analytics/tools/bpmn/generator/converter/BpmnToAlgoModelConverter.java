@@ -15,6 +15,7 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter;
 
+import static io.process.analytics.tools.bpmn.generator.internal.Semantic.getId;
 import static io.process.analytics.tools.bpmn.generator.model.ShapeType.*;
 
 import java.util.List;
@@ -57,11 +58,6 @@ public class BpmnToAlgoModelConverter {
             shapeType = EVENT;
         }
         return new Shape(flowNode.getId(), flowNode.getName(), shapeType);
-    }
-
-    // assuming this is a TBaseElement
-    private static String getId(Object object) {
-        return ((TBaseElement) object).getId();
     }
 
 }

@@ -40,6 +40,11 @@ public class Semantic {
     @Getter
     private final TDefinitions definitions;
 
+    // assuming this is a TBaseElement
+    public static String getId(Object object) {
+        return ((TBaseElement) object).getId();
+    }
+
     public List<TParticipant> getParticipants() {
         return getCollaboration()
                 .map(TCollaboration::getParticipant)
