@@ -22,13 +22,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
 
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-
-import static io.process.analytics.tools.bpmn.generator.internal.BPMNDiagramRichBuilder.bpmnElementQName;
 
 /**
  * Helper to access to the BPMN semantic part
@@ -104,19 +103,24 @@ public class Semantic {
 
     public void add(TProcess process) {
         definitions.getRootElement()
-                .add(new JAXBElement<>(bpmnElementQName("TProcess"), TProcess.class, null, process));
+                .add(new JAXBElement<>(bpmnElementQName("process"), TProcess.class, null, process));
     }
 
     public static void addFlowElements(TProcess process, Collection<TFlowElement> flowElements) {
         flowElements.stream()
-                .map(f -> new JAXBElement<>(bpmnElementQName("TFlowElement"), TFlowElement.class, null, f))
+                // TODO name should be set accordingly to the type of the flow element
+                .map(f -> new JAXBElement<>(bpmnElementQName("userTask"), TFlowElement.class, null, f))
                 .forEach(f -> process.getFlowElement().add(f));
     }
 
     public static void addSequenceFlowElements(TProcess process, Collection<TSequenceFlow> sequenceFlowElements) {
         sequenceFlowElements.stream()
-                .map(e -> new JAXBElement<>(bpmnElementQName("TSequenceFlow"), TSequenceFlow.class, null, e))
+                .map(e -> new JAXBElement<>(bpmnElementQName("sequenceFlow"), TSequenceFlow.class, null, e))
                 .forEach(e -> process.getFlowElement().add(e));
+    }
+
+    private static QName bpmnElementQName(String bpmnElement) {
+        return new QName("http://www.omg.org/spec/BPMN/20100524/MODEL", bpmnElement, "");
     }
 
     @RequiredArgsConstructor

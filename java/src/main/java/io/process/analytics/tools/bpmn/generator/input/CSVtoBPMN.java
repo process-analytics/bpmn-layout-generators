@@ -6,8 +6,10 @@ import static io.process.analytics.tools.bpmn.generator.internal.Semantic.addSeq
 import java.util.ArrayList;
 import java.util.List;
 
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
+import javax.xml.XMLConstants;
+
 import io.process.analytics.tools.bpmn.generator.internal.Semantic;
+import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 
 public class CSVtoBPMN {
 
@@ -16,6 +18,7 @@ public class CSVtoBPMN {
         process.setId("process_1"); // TODO set generated id?
         TDefinitions definitions = new TDefinitions();
         definitions.setId("definitions_1"); // TODO set generated id?
+        definitions.setTargetNamespace(XMLConstants.NULL_NS_URI);
         Semantic semantic = new Semantic(definitions);
         semantic.add(process);
 
