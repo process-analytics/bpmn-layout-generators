@@ -1,12 +1,9 @@
 /*
  * Copyright 2020 Bonitasoft S.A.
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
  * http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,16 +14,19 @@ package io.process.analytics.tools.bpmn.generator.internal;
 
 import java.io.File;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
+import javax.xml.bind.*;
 import javax.xml.transform.stream.StreamSource;
 
+import com.sun.xml.internal.bind.marshaller.NamespacePrefixMapper;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.ObjectFactory;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
 
 public class XmlParser {
+
     private static final JAXBContext context = initContext();
 
     private static JAXBContext initContext() {
@@ -40,9 +40,22 @@ public class XmlParser {
     public void marshal(TDefinitions definitions, File outputFile) {
         try {
             JAXBElement<TDefinitions> root = new ObjectFactory().createDefinitions(definitions);
-            context.createMarshaller().marshal(root, outputFile);
+            Marshaller marshaller = context.createMarshaller();
+            configure(marshaller);
+            marshaller.marshal(root, outputFile);
         } catch (JAXBException e) {
             throw new RuntimeException("Unable to marshal", e);
+        }
+    }
+
+    private static void configure(Marshaller marshaller) throws PropertyException {
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        try {
+            //marshaller.setProperty("com.sun.xml.internal.bind.namespacePrefixMapper", new BpmnNamespaceMapper());
+            marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new BpmnNamespaceMapper());
+        } catch(PropertyException e) {
+            // In case another JAXB implementation is used
+            e.printStackTrace();
         }
     }
 
@@ -56,4 +69,29 @@ public class XmlParser {
         }
     }
 
+    public static class BpmnNamespaceMapper extends NamespacePrefixMapper {
+
+        private static final String URI_BPMN_DI = "http://www.omg.org/spec/BPMN/20100524/DI";
+        private static final String URI_DC = "http://www.omg.org/spec/DD/20100524/DC";
+        private static final String URI_DI = "http://www.omg.org/spec/DD/20100524/DI";
+
+        private static final Map<String, String> namespaces = new HashMap<>();
+        static {
+            namespaces.put(URI_BPMN_DI, "bpmndi");
+            namespaces.put(URI_DC, "dc");
+            namespaces.put(URI_DI, "di");
+        }
+
+        @Override
+        public String getPreferredPrefix(String namespaceUri, String suggestion, boolean requirePrefix) {
+            return namespaces.getOrDefault(namespaceUri, suggestion);
+        }
+
+        @Override
+        public String[] getPreDeclaredNamespaceUris() {
+            Set<String> uris = namespaces.keySet();
+            return uris.toArray(new String[uris.size()]);
+        }
+
+    }
 }
