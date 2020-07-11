@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
@@ -120,7 +121,7 @@ public class Semantic {
     }
 
     private static QName bpmnElementQName(String bpmnElement) {
-        return new QName("http://www.omg.org/spec/BPMN/20100524/MODEL", bpmnElement, "");
+        return new QName("http://www.omg.org/spec/BPMN/20100524/MODEL", bpmnElement, XMLConstants.DEFAULT_NS_PREFIX);
     }
 
     @RequiredArgsConstructor
