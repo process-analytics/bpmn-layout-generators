@@ -51,6 +51,8 @@ public class XmlParser {
     private static void configure(Marshaller marshaller) throws PropertyException {
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         try {
+            // TODO not working, give a try to https://github.com/Siggen/jaxb2-namespace-prefix
+            // jaxb binding for the maven plugin: http://www.mojohaus.org/jaxb2-maven-plugin/Documentation/v2.2/example_xjc_basic.html#Example_6:_Using_an_XML_Java_Binding_file_XJB
             //marshaller.setProperty("com.sun.xml.internal.bind.namespacePrefixMapper", new BpmnNamespaceMapper());
             marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new BpmnNamespaceMapper());
         } catch(PropertyException e) {
