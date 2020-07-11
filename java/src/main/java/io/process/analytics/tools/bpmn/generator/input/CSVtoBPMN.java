@@ -4,7 +4,9 @@ import static io.process.analytics.tools.bpmn.generator.internal.Semantic.addFlo
 import static io.process.analytics.tools.bpmn.generator.internal.Semantic.addSequenceFlowElements;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.XMLConstants;
 
@@ -12,6 +14,10 @@ import io.process.analytics.tools.bpmn.generator.internal.Semantic;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 
 public class CSVtoBPMN {
+
+    // map original flow element id with the values we are using
+    // id cannot be numeric, in that case we map the id with a generated one, letting edge reference element ids with the values we are using for BPMN
+    private final Map<String, String> mappingShapeId = new HashMap<>();
 
     public TDefinitions readFromCSV(String nodes, String edges) {
         TProcess process = new TProcess();
@@ -38,7 +44,15 @@ public class CSVtoBPMN {
             String[] node = line.split(",");
             TFlowElement userTask = new TUserTask();
             userTask.setName(node[2]);
-            userTask.setId(node[1]);
+
+            String originalId = node[1];
+            String bpmnId = originalId;
+            if (isNumeric(originalId)) {
+                bpmnId = "bpmnElement_" + originalId;
+            }
+            this.mappingShapeId.put(originalId, bpmnId);
+
+            userTask.setId(bpmnId);
             flowElements.add(userTask);
         }
         return flowElements;
@@ -60,18 +74,36 @@ public class CSVtoBPMN {
             String[] edge = line.split(",");
             TSequenceFlow tSequenceFlow = new TSequenceFlow();
 
-            TUserTask value = new TUserTask();
-            value.setId(edge[2]);
-            tSequenceFlow.setSourceRef(value);
+            TUserTask sourceRef = new TUserTask();
+            tSequenceFlow.setSourceRef(sourceRef);
+            sourceRef.setId(this.mappingShapeId.getOrDefault(edge[2], edge[2]));
 
-            TUserTask value1 = new TUserTask();
-            value1.setId(edge[3]);
-            tSequenceFlow.setTargetRef(value1);
+            TUserTask targetRef = new TUserTask();
+            tSequenceFlow.setTargetRef(targetRef);
+            targetRef.setId(this.mappingShapeId.getOrDefault(edge[3], edge[3]));
 
-            tSequenceFlow.setId("edge_" + edge[1]);
+            String id = edge[1];
+            if (isNumeric(id)) {
+                id = "sequenceFlow_" + id;
+            }
+            tSequenceFlow.setId(id);
             flowElements.add(tSequenceFlow);
         }
         return flowElements;
+    }
+
+    // TODO not optimal for performance, see https://www.baeldung.com/java-check-string-number
+    // bpmn element id cannot be numeric
+    private static boolean isNumeric(String s) {
+        if (s == null) {
+            return false;
+        }
+        try {
+            Double.parseDouble(s);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 
 }

@@ -32,7 +32,7 @@ class CSVtoBPMNTest {
         List<? extends TFlowElement> flowNodes = bpmnElements.getFlowNodes();
         assertThat(flowNodes).hasSize(9);
         TFlowElement flowElement0 = flowNodes.get(0);
-        assertThat(flowElement0.getId()).isEqualTo("1");
+        assertThat(flowElement0.getId()).isEqualTo("bpmnElement_1");
         // TODO double quote should be removed
         assertThat(flowElement0.getName()).isEqualTo("\"End\"");
         // TODO this should probably be TTask (BPMN abstract task)
@@ -41,9 +41,9 @@ class CSVtoBPMNTest {
         List<? extends TSequenceFlow> sequenceFlows = bpmnElements.getSequenceFlows();
         assertThat(sequenceFlows).hasSize(13);
         TSequenceFlow sequenceFlow12 = sequenceFlows.get(12);
-        assertThat(sequenceFlow12.getId()).isEqualTo("edge_13");
-        assertThat(getId(sequenceFlow12.getSourceRef())).isEqualTo("9");
-        assertThat(getId(sequenceFlow12.getTargetRef())).isEqualTo("5");
+        assertThat(sequenceFlow12.getId()).isEqualTo("sequenceFlow_13");
+        assertThat(getId(sequenceFlow12.getSourceRef())).isEqualTo("bpmnElement_9");
+        assertThat(getId(sequenceFlow12.getTargetRef())).isEqualTo("bpmnElement_5");
     }
 
     // TODO the underlying method read lines then join. The CSVtoBPMN spit the string into lines! Useless work!
