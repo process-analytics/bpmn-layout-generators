@@ -1,7 +1,7 @@
 package io.process.analytics.tools.bpmn.generator.input;
 
-import static io.process.analytics.tools.bpmn.generator.internal.Semantic.addFlowElements;
-import static io.process.analytics.tools.bpmn.generator.internal.Semantic.addSequenceFlowElements;
+import static io.process.analytics.tools.bpmn.generator.internal.Semantic.addFlowNodes;
+import static io.process.analytics.tools.bpmn.generator.internal.Semantic.addSequenceFlows;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,21 +28,21 @@ public class CSVtoBPMN {
         Semantic semantic = new Semantic(definitions);
         semantic.add(process);
 
-        addFlowElements(process, getFlowElements(nodes));
-        addSequenceFlowElements(process, getEdgeElements(edges));
+        addFlowNodes(process, getFlowNodeElements(nodes));
+        addSequenceFlows(process, getEdgeElements(edges));
 
         return definitions;
     }
 
-    private List<TFlowElement> getFlowElements(String nodes) {
+    private List<TFlowNode> getFlowNodeElements(String nodes) {
         String[] lines = toLinesWithoutHeader(nodes);
-        List<TFlowElement> flowElements = new ArrayList<>();
+        List<TFlowNode> flowElements = new ArrayList<>();
         for (String line : lines) {
             if(line == null){
                 continue;
             }
             String[] node = line.split(",");
-            TFlowElement userTask = new TUserTask();
+            TFlowNode userTask = new TUserTask();
             userTask.setName(node[2]);
 
             String originalId = node[1];

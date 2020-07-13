@@ -107,14 +107,14 @@ public class Semantic {
                 .add(new JAXBElement<>(bpmnElementQName("process"), TProcess.class, null, process));
     }
 
-    public static void addFlowElements(TProcess process, Collection<TFlowElement> flowElements) {
+    public static void addFlowNodes(TProcess process, Collection<TFlowNode> flowElements) {
         flowElements.stream()
                 // TODO name should be set accordingly to the type of the flow element
-                .map(f -> new JAXBElement<>(bpmnElementQName("userTask"), TFlowElement.class, null, f))
+                .map(f -> new JAXBElement<>(bpmnElementQName("userTask"), TFlowNode.class, null, f))
                 .forEach(f -> process.getFlowElement().add(f));
     }
 
-    public static void addSequenceFlowElements(TProcess process, Collection<TSequenceFlow> sequenceFlowElements) {
+    public static void addSequenceFlows(TProcess process, Collection<TSequenceFlow> sequenceFlowElements) {
         sequenceFlowElements.stream()
                 .map(e -> new JAXBElement<>(bpmnElementQName("sequenceFlow"), TSequenceFlow.class, null, e))
                 .forEach(e -> process.getFlowElement().add(e));
