@@ -14,14 +14,10 @@ package io.process.analytics.tools.bpmn.generator.internal;
 
 import java.io.File;
 import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import javax.xml.bind.*;
 import javax.xml.transform.stream.StreamSource;
 
-import com.sun.xml.internal.bind.marshaller.NamespacePrefixMapper;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.ObjectFactory;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
 
@@ -71,29 +67,4 @@ public class XmlParser {
         }
     }
 
-    public static class BpmnNamespaceMapper extends NamespacePrefixMapper {
-
-        private static final String URI_BPMN_DI = "http://www.omg.org/spec/BPMN/20100524/DI";
-        private static final String URI_DC = "http://www.omg.org/spec/DD/20100524/DC";
-        private static final String URI_DI = "http://www.omg.org/spec/DD/20100524/DI";
-
-        private static final Map<String, String> namespaces = new HashMap<>();
-        static {
-            namespaces.put(URI_BPMN_DI, "bpmndi");
-            namespaces.put(URI_DC, "dc");
-            namespaces.put(URI_DI, "di");
-        }
-
-        @Override
-        public String getPreferredPrefix(String namespaceUri, String suggestion, boolean requirePrefix) {
-            return namespaces.getOrDefault(namespaceUri, suggestion);
-        }
-
-        @Override
-        public String[] getPreDeclaredNamespaceUris() {
-            Set<String> uris = namespaces.keySet();
-            return uris.toArray(new String[uris.size()]);
-        }
-
-    }
 }
