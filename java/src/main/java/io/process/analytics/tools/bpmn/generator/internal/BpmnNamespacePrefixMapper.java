@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020 Bonitasoft S.A.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.process.analytics.tools.bpmn.generator.internal;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
@@ -6,9 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-// https://stackoverflow.com/a/16981450/3180025
-// <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" ...
-//elementFormDefault="qualified" attributeFormDefault="unqualified" ... >
 public class BpmnNamespacePrefixMapper extends NamespacePrefixMapper {
 
     private static final String URI_BPMN_DI = "http://www.omg.org/spec/BPMN/20100524/DI";
@@ -19,7 +31,6 @@ public class BpmnNamespacePrefixMapper extends NamespacePrefixMapper {
     private static final Map<String, String> namespaces = new HashMap<>();
     static {
         namespaces.put(URI_BPMN_DI, "bpmndi");
-        //namespaces.put(URI_BPMN_MODEL, "model");
         namespaces.put(URI_BPMN_MODEL, "semantic");
         namespaces.put(URI_DC, "dc");
         namespaces.put(URI_DI, "di");
@@ -27,13 +38,7 @@ public class BpmnNamespacePrefixMapper extends NamespacePrefixMapper {
 
     @Override
     public String getPreferredPrefix(String namespaceUri, String suggestion, boolean requirePrefix) {
-        System.out.println("getPreferredPrefix");
-        System.out.println("  " + namespaceUri);
-        System.out.println("  " + suggestion);
-        System.out.println("  " + requirePrefix);
-        String returned = namespaces.getOrDefault(namespaceUri, suggestion);
-        System.out.println("  -->" + returned);
-        return returned;
+        return namespaces.getOrDefault(namespaceUri, suggestion);
     }
 
     @Override
