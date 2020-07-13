@@ -36,25 +36,22 @@ public class XmlParser {
     public void marshal(TDefinitions definitions, File outputFile) {
         try {
             JAXBElement<TDefinitions> root = new ObjectFactory().createDefinitions(definitions);
-            Marshaller marshaller = context.createMarshaller();
-            configure(marshaller);
-            marshaller.marshal(root, outputFile);
+            createMarshaller().marshal(root, outputFile);
         } catch (JAXBException e) {
             throw new RuntimeException("Unable to marshal", e);
         }
     }
 
-    private static void configure(Marshaller marshaller) throws PropertyException {
+    private Marshaller createMarshaller() throws JAXBException {
+        Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         try {
-            // TODO not working, give a try to https://github.com/Siggen/jaxb2-namespace-prefix
-            // jaxb binding for the maven plugin: http://www.mojohaus.org/jaxb2-maven-plugin/Documentation/v2.2/example_xjc_basic.html#Example_6:_Using_an_XML_Java_Binding_file_XJB
-            //marshaller.setProperty("com.sun.xml.internal.bind.namespacePrefixMapper", new BpmnNamespaceMapper());
             marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new BpmnNamespacePrefixMapper());
         } catch(PropertyException e) {
             // In case another JAXB implementation is used
             e.printStackTrace();
         }
+        return marshaller;
     }
 
     public TDefinitions unmarshall(String xml) {
