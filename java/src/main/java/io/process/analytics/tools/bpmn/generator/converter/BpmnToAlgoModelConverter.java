@@ -21,6 +21,7 @@ import static io.process.analytics.tools.bpmn.generator.model.ShapeType.*;
 import java.util.List;
 
 import io.process.analytics.tools.bpmn.generator.internal.Semantic;
+import io.process.analytics.tools.bpmn.generator.internal.Semantic.BpmnElements;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import io.process.analytics.tools.bpmn.generator.model.Edge;
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
@@ -35,13 +36,15 @@ public class BpmnToAlgoModelConverter {
 
         List<TProcess> processes = semantic.getProcesses();
         for (TProcess process : processes) {
-            Semantic.BpmnElements bpmnElements = semantic.getBpmnElements(process);
+            BpmnElements bpmnElements = semantic.getBpmnElements(process);
 
-            bpmnElements.getFlowNodes().stream()
+            bpmnElements.getFlowNodes()
+                    .stream()
                     .map(BpmnToAlgoModelConverter::toShape)
                     .forEach(diagram::shape);
 
-            bpmnElements.getSequenceFlows().stream()
+            bpmnElements.getSequenceFlows()
+                    .stream()
                     .map(seqFlow -> Edge.edge(seqFlow.getId(), getId(seqFlow.getSourceRef()), getId(seqFlow.getTargetRef())))
                     .forEach(diagram::edge);
         }

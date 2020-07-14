@@ -15,12 +15,12 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter;
 
+import java.util.List;
+
 import io.process.analytics.tools.bpmn.generator.model.*;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.Singular;
-
-import java.util.List;
 
 public class AlgoToDisplayModelConverter {
 
@@ -31,7 +31,7 @@ public class AlgoToDisplayModelConverter {
     public DisplayModel convert(Grid grid, Diagram diagram) {
         DisplayModel.DisplayModelBuilder model = DisplayModel.builder();
         model.width(grid.width() * CELL_WIDTH).height(grid.height() * CELL_HEIGHT);
-        
+
         for (Position position : grid.getPositions()) {
             int xOffset = position.getX() * CELL_WIDTH;
             int yOffset = position.getY() * CELL_HEIGHT;
@@ -78,7 +78,10 @@ public class AlgoToDisplayModelConverter {
                     .rx(y(10)).strokeWidth(y(5)).build());
         }
 
-        diagram.getEdges().stream().map(edge -> new DisplayEdge(edge.getId())).forEach(model::edge);
+        diagram.getEdges()
+                .stream()
+                .map(edge -> new DisplayEdge(edge.getId()))
+                .forEach(model::edge);
 
         return model.build();
     }
