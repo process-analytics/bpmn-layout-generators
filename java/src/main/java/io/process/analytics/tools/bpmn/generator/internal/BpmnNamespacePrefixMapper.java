@@ -23,17 +23,12 @@ import java.util.Set;
 
 public class BpmnNamespacePrefixMapper extends NamespacePrefixMapper {
 
-    private static final String URI_BPMN_DI = "http://www.omg.org/spec/BPMN/20100524/DI";
-    private static final String URI_BPMN_MODEL = "http://www.omg.org/spec/BPMN/20100524/MODEL";
-    private static final String URI_DC = "http://www.omg.org/spec/DD/20100524/DC";
-    private static final String URI_DI = "http://www.omg.org/spec/DD/20100524/DI";
-
     private static final Map<String, String> namespaces = new HashMap<>();
     static {
-        namespaces.put(URI_BPMN_DI, "bpmndi");
-        namespaces.put(URI_BPMN_MODEL, "semantic");
-        namespaces.put(URI_DC, "dc");
-        namespaces.put(URI_DI, "di");
+        namespaces.put("http://www.omg.org/spec/BPMN/20100524/DI", "bpmndi");
+        namespaces.put("http://www.omg.org/spec/BPMN/20100524/MODEL", "semantic");
+        namespaces.put("http://www.omg.org/spec/DD/20100524/DC", "dc");
+        namespaces.put("http://www.omg.org/spec/DD/20100524/DI", "di");
     }
 
     @Override
