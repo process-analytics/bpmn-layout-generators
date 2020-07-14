@@ -28,6 +28,7 @@ import javax.xml.namespace.QName;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayDimension;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayEdge;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayFlowNode;
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayPoint;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -59,8 +60,9 @@ public class BPMNDiagramRichBuilder {
 
     public void addFlowNode(DisplayFlowNode flowNode) {
         BPMNShape bpmnShape = new BPMNShape();
-        bpmnShape.setId("Shape_" + generateRandomId());
-        putBpmnElement(bpmnShape, flowNode.bpmnElementId);
+        String bpmnElementId = flowNode.bpmnElementId;
+        bpmnShape.setId("BPMNShape_" + bpmnElementId);
+        putBpmnElement(bpmnShape, bpmnElementId);
 
         bpmnShape.setBounds(bounds(flowNode.dimension));
 
@@ -74,10 +76,23 @@ public class BPMNDiagramRichBuilder {
 
     public void addEdge(DisplayEdge edge) {
         BPMNEdge bpmnEdge = new BPMNEdge();
-        bpmnEdge.setId("Edge_" + generateRandomId());
-        putBpmnElement(bpmnEdge, edge.bpmnElementId);
+        String bpmnElementId = edge.bpmnElementId;
+        bpmnEdge.setId("BPMNEdge_" + bpmnElementId);
+        putBpmnElement(bpmnEdge, bpmnElementId);
+
+        List<Point> bpmnEdgeWaypoint = bpmnEdge.getWaypoint();
+        edge.wayPoints.stream()
+                .map(BPMNDiagramRichBuilder::toPoint)
+                .forEach(bpmnEdgeWaypoint::add);
 
         bpmnEdges.add(bpmnEdge);
+    }
+
+    private static Point toPoint(DisplayPoint displayPoint) {
+        Point point = new Point();
+        point.setX(displayPoint.x);
+        point.setY(displayPoint.y);
+        return point;
     }
 
     private static Bounds bounds(DisplayDimension dimension) {
