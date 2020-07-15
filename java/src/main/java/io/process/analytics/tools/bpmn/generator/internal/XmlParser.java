@@ -52,6 +52,7 @@ public class XmlParser {
             marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new BpmnNamespacePrefixMapper());
         } catch(PropertyException e) {
             // In case another JAXB implementation is used
+            // do not stop processing, namespace prefixes will be generated automatically in that case
             e.printStackTrace();
         }
         return marshaller;
