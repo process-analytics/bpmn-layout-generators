@@ -18,15 +18,14 @@ package io.process.analytics.tools.bpmn.generator.internal;
 import java.io.File;
 import java.io.StringReader;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
+import javax.xml.bind.*;
 import javax.xml.transform.stream.StreamSource;
 
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.ObjectFactory;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
 
 public class XmlParser {
+
     private static final JAXBContext context = initContext();
 
     private static JAXBContext initContext() {
@@ -40,10 +39,23 @@ public class XmlParser {
     public void marshal(TDefinitions definitions, File outputFile) {
         try {
             JAXBElement<TDefinitions> root = new ObjectFactory().createDefinitions(definitions);
-            context.createMarshaller().marshal(root, outputFile);
+            createMarshaller().marshal(root, outputFile);
         } catch (JAXBException e) {
             throw new RuntimeException("Unable to marshal", e);
         }
+    }
+
+    private Marshaller createMarshaller() throws JAXBException {
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        try {
+            marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new BpmnNamespacePrefixMapper());
+        } catch(PropertyException e) {
+            // In case another JAXB implementation is used
+            // do not stop processing, namespace prefixes will be generated automatically in that case
+            e.printStackTrace();
+        }
+        return marshaller;
     }
 
     public TDefinitions unmarshall(String xml) {

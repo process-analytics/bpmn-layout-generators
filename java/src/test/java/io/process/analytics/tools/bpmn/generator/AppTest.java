@@ -46,7 +46,7 @@ public class AppTest {
 
         File bpmnFile = new File(outputPath);
         assertThat(bpmnFile).exists().isFile();
-        assertThat(fileContent(bpmnFile)).contains("<definitions xmlns=\"http://www.omg.org/spec/BPMN/20100524/MODEL\"");
+        assertThat(fileContent(bpmnFile)).contains("<semantic:definitions xmlns:semantic=\"http://www.omg.org/spec/BPMN/20100524/MODEL\"");
     }
 
     @Test
