@@ -35,7 +35,6 @@ class CSVtoBPMNTest {
         assertThat(flowElement0.getId()).isEqualTo("bpmnElement_1");
         // TODO double quote should be removed
         assertThat(flowElement0.getName()).isEqualTo("\"End\"");
-        // TODO this should probably be TTask (BPMN abstract task)
         assertThat(flowElement0).isExactlyInstanceOf(TUserTask.class);
 
         List<? extends TSequenceFlow> sequenceFlows = bpmnElements.getSequenceFlows();
