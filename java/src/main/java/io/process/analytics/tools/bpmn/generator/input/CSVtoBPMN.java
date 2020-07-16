@@ -43,7 +43,7 @@ public class CSVtoBPMN {
             }
             String[] node = line.split(",");
             TFlowNode userTask = new TUserTask();
-            userTask.setName(node[2]);
+            userTask.setName(removeEnclosingDoubleQuote(node[2]));
 
             String originalId = node[1];
             String bpmnId = originalId;
@@ -56,6 +56,10 @@ public class CSVtoBPMN {
             flowElements.add(userTask);
         }
         return flowElements;
+    }
+
+    private static String removeEnclosingDoubleQuote(String s) {
+        return s.replaceAll("^\"|\"$", "");
     }
 
     private String[] toLinesWithoutHeader(String fileContent) {
