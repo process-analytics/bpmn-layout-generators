@@ -21,9 +21,9 @@ public class CSVtoBPMN {
 
     public TDefinitions readFromCSV(String nodes, String edges) {
         TProcess process = new TProcess();
-        process.setId("process_1"); // TODO set generated id?
+        process.setId("process_1");
         TDefinitions definitions = new TDefinitions();
-        definitions.setId("definitions_1"); // TODO set generated id?
+        definitions.setId("definitions_1");
         definitions.setTargetNamespace(XMLConstants.NULL_NS_URI);
         Semantic semantic = new Semantic(definitions);
         semantic.add(process);
