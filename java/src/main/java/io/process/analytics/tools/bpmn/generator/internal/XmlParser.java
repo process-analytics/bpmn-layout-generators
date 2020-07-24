@@ -17,6 +17,7 @@ package io.process.analytics.tools.bpmn.generator.internal;
 
 import java.io.File;
 import java.io.StringReader;
+import java.io.StringWriter;
 
 import javax.xml.bind.*;
 import javax.xml.transform.stream.StreamSource;
@@ -36,10 +37,12 @@ public class XmlParser {
         }
     }
 
-    public void marshal(TDefinitions definitions, File outputFile) {
+    public String marshal(TDefinitions definitions) {
         try {
             JAXBElement<TDefinitions> root = new ObjectFactory().createDefinitions(definitions);
-            createMarshaller().marshal(root, outputFile);
+            StringWriter stringWriter = new StringWriter();
+            createMarshaller().marshal(root, stringWriter);
+            return stringWriter.toString();
         } catch (JAXBException e) {
             throw new RuntimeException("Unable to marshal", e);
         }

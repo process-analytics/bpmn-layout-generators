@@ -32,7 +32,7 @@ public class SVGExporter {
 
     private final AlgoToDisplayModelConverter converter = new AlgoToDisplayModelConverter();
 
-    public byte[] export(Grid grid, Diagram diagram) {
+    public String export(Grid grid, Diagram diagram) {
         DisplayModel model = converter.convert(grid, diagram);
 
         // TODO introduce a method to generate escaped double quote and avoid double quote escaping when writing xml
@@ -141,7 +141,7 @@ public class SVGExporter {
             content.append("</text>\n");
         }
         content.append("</svg>");
-        return content.toString().getBytes();
+        return content.toString();
     }
 
 }

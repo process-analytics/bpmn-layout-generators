@@ -14,142 +14,65 @@
  */
 package io.process.analytics.tools.bpmn.generator;
 
-import static io.process.analytics.tools.bpmn.generator.export.BPMNExporter.defaultBpmnExporter;
-import static io.process.analytics.tools.bpmn.generator.internal.BpmnInOut.defaultBpmnInOut;
+import static io.process.analytics.tools.bpmn.generator.BPMNLayoutGenerator.ExportType.BPMN;
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.List;
 
-import io.process.analytics.tools.bpmn.generator.algo.ShapeLayouter;
-import io.process.analytics.tools.bpmn.generator.algo.ShapeSorter;
-import io.process.analytics.tools.bpmn.generator.converter.BpmnToAlgoModelConverter;
-import io.process.analytics.tools.bpmn.generator.export.ASCIIExporter;
-import io.process.analytics.tools.bpmn.generator.export.SVGExporter;
-import io.process.analytics.tools.bpmn.generator.internal.BpmnInOut;
+import io.process.analytics.tools.bpmn.generator.BPMNLayoutGenerator.ExportType;
 import io.process.analytics.tools.bpmn.generator.internal.FileUtils;
-import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
-import io.process.analytics.tools.bpmn.generator.model.Grid;
-import io.process.analytics.tools.bpmn.generator.model.Diagram;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-@RequiredArgsConstructor
 @Log4j2
 public class App {
 
     public static void main(String[] args) throws Exception {
-        validate(args);
-        File bpmnInputFile = new File(args[0]);
-        File outputFile = new File(args[1]);
-        String exportType = exportType(args);
-
-        new App(defaultBpmnInOut()).process(bpmnInputFile, outputFile, exportType);
+        new App(Arrays.asList(args)).run();
     }
 
-    private static void validate(String[] args) {
-        if (args.length <= 1) {
+    private List<String> args;
+    BPMNLayoutGenerator bpmnLayoutGenerator = new BPMNLayoutGenerator();
+
+    public App(List<String> args) {
+        this.args = args;
+    }
+
+    private void run() throws IOException {
+        validate(args);
+        File bpmnInputFile = new File(args.get(0));
+        File outputFile = new File(args.get(1));
+        ExportType exportType = exportType(args);
+        String bpmn = bpmnLayoutGenerator.generateLayoutFromBPMNSemantic(FileUtils.fileContent(bpmnInputFile), exportType);
+        FileUtils.createParents(outputFile);
+        Files.write(outputFile.toPath(), bpmn.getBytes());
+
+    }
+
+    private void validate(List<String> args) {
+        if (args.size() <= 1) {
             throw new IllegalArgumentException("You must pass at least 2 arguments");
         }
     }
-
-    private static String exportType(String[] args) {
-        String type = "bpmn";
-        if (args.length > 2) {
-            type = args[2];
-            List<String> validExportTypes = asList("ascii", "bpmn", "svg");
-            if (!validExportTypes.contains(type)) {
-                throw new IllegalArgumentException(
-                        format("Invalid export type: %s. Must be one of %s", type, validExportTypes));
+    private ExportType exportType(List<String> args) {
+        ExportType type = BPMN;
+        if (args.size() > 2) {
+            try {
+                type = ExportType.valueOf(args.get(2).toUpperCase());
+            } catch (IllegalArgumentException e) { throw new IllegalArgumentException(
+                    format("Invalid export type: %s. Must be one of [%s]", args.get(2),
+                            stream(ExportType.values())
+                            .map(Enum::toString)
+                            .map(String::toLowerCase)
+                            .collect(joining(", "))));
             }
         }
         return type;
-    }
-
-    private static void log(String message) {
-        log.info(message);
-    }
-
-    // =================================================================================================================
-    // TODO implementation to be extracted in a a dedicated class
-    // =================================================================================================================
-
-    protected final BpmnInOut bpmnInOut;
-
-    @RequiredArgsConstructor
-    @Getter
-    public static class LayoutSortedDiagram {
-
-        private final TDefinitions originalDefinitions;
-        private final Grid grid;
-        private final Diagram diagram;
-    }
-
-    private void process(File bpmnInputFile, File outputFile, String exportType) throws IOException {
-        LayoutSortedDiagram diagram = loadAndLayout(bpmnInputFile);
-
-        FileUtils.touch(outputFile);
-        log("Requested Export Type: " + exportType);
-        switch (exportType) {
-            case "ascii":
-                exportToAscii(diagram, outputFile);
-                break;
-            case "bpmn":
-                exportToBpmn(diagram, outputFile);
-                break;
-            case "svg":
-                exportToSvg(diagram, outputFile);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected Export Type: " + exportType);
-        }
-    }
-
-    public LayoutSortedDiagram loadAndLayout(File bpmnInputFile) {
-        log("Loading BPMN file: " + bpmnInputFile);
-        TDefinitions originalDefinitions = bpmnInOut.readFromBpmn(bpmnInputFile);
-        log("BPMN file Loaded");
-
-        return computeLayout(originalDefinitions);
-    }
-
-    protected LayoutSortedDiagram computeLayout(TDefinitions definitions) {
-        log("Converting BPMN into internal model");
-        Diagram diagram = new BpmnToAlgoModelConverter().toAlgoModel(definitions);
-        log("Conversion done");
-
-        log("Sorting and generating Layout");
-        Diagram sortedDiagram = new ShapeSorter().sort(diagram);
-        Grid grid = new ShapeLayouter().layout(sortedDiagram);
-        log("Sort and Layout done");
-
-        return new LayoutSortedDiagram(definitions, grid, sortedDiagram);
-    }
-
-    protected void exportToBpmn(LayoutSortedDiagram diagram, File outputFile) {
-        log("Exporting to BPMN");
-        TDefinitions newDefinitions = defaultBpmnExporter().export(diagram.originalDefinitions, diagram.grid, diagram.diagram);
-        this.bpmnInOut.writeToBpmnFile(newDefinitions, outputFile);
-        log("BPMN exported to " + outputFile);
-    }
-
-    private void exportToSvg(LayoutSortedDiagram diagram, File outputFile) throws IOException {
-        log("Exporting to SVG");
-        byte[] svgContent = new SVGExporter().export(diagram.getGrid(), diagram.getDiagram());
-        Files.write(outputFile.toPath(), svgContent);
-        log("SVG exported to " + outputFile);
-    }
-
-    private static void exportToAscii(LayoutSortedDiagram diagram, File outputFile) throws IOException {
-        log("Exporting to ASCII file");
-        String asciiContent = new ASCIIExporter().export(diagram.getGrid());
-        Files.write(outputFile.toPath(), asciiContent.getBytes(StandardCharsets.UTF_8));
-        log("ASCII exported to " + outputFile);
     }
 
 }

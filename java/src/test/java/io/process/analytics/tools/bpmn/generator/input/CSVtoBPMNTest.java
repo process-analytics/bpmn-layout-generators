@@ -1,6 +1,5 @@
 package io.process.analytics.tools.bpmn.generator.input;
 
-import io.process.analytics.tools.bpmn.generator.converter.BpmnToAlgoModelConverter;
 import io.process.analytics.tools.bpmn.generator.internal.Semantic;
 import io.process.analytics.tools.bpmn.generator.internal.Semantic.BpmnElements;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
