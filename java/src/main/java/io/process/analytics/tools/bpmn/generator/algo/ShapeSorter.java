@@ -125,7 +125,7 @@ public class ShapeSorter {
     }
 
     private Set<Edge> removeEdgesStartingWithNode(Set<Edge> edges, Shape startShape) {
-        return edges.stream().filter(e -> e.getFrom() != startShape.getId()).collect(Collectors.toSet());
+        return edges.stream().filter(e -> !e.getFrom().equals(startShape.getId())).collect(Collectors.toSet());
     }
 
     private Set<Shape> getStartNodes(Set<Shape> nodesToSort, Set<Edge> edges) {
@@ -137,7 +137,7 @@ public class ShapeSorter {
     private List<Join> findAllJoins(Set<Shape> shapes, Set<Edge> edges) {
         //get the nodes that are "join"
         return shapes.stream().map(n -> Join.builder().to(n))
-                .map(j -> j.incomings(edges.stream().filter(e -> e.getTo() == j.to.getId()).map(Edge::getFrom).collect(Collectors.toList())))
+                .map(j -> j.incomings(edges.stream().filter(e -> e.getTo().equals(j.to.getId())).map(Edge::getFrom).collect(Collectors.toList())))
                 .map(Join.JoinBuilder::build)
                 //keep only join if there is more than 1 edge incoming
                 .filter(j -> j.incomings.size() > 1)
@@ -147,7 +147,7 @@ public class ShapeSorter {
 
 
     private boolean hasNoIncomingLink(Shape m, Set<Edge> edges) {
-        return edges.stream().noneMatch(e -> e.getTo() == m.getId());
+        return edges.stream().noneMatch(e -> e.getTo().equals(m.getId()));
     }
 
     @Data

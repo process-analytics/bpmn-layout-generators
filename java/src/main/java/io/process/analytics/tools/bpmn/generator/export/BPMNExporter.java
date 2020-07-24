@@ -19,14 +19,18 @@ import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelCon
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayModel;
 import io.process.analytics.tools.bpmn.generator.internal.BPMNDiagramRichBuilder;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
-import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
+import io.process.analytics.tools.bpmn.generator.model.Grid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class BPMNExporter {
 
     private final AlgoToDisplayModelConverter converter;
+
+    public static BPMNExporter defaultBpmnExporter() {
+        return new BPMNExporter(new AlgoToDisplayModelConverter());
+    }
 
     public TDefinitions export(TDefinitions originalBpmnDefinitions, Grid grid, Diagram diagram) {
         BPMNDiagramRichBuilder builder = new BPMNDiagramRichBuilder(originalBpmnDefinitions);

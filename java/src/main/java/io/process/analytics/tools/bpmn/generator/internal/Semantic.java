@@ -15,12 +15,15 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
 
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import lombok.Getter;
@@ -36,6 +39,11 @@ public class Semantic {
     @NonNull
     @Getter
     private final TDefinitions definitions;
+
+    // assuming this is a TBaseElement
+    public static String getId(Object object) {
+        return ((TBaseElement) object).getId();
+    }
 
     public List<TParticipant> getParticipants() {
         return getCollaboration()
@@ -92,6 +100,28 @@ public class Semantic {
                 .collect(Collectors.toList());
 
         return new BpmnElements(flowNodes, sequenceFlows);
+    }
+
+    public void add(TProcess process) {
+        definitions.getRootElement()
+                .add(new JAXBElement<>(bpmnElementQName("process"), TProcess.class, null, process));
+    }
+
+    public static void addFlowNodes(TProcess process, Collection<TFlowNode> flowElements) {
+        flowElements.stream()
+                // TODO name should be set accordingly to the type of the flow element
+                .map(f -> new JAXBElement<>(bpmnElementQName("userTask"), TFlowNode.class, null, f))
+                .forEach(f -> process.getFlowElement().add(f));
+    }
+
+    public static void addSequenceFlows(TProcess process, Collection<TSequenceFlow> sequenceFlowElements) {
+        sequenceFlowElements.stream()
+                .map(e -> new JAXBElement<>(bpmnElementQName("sequenceFlow"), TSequenceFlow.class, null, e))
+                .forEach(e -> process.getFlowElement().add(e));
+    }
+
+    private static QName bpmnElementQName(String bpmnElement) {
+        return new QName("http://www.omg.org/spec/BPMN/20100524/MODEL", bpmnElement, XMLConstants.DEFAULT_NS_PREFIX);
     }
 
     @RequiredArgsConstructor

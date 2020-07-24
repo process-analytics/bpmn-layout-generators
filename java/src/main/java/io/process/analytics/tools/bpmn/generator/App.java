@@ -14,6 +14,7 @@
  */
 package io.process.analytics.tools.bpmn.generator;
 
+import static io.process.analytics.tools.bpmn.generator.export.BPMNExporter.defaultBpmnExporter;
 import static io.process.analytics.tools.bpmn.generator.internal.BpmnInOut.defaultBpmnInOut;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -26,10 +27,8 @@ import java.util.List;
 
 import io.process.analytics.tools.bpmn.generator.algo.ShapeLayouter;
 import io.process.analytics.tools.bpmn.generator.algo.ShapeSorter;
-import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter;
 import io.process.analytics.tools.bpmn.generator.converter.BpmnToAlgoModelConverter;
 import io.process.analytics.tools.bpmn.generator.export.ASCIIExporter;
-import io.process.analytics.tools.bpmn.generator.export.BPMNExporter;
 import io.process.analytics.tools.bpmn.generator.export.SVGExporter;
 import io.process.analytics.tools.bpmn.generator.internal.BpmnInOut;
 import io.process.analytics.tools.bpmn.generator.internal.FileUtils;
@@ -80,11 +79,11 @@ public class App {
     // TODO implementation to be extracted in a a dedicated class
     // =================================================================================================================
 
-    private final BpmnInOut bpmnInOut;
+    protected final BpmnInOut bpmnInOut;
 
     @RequiredArgsConstructor
     @Getter
-    private static class LayoutSortedDiagram {
+    public static class LayoutSortedDiagram {
 
         private final TDefinitions originalDefinitions;
         private final Grid grid;
@@ -116,8 +115,12 @@ public class App {
         TDefinitions originalDefinitions = bpmnInOut.readFromBpmn(bpmnInputFile);
         log("BPMN file Loaded");
 
+        return computeLayout(originalDefinitions);
+    }
+
+    protected LayoutSortedDiagram computeLayout(TDefinitions definitions) {
         log("Converting BPMN into internal model");
-        Diagram diagram = new BpmnToAlgoModelConverter().toAlgoModel(originalDefinitions);
+        Diagram diagram = new BpmnToAlgoModelConverter().toAlgoModel(definitions);
         log("Conversion done");
 
         log("Sorting and generating Layout");
@@ -125,13 +128,12 @@ public class App {
         Grid grid = new ShapeLayouter().layout(sortedDiagram);
         log("Sort and Layout done");
 
-        return new LayoutSortedDiagram(originalDefinitions, grid, sortedDiagram);
+        return new LayoutSortedDiagram(definitions, grid, sortedDiagram);
     }
 
-    private void exportToBpmn(LayoutSortedDiagram diagram, File outputFile) {
+    protected void exportToBpmn(LayoutSortedDiagram diagram, File outputFile) {
         log("Exporting to BPMN");
-        BPMNExporter bpmnExporter = new BPMNExporter(new AlgoToDisplayModelConverter());
-        TDefinitions newDefinitions = bpmnExporter.export(diagram.originalDefinitions, diagram.grid, diagram.diagram);
+        TDefinitions newDefinitions = defaultBpmnExporter().export(diagram.originalDefinitions, diagram.grid, diagram.diagram);
         this.bpmnInOut.writeToBpmnFile(newDefinitions, outputFile);
         log("BPMN exported to " + outputFile);
     }

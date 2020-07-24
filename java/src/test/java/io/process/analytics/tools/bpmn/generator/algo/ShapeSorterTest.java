@@ -64,6 +64,20 @@ class ShapeSorterTest {
 
         assertThat(sorted.getShapes()).containsExactly(start, step1, step2);
     }
+    @Test
+    void should_sort_3_shapes_other_initial_ordering() {
+        Diagram diagram = Diagram.builder()
+                .shape(end)
+                .shape(start)
+                .shape(step1)
+                .edge(edge(step1, end))
+                .edge(edge(start, step1))
+                .build();
+
+        Diagram sorted = shapeSorter.sort(diagram);
+
+        assertThat(sorted.getShapes()).containsExactly(start, step1, end);
+    }
 
     @Test
     void should_sort_shapes_with_split_and_join() {

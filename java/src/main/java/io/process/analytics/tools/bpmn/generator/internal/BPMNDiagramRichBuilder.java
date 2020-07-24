@@ -123,7 +123,7 @@ public class BPMNDiagramRichBuilder {
     }
 
     private static QName bpmnElementQName(String bpmnElement) {
-        return new QName("http://www.omg.org/spec/BPMN/20100524/DI", bpmnElement, "");
+        return new QName("http://www.omg.org/spec/BPMN/20100524/DI", bpmnElement, XMLConstants.DEFAULT_NS_PREFIX);
     }
 
     // TODO we need to know if this is a process or a collaboration to set the actual QName
