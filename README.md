@@ -1,4 +1,5 @@
-# bpmn-layout-generators [![Build Status](https://travis-ci.com/process-analytics/bpmn-layout-generators.svg?branch=master)](https://travis-ci.com/process-analytics/bpmn-layout-generators)
+# bpmn-layout-generators [![Build Status](https://travis-ci.com/process-analytics/bpmn-layout-generators.svg?branch=master)](https://travis-ci.com/process-analytics/bpmn-layout-generators) 
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](https://github.com/process-analytics/.github/blob/main/CODE_OF_CONDUCT.md)
 
 Tools for generating missing BPMNDiagram elements in BPMN files
 
