@@ -8,9 +8,11 @@
             <img alt="Build" src="https://travis-ci.com/process-analytics/bpmn-layout-generators.svg?branch=master"> 
         </a> 
         <br>
+        <!-- no CONTRIBUTING guide available for now
         <a href="CONTRIBUTING.md">
             <img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-ff69b4.svg?style=flat-square"> 
         </a> 
+        -->
         <a href="https://github.com/process-analytics/.github/blob/main/CODE_OF_CONDUCT.md">
             <img alt="Contributor Covenant" src="https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg"> 
         </a> 
