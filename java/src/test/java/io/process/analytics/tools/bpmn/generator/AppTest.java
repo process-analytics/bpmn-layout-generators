@@ -15,34 +15,36 @@
  */
 package io.process.analytics.tools.bpmn.generator;
 
-import static io.process.analytics.tools.bpmn.generator.App.main;
+import static io.process.analytics.tools.bpmn.generator.App.runApp;
 import static io.process.analytics.tools.bpmn.generator.internal.FileUtils.fileContent;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
 public class AppTest {
 
     @Test
-    public void main_fail_on_missing_argument() throws Exception {
-        assertThatThrownBy(() -> { main(new String[] { "input" }); }).isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("You must pass at least 2 arguments");
+    public void main_fail_on_unexisting_input_file() throws Exception {
+        int returnCode = runApp("input");
+
+        assertThat(returnCode).isEqualTo(2);
     }
 
     @Test
     public void main_fail_on_wrong_export_type() throws Exception {
-        assertThatThrownBy(() -> { generate("input", "output", "unknown_export_type" ); })
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Invalid export type: unknown_export_type. Must be one of [ascii, bpmn, svg]");
+
+        int returnCode = runApp("input", "--output-type", "unknown_export_type");
+
+        assertThat(returnCode).isEqualTo(2);
     }
 
     @Test
     public void main_generates_xml_output_file() throws Exception {
         String outputPath = outputPath("A.2.0_with_diagram.bpmn.xml");
-        generateToBpmn(inputPath("A.2.0.bpmn.xml"), outputPath);
+        runApp(input("bpmn/A.2.0.bpmn.xml"), outputPath);
 
         File bpmnFile = new File(outputPath);
         assertThat(bpmnFile).exists().isFile();
@@ -52,7 +54,7 @@ public class AppTest {
     @Test
     public void main_generates_svg_output_file() throws Exception {
         String outputPath = outputPath("A.2.0_with_diagram.bpmn.svg");
-        generateToSvg(inputPath("A.2.0.bpmn.xml"), outputPath);
+        runApp(input("bpmn/A.2.0.bpmn.xml"), outputPath, "svg");
 
         File svgFile = new File(outputPath);
         assertThat(svgFile).exists().isFile();
@@ -62,39 +64,46 @@ public class AppTest {
     @Test
     public void main_generates_ascii_output_file() throws Exception {
         String outputPath = outputPath("02-startEvent_task_endEvent-without-collaboration.bpmn.txt");
-        generateToAscii(inputPath("02-startEvent_task_endEvent-without-collaboration.bpmn.xml"), outputPath);
+        runApp(input("csv/02-startEvent_task_endEvent-without-collaboration.bpmn.xml"), outputPath, "ascii");
 
         File asciiFile = new File(outputPath);
         assertThat(asciiFile).exists().isFile();
         assertThat(fileContent(asciiFile)).contains("+---");
     }
 
+    @Test
+    public void main_generates_bpmn_with_simple_discovery_data() throws Exception {
+        String outputPath = outputPath("from_simple_csv_diagram.bpmn.xml");
+        runApp("--input-type=CSV", "--output", outputPath, input("csv/PatientsProcess/nodeSimple.csv"), input("csv/PatientsProcess/edgeSimple.csv"));
+
+        assertOutFile(outputPath);
+    }
+
+    @Test
+    public void main_generates_bpmn_with_patients_process_discovery_data() throws Exception {
+        String outputPath = outputPath("from_patients_csv_diagram.bpmn.xml");
+        runApp("--input-type=CSV", "--output", outputPath, input("csv/PatientsProcess/node.csv"), input("csv/PatientsProcess/edge.csv"));
+
+        assertOutFile(outputPath);
+    }
+
     // =================================================================================================================
     // UTILS
     // =================================================================================================================
 
-    private static String inputPath(String fileName) {
-        return "src/test/resources/bpmn/" + fileName;
+    private static void assertOutFile(String outputPath) throws IOException {
+        File bpmnFile = new File(outputPath);
+        assertThat(bpmnFile).exists().isFile();
+        assertThat(fileContent(bpmnFile)).contains("<semantic:definitions").contains("xmlns:semantic=\"http://www.omg.org/spec/BPMN/20100524/MODEL\"");
+    }
+
+
+    private static String input(String fileName) {
+        return "src/test/resources/" + fileName;
     }
 
     private static String outputPath(String fileName) {
         return "target/test/output/AppTest/" + fileName;
-    }
-
-    private static void generateToBpmn(String input, String output) throws Exception {
-        main(new String[] { input, output});
-    }
-
-    private static void generate(String input, String output, String exportType) throws Exception {
-        main(new String[] { input, output, exportType });
-    }
-
-    private static void generateToSvg(String input, String output) throws Exception {
-        generate(input, output, "svg");
-    }
-
-    private static void generateToAscii(String input, String output) throws Exception {
-        generate(input, output, "ascii");
     }
 
 }
