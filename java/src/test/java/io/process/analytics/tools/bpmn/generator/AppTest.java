@@ -44,7 +44,7 @@ public class AppTest {
     @Test
     public void main_generates_xml_output_file() throws Exception {
         String outputPath = outputPath("A.2.0_with_diagram.bpmn.xml");
-        runApp(input("bpmn/A.2.0.bpmn.xml"), outputPath);
+        runApp(input("bpmn/A.2.0.bpmn.xml"), "-o", outputPath);
 
         File bpmnFile = new File(outputPath);
         assertThat(bpmnFile).exists().isFile();
@@ -54,7 +54,7 @@ public class AppTest {
     @Test
     public void main_generates_svg_output_file() throws Exception {
         String outputPath = outputPath("A.2.0_with_diagram.bpmn.svg");
-        runApp(input("bpmn/A.2.0.bpmn.xml"), outputPath, "svg");
+        runApp(input("bpmn/A.2.0.bpmn.xml"), "--output-type=SVG", "-o", outputPath);
 
         File svgFile = new File(outputPath);
         assertThat(svgFile).exists().isFile();
@@ -64,7 +64,7 @@ public class AppTest {
     @Test
     public void main_generates_ascii_output_file() throws Exception {
         String outputPath = outputPath("02-startEvent_task_endEvent-without-collaboration.bpmn.txt");
-        runApp(input("csv/02-startEvent_task_endEvent-without-collaboration.bpmn.xml"), outputPath, "ascii");
+        runApp(input("bpmn/02-startEvent_task_endEvent-without-collaboration.bpmn.xml"), "--output-type=ASCII", "-o", outputPath);
 
         File asciiFile = new File(outputPath);
         assertThat(asciiFile).exists().isFile();
