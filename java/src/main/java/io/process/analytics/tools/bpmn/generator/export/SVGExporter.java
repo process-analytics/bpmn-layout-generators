@@ -18,10 +18,7 @@ package io.process.analytics.tools.bpmn.generator.export;
 import static io.process.analytics.tools.bpmn.generator.internal.StringUtils.defaultIfNull;
 
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter;
-import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayDimension;
-import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayFlowNode;
-import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayLabel;
-import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayModel;
+import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.*;
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.ShapeType;
@@ -43,12 +40,15 @@ public class SVGExporter {
                 .append(model.height).append("\">\n");
 
         // TODO extract colors to constant or configurable field
-        final String colorActivityFill ="#E3E3E3";
-        final String colorActivityStroke ="#92ADC8";
-        final String colorEventFill ="LightSalmon";
-        final String colorEventStroke ="FireBrick";
-        final String colorGatewayFill ="Gold";
-        final String colorGatewayStroke ="GoldenRod";
+        final String colorActivityFill = "#E3E3E3";
+        final String colorActivityStroke = "#92ADC8";
+        final String colorEventFill = "LightSalmon";
+        final String colorEventStroke = "FireBrick";
+        final String colorGatewayFill = "Gold";
+        final String colorGatewayStroke = "GoldenRod";
+        final String colorEgeStroke = "Black";
+        final int edgeStrokeWidth = 2;
+        final double edgeStrokeOpacity = 0.5;
 
         for (DisplayFlowNode flowNode : model.flowNodes) {
             DisplayDimension flowNodeDimension = flowNode.dimension;
@@ -140,6 +140,38 @@ public class SVGExporter {
             }
             content.append("</text>\n");
         }
+
+        for (DisplayEdge edge : model.edges) {
+            // TODO manage couples in a generic way or build svg path instead of line (remove duplication)
+            if (edge.wayPoints.size() >= 2) {
+                DisplayPoint start = edge.wayPoints.get(0);
+                DisplayPoint end = edge.wayPoints.get(1);
+                content.append("<line")
+                        .append(" x1=\"").append(start.x).append("\"")
+                        .append(" y1=\"").append(start.y).append("\"")
+                        .append(" x2=\"").append(end.x).append("\"")
+                        .append(" y2=\"").append(end.y).append("\"")
+                        .append(" stroke=\"").append(colorEgeStroke).append("\"")
+                        .append(" stroke-width=\"").append(edgeStrokeWidth).append("\"")
+                        .append(" stroke-opacity=\"").append(edgeStrokeOpacity).append("\"")
+                        .append(" />\n");
+
+                if (edge.wayPoints.size() >= 3) {
+                    start = end;
+                    end = edge.wayPoints.get(2);
+                    content.append("<line")
+                            .append(" x1=\"").append(start.x).append("\"")
+                            .append(" y1=\"").append(start.y).append("\"")
+                            .append(" x2=\"").append(end.x).append("\"")
+                            .append(" y2=\"").append(end.y).append("\"")
+                            .append(" stroke=\"").append(colorEgeStroke).append("\"")
+                            .append(" stroke-width=\"").append(edgeStrokeWidth).append("\"")
+                            .append(" stroke-opacity=\"").append(edgeStrokeOpacity).append("\"")
+                            .append(" />\n");
+                }
+            }
+        }
+
         content.append("</svg>");
         return content.toString().getBytes();
     }
