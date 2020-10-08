@@ -99,7 +99,7 @@ public class App implements Callable<Integer> {
             System.err.println("File not found: " + e.getMessage());
             return 2;
         } catch (Exception e) {
-            System.err.println("An error occured: " + e.getMessage());
+            System.err.println("An error occurred: " + e.getMessage());
             return 1;
         }
         return 0;
