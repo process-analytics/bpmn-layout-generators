@@ -48,9 +48,8 @@ public class BpmnInOut {
         }
     }
 
-    public void writeToBpmnFile(TDefinitions definitions, File file) {
-        createParents(file);
-        xmlParser.marshal(definitions, file);
+    public String writeToBpmn(TDefinitions definitions) {
+        return xmlParser.marshal(definitions);
     }
 
 }
