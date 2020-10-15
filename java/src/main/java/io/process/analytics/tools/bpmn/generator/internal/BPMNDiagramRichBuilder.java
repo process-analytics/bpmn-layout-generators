@@ -30,6 +30,7 @@ import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelCon
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayFlowNode;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayPoint;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
+import io.process.analytics.tools.bpmn.generator.model.ShapeType;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -66,10 +67,12 @@ public class BPMNDiagramRichBuilder {
 
         bpmnShape.setBounds(bounds(flowNode.dimension));
 
-        BPMNLabel label = new BPMNLabel();
-        label.setBounds(bounds(flowNode.label.dimension));
-        // TODO add label style
-        bpmnShape.setBPMNLabel(label);
+        if (!ShapeType.ACTIVITY.equals(flowNode.type)) {
+            BPMNLabel label = new BPMNLabel();
+            label.setBounds(bounds(flowNode.label.dimension));
+            // TODO add label style
+            bpmnShape.setBPMNLabel(label);
+        }
 
         bpmnShapes.add(bpmnShape);
     }
