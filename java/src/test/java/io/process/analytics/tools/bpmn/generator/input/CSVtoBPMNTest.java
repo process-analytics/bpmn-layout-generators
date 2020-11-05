@@ -32,7 +32,6 @@ class CSVtoBPMNTest {
         assertThat(flowNodes).hasSize(9);
         TFlowElement flowElement0 = flowNodes.get(0);
         assertThat(flowElement0.getId()).isEqualTo("bpmnElement_1");
-        // TODO double quote should be removed
         assertThat(flowElement0.getName()).isEqualTo("End");
         assertThat(flowElement0).isExactlyInstanceOf(TUserTask.class);
 
@@ -42,6 +41,24 @@ class CSVtoBPMNTest {
         assertThat(sequenceFlow12.getId()).isEqualTo("sequenceFlow_13");
         assertThat(getId(sequenceFlow12.getSourceRef())).isEqualTo("bpmnElement_9");
         assertThat(getId(sequenceFlow12.getTargetRef())).isEqualTo("bpmnElement_5");
+    }
+
+    @Test
+    public void should_convert_csv_with_gateways() throws IOException {
+        String edge = readCsvFile("src/test/resources/csv/PatientsProcess/gateway_edge_simple.csv");
+        String node = readCsvFile("src/test/resources/csv/PatientsProcess/gateway_node_simple.csv");
+
+        TDefinitions definitions = new CSVtoBPMN().readFromCSV(node, edge);
+
+        Semantic semantic = new Semantic(definitions);
+        BpmnElements bpmnElements = semantic.getBpmnElements(semantic.getProcesses().get(0));
+        List<? extends TFlowElement> flowNodes = bpmnElements.getFlowNodes();
+        assertThat(flowNodes).hasSize(5);
+        assertThat(flowNodes).anyMatch(f -> f.getName().equals("End") && (f instanceof TUserTask));
+        assertThat(flowNodes).anyMatch(f -> f.getName().equals("Start") && (f instanceof TUserTask));
+        assertThat(flowNodes).anyMatch(f -> f.getName().equals("Task1") && (f instanceof TUserTask));
+        assertThat(flowNodes).anyMatch(f -> f.getName().equals("Task2") && (f instanceof TUserTask));
+        assertThat(flowNodes).anyMatch(f -> f.getName().equals("Gateway1") && (f instanceof TGateway));
     }
 
     // TODO the underlying method read lines then join. The CSVtoBPMN spit the string into lines! Useless work!

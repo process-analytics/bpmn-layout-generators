@@ -38,12 +38,22 @@ public class CSVtoBPMN {
         String[] lines = toLinesWithoutHeader(nodes);
         List<TFlowNode> flowElements = new ArrayList<>();
         for (String line : lines) {
-            if(line == null){
+            if (line == null) {
                 continue;
             }
             String[] node = line.split(",");
-            TFlowNode userTask = new TUserTask();
-            userTask.setName(removeEnclosingDoubleQuote(node[2]));
+            String type = removeEnclosingDoubleQuote(node[3]);
+            TFlowNode flowNode;
+            switch (type) {
+                //TODO manage other type of gateways
+                case "gateway":
+                    flowNode = new TParallelGateway();
+                    break;
+                case "task":
+                default:
+                    flowNode = new TUserTask();
+            }
+            flowNode.setName(removeEnclosingDoubleQuote(node[2]));
 
             String originalId = node[1];
             String bpmnId = originalId;
@@ -52,8 +62,8 @@ public class CSVtoBPMN {
             }
             this.mappingShapeId.put(originalId, bpmnId);
 
-            userTask.setId(bpmnId);
-            flowElements.add(userTask);
+            flowNode.setId(bpmnId);
+            flowElements.add(flowNode);
         }
         return flowElements;
     }

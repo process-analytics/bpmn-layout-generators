@@ -80,6 +80,14 @@ public class AppTest {
     }
 
     @Test
+    public void main_generates_bpmn_with_gateways() throws Exception {
+        String outputPath = outputPath("from_csv_with_gateways.bpmn");
+        runApp("--input-type=CSV", "--output", outputPath, input("csv/PatientsProcess/gateway_node_simple.csv"), input("csv/PatientsProcess/gateway_edge_simple.csv"));
+
+        assertOutFile(outputPath);
+    }
+
+    @Test
     public void main_generates_bpmn_with_patients_process_discovery_data() throws Exception {
         String outputPath = outputPath("from_patients_csv_diagram.bpmn.xml");
         runApp("--input-type=CSV", "--output", outputPath, input("csv/PatientsProcess/node.csv"), input("csv/PatientsProcess/edge.csv"));

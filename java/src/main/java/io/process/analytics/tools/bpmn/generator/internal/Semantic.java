@@ -15,10 +15,7 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.xml.XMLConstants;
@@ -109,8 +106,9 @@ public class Semantic {
 
     public static void addFlowNodes(TProcess process, Collection<TFlowNode> flowElements) {
         flowElements.stream()
-                // TODO name should be set accordingly to the type of the flow element
-                .map(f -> new JAXBElement<>(bpmnElementQName("userTask"), TFlowNode.class, null, f))
+                .map(f -> {
+                    return new JAXBElement<>(bpmnElementQName(f), TFlowNode.class, null, f);
+                })
                 .forEach(f -> process.getFlowElement().add(f));
     }
 
@@ -122,6 +120,15 @@ public class Semantic {
 
     private static QName bpmnElementQName(String bpmnElement) {
         return new QName("http://www.omg.org/spec/BPMN/20100524/MODEL", bpmnElement, XMLConstants.DEFAULT_NS_PREFIX);
+    }
+
+    //TODO add other type of flow node elements
+    private static final Map<Class<? extends TFlowNode>, String> bpmnElementBindings = new HashMap<Class<? extends TFlowNode>, String>() {{
+        put(TParallelGateway.class, "parallelGateway");
+    }};
+
+    private static QName bpmnElementQName(TFlowNode flowNode) {
+        return bpmnElementQName(bpmnElementBindings.getOrDefault(flowNode.getClass(), "userTask"));
     }
 
     @RequiredArgsConstructor
