@@ -109,8 +109,14 @@ public class Semantic {
 
     public static void addFlowNodes(TProcess process, Collection<TFlowNode> flowElements) {
         flowElements.stream()
-                // TODO name should be set accordingly to the type of the flow element
-                .map(f -> new JAXBElement<>(bpmnElementQName("userTask"), TFlowNode.class, null, f))
+                .map(f -> {
+                    if (f instanceof TGateway) {
+                        return new JAXBElement<>(bpmnElementQName("parallelGateway"), TFlowNode.class, null, f);
+                    }else {
+                        //TODO add other type of flow node elements
+                        return new JAXBElement<>(bpmnElementQName("userTask"), TFlowNode.class, null, f);
+                    }
+                })
                 .forEach(f -> process.getFlowElement().add(f));
     }
 

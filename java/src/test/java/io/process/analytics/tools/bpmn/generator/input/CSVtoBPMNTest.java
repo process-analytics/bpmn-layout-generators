@@ -44,6 +44,24 @@ class CSVtoBPMNTest {
         assertThat(getId(sequenceFlow12.getTargetRef())).isEqualTo("bpmnElement_5");
     }
 
+    @Test
+    public void should_convert_csv_with_gateways() throws IOException {
+        String edge = readCsvFile("src/test/resources/csv/PatientsProcess/gateway_edge_simple.csv");
+        String node = readCsvFile("src/test/resources/csv/PatientsProcess/gateway_node_simple.csv");
+
+        TDefinitions definitions = new CSVtoBPMN().readFromCSV(node, edge);
+
+        Semantic semantic = new Semantic(definitions);
+        BpmnElements bpmnElements = semantic.getBpmnElements(semantic.getProcesses().get(0));
+        List<? extends TFlowElement> flowNodes = bpmnElements.getFlowNodes();
+        assertThat(flowNodes).hasSize(5);
+        assertThat(flowNodes).anyMatch(f -> f.getName().equals("End") && (f instanceof TUserTask));
+        assertThat(flowNodes).anyMatch(f -> f.getName().equals("Start") && (f instanceof TUserTask));
+        assertThat(flowNodes).anyMatch(f -> f.getName().equals("Task1") && (f instanceof TUserTask));
+        assertThat(flowNodes).anyMatch(f -> f.getName().equals("Task2") && (f instanceof TUserTask));
+        assertThat(flowNodes).anyMatch(f -> f.getName().equals("Gateway1") && (f instanceof TGateway));
+    }
+
     // TODO the underlying method read lines then join. The CSVtoBPMN spit the string into lines! Useless work!
     private static String readCsvFile(String csvFilePath) throws IOException {
         return fileContent(new File(csvFilePath));
