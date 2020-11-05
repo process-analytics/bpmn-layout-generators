@@ -16,5 +16,11 @@
 package io.process.analytics.tools.bpmn.generator.model;
 
 public enum ShapeType {
+
     ACTIVITY, EVENT, GATEWAY;
+
+    public static boolean isActivity(ShapeType type) {
+        return ShapeType.ACTIVITY.equals(type);
+    }
+
 }
