@@ -110,12 +110,7 @@ public class Semantic {
     public static void addFlowNodes(TProcess process, Collection<TFlowNode> flowElements) {
         flowElements.stream()
                 .map(f -> {
-                    if (f instanceof TGateway) {
-                        return new JAXBElement<>(bpmnElementQName("parallelGateway"), TFlowNode.class, null, f);
-                    }else {
-                        //TODO add other type of flow node elements
-                        return new JAXBElement<>(bpmnElementQName("userTask"), TFlowNode.class, null, f);
-                    }
+                    return new JAXBElement<>(bpmnElementQName(f), TFlowNode.class, null, f);
                 })
                 .forEach(f -> process.getFlowElement().add(f));
     }
@@ -128,6 +123,14 @@ public class Semantic {
 
     private static QName bpmnElementQName(String bpmnElement) {
         return new QName("http://www.omg.org/spec/BPMN/20100524/MODEL", bpmnElement, XMLConstants.DEFAULT_NS_PREFIX);
+    }
+
+    private static QName bpmnElementQName(TFlowNode flowNode) {
+        if (flowNode instanceof TGateway) {
+            return bpmnElementQName("parallelGateway");
+        }
+        //TODO add other type of flow node elements
+        return bpmnElementQName("userTask");
     }
 
     @RequiredArgsConstructor
