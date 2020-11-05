@@ -15,10 +15,7 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.xml.XMLConstants;
@@ -125,12 +122,13 @@ public class Semantic {
         return new QName("http://www.omg.org/spec/BPMN/20100524/MODEL", bpmnElement, XMLConstants.DEFAULT_NS_PREFIX);
     }
 
+    //TODO add other type of flow node elements
+    private static final Map<Class<? extends TFlowNode>, String> bpmnElementBindings = new HashMap<Class<? extends TFlowNode>, String>() {{
+        put(TParallelGateway.class, "parallelGateway");
+    }};
+
     private static QName bpmnElementQName(TFlowNode flowNode) {
-        if (flowNode instanceof TGateway) {
-            return bpmnElementQName("parallelGateway");
-        }
-        //TODO add other type of flow node elements
-        return bpmnElementQName("userTask");
+        return bpmnElementQName(bpmnElementBindings.getOrDefault(flowNode.getClass(), "userTask"));
     }
 
     @RequiredArgsConstructor
