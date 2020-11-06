@@ -67,7 +67,7 @@ public class BPMNDiagramRichBuilder {
 
         bpmnShape.setBounds(bounds(flowNode.dimension));
 
-        if (!ShapeType.isActivity(flowNode.type)) {
+        if (!ShapeType.ACTIVITY.equals(flowNode.type)) {
             BPMNLabel label = new BPMNLabel();
             label.setBounds(bounds(flowNode.label.dimension));
             // TODO add label style
