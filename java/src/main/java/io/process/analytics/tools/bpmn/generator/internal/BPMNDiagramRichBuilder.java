@@ -67,10 +67,19 @@ public class BPMNDiagramRichBuilder {
 
         bpmnShape.setBounds(bounds(flowNode.dimension));
 
-        if (!ShapeType.ACTIVITY.equals(flowNode.type)) {
+        // For activity, don't pass label position, BPMN vendor generally manage default positionning very well (centered on activity inside)
+        ShapeType shapeType = flowNode.type;
+        if (!ShapeType.ACTIVITY.equals(shapeType)) {
             BPMNLabel label = new BPMNLabel();
-            label.setBounds(bounds(flowNode.label.dimension));
-            // TODO add label style
+            DisplayDimension labelDimension = flowNode.label.dimension;
+
+            // For event adjust positions
+            if(ShapeType.EVENT == shapeType) {
+                labelDimension = new DisplayDimension( flowNode.dimension.x, labelDimension.y, labelDimension.width, labelDimension.height);
+            }
+
+            label.setBounds(bounds(labelDimension));
+            // TODO add label style?
             bpmnShape.setBPMNLabel(label);
         }
 
