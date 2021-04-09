@@ -42,13 +42,22 @@ public class AppTest {
     }
 
     @Test
-    public void main_generates_xml_output_file() throws Exception {
-        String outputPath = outputPath("A.2.0_with_diagram.bpmn.xml");
-        runApp(input("bpmn/A.2.0.bpmn.xml"), "-o", outputPath);
+    public void main_generates_bpmn_output_file_for_A_2_0() throws Exception {
+        checkBPMNGeneration("bpmn/A.2.0.bpmn.xml", "A.2.0_with_diagram.bpmn.xml");
+    }
+
+    private void checkBPMNGeneration(String inputFileName, String outputFileName) throws IOException {
+        String outputPath = outputPath(outputFileName);
+        runApp(input(inputFileName), "-o", outputPath);
 
         File bpmnFile = new File(outputPath);
         assertThat(bpmnFile).exists().isFile();
         assertThat(fileContent(bpmnFile)).contains("<semantic:definitions").contains("xmlns:semantic=\"http://www.omg.org/spec/BPMN/20100524/MODEL\"");
+    }
+
+    @Test
+    public void main_generates_bpmn_output_file_for_A_2_1() throws Exception {
+        checkBPMNGeneration("bpmn/A.2.1.bpmn.xml", "A.2.1_with_diagram.bpmn.xml");
     }
 
     @Test

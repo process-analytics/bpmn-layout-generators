@@ -61,6 +61,8 @@ public class AlgoToDisplayModelConverter {
             int y = yOffset + (CELL_HEIGHT - nodeHeight) / 2;
             DisplayDimension flowNodeDimension = new DisplayDimension(x, y, nodeWidth, nodeHeight);
 
+            // Labels positions better work with the SVG export
+            // BPMN label positions are adjusted in BPMNDiagramRichBuilder
             int labelX = xOffset + x(50);
             int labelY = yOffset + y(50);
             if (shapeType == ShapeType.EVENT) { // put the label under the shape

@@ -30,6 +30,7 @@ import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelCon
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayFlowNode;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayPoint;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
+import io.process.analytics.tools.bpmn.generator.model.ShapeType;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -66,10 +67,21 @@ public class BPMNDiagramRichBuilder {
 
         bpmnShape.setBounds(bounds(flowNode.dimension));
 
-        BPMNLabel label = new BPMNLabel();
-        label.setBounds(bounds(flowNode.label.dimension));
-        // TODO add label style
-        bpmnShape.setBPMNLabel(label);
+        // For activity, don't pass label position, BPMN vendor generally manage default positionning very well (centered on activity inside)
+        ShapeType shapeType = flowNode.type;
+        if (!ShapeType.ACTIVITY.equals(shapeType)) {
+            BPMNLabel label = new BPMNLabel();
+            DisplayDimension labelDimension = flowNode.label.dimension;
+
+            // For event adjust positions
+            if(ShapeType.EVENT == shapeType) {
+                labelDimension = new DisplayDimension( flowNode.dimension.x, labelDimension.y, labelDimension.width, labelDimension.height);
+            }
+
+            label.setBounds(bounds(labelDimension));
+            // TODO add label style?
+            bpmnShape.setBPMNLabel(label);
+        }
 
         bpmnShapes.add(bpmnShape);
     }
