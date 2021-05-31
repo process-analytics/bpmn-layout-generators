@@ -18,9 +18,11 @@ package io.process.analytics.tools.bpmn.generator.algo;
 import static io.process.analytics.tools.bpmn.generator.model.Edge.revertedEdge;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import io.process.analytics.tools.bpmn.generator.model.Edge;
@@ -81,28 +83,34 @@ public class ShapeSorter {
     }
 
     private Diagram doSort(Diagram diagram) {
-        Set<Shape> nodesToSort = new HashSet<>(diagram.getShapes());
-        Set<Edge> remainingEdges = new HashSet<>(diagram.getEdges());
-        Set<Edge> finalEdges = new HashSet<>(diagram.getEdges());
-        List<Join> joins = findAllJoins(nodesToSort, remainingEdges);
+        Set<Shape> shapeToSort = new TreeSet<>(Comparator.comparing(Shape::getId));
+        Set<Edge> remainingEdges = new TreeSet<>(Comparator.comparing(Edge::getId));
+        Set<Edge> finalEdges = new TreeSet<>(Comparator.comparing(Edge::getId));
+        shapeToSort.addAll(diagram.getShapes());
+        remainingEdges.addAll(diagram.getEdges());
+        finalEdges.addAll(diagram.getEdges());
+        List<Join> joins = findAllJoins(shapeToSort, remainingEdges);
 
         Diagram.DiagramBuilder sortedDiagram = Diagram.builder();
 
-        while (!nodesToSort.isEmpty()) {
-            Set<Shape> startShapes = getStartNodes(nodesToSort, remainingEdges);
+        while (!shapeToSort.isEmpty()) {
+            Set<Shape> startShapes = getStartNodes(shapeToSort, remainingEdges);
             if (!startShapes.isEmpty()) {
                 for (Shape startShape : startShapes) {
-                    nodesToSort.remove(startShape);
+                    shapeToSort.remove(startShape);
                     sortedDiagram.shape(startShape);
                     remainingEdges = removeEdgesStartingWithNode(remainingEdges, startShape);
                     joins.stream().filter(j -> j.isJoining(startShape)).forEach(j -> j.markProcessed(startShape));
                 }
             } else {
                 //retrieve a join that we "entered", i.e. we processed an element that has an edge going to this join.
-                Join join = getAJoinThatWasProcessed(joins);
+                Join join = getAJoinThatWasProcessed(joins, shapeToSort);
                 //revert all edges from this join to remove the cycle
                 remainingEdges = revertNonProcessedEdgeOfTheJoin(remainingEdges, join);
                 finalEdges = revertNonProcessedEdgeOfTheJoin(finalEdges, join);
+                if (getStartNodes(shapeToSort, remainingEdges).isEmpty()) {
+                    throw new IllegalStateException("Unable to remove cycle from the Diagram: " + diagram);
+                }
             }
         }
         return sortedDiagram.edges(finalEdges).build();
@@ -119,9 +127,11 @@ public class ShapeSorter {
         }).collect(Collectors.toSet());
     }
 
-    private Join getAJoinThatWasProcessed(List<Join> joins) {
+    private Join getAJoinThatWasProcessed(List<Join> joins, Set<Shape> shapeToSort) {
         // we should always have a join that was processed at least once when we don't have a start node
-        return joins.stream().filter(j -> !j.getProcessedEdges().isEmpty()).findFirst().get();
+        return joins.stream().filter(j -> !j.getProcessedEdges().isEmpty())
+                .filter(j -> shapeToSort.contains(j.to))
+                .findFirst().get();
     }
 
     private Set<Edge> removeEdgesStartingWithNode(Set<Edge> edges, Shape startShape) {

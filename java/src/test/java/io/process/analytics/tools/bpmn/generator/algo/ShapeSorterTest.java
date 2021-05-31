@@ -36,6 +36,7 @@ class ShapeSorterTest {
     private final Shape step3 = shape("step3");
     private final Shape step4 = shape("step4");
     private final Shape step5 = shape("step5");
+    private final Shape step6 = shape("step6");
     private final Shape end = shape("end");
 
     @Test
@@ -168,6 +169,56 @@ class ShapeSorterTest {
                 revertedEdge(t3),
                 revertedEdge(t4),
                 t5);
+    }
+    @Test
+    public void should_be_able_to_sort_multiple_cycles() {
+
+        // start -> step1 -> step2 -> end
+        //           <- step3 <-
+        Edge t1 = Edge.builder().id("t1").from(start.getId()).to(step1.getId()).build();
+        //cycle 1
+        Edge t2 = Edge.builder().id("t2").from(step1.getId()).to(step2.getId()).build();
+        Edge t3 = Edge.builder().id("t3").from(step2.getId()).to(step3.getId()).build();
+        Edge t4 = Edge.builder().id("t4").from(step3.getId()).to(step1.getId()).build();
+        // cycle 2
+        Edge t5 = Edge.builder().id("t5").from(step2.getId()).to(step4.getId()).build();
+        Edge t6 = Edge.builder().id("t6").from(step4.getId()).to(step5.getId()).build();
+        Edge t7 = Edge.builder().id("t7").from(step5.getId()).to(step6.getId()).build();
+        Edge t8 = Edge.builder().id("t8").from(step6.getId()).to(step4.getId()).build();
+
+        Edge t9 = Edge.builder().id("t9").from(step5.getId()).to(end.getId()).build();
+        Diagram diagram = Diagram.builder()
+                .shape(start)
+                .shape(step1)
+                .shape(step2)
+                .shape(step3)
+                .shape(step4)
+                .shape(step5)
+                .shape(step6)
+                .shape(end)
+                .edge(t1)
+                .edge(t2)
+                .edge(t3)
+                .edge(t4)
+                .edge(t5)
+                .edge(t6)
+                .edge(t7)
+                .edge(t8)
+                .edge(t9)
+                .build();
+
+        Diagram sorted = shapeSorter.sort(diagram);
+
+        assertThat(sorted.getEdges()).containsOnly(
+                t1,
+                t2,
+                revertedEdge(t3),
+                revertedEdge(t4),
+                t5,
+                t6,
+                revertedEdge(t7),
+                revertedEdge(t8),
+                t9);
     }
 
 }
