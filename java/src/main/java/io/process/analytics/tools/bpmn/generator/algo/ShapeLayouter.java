@@ -26,6 +26,7 @@ public class ShapeLayouter {
             addRowsWhenShapeIsASplit(diagram, grid, shape, positionOfCurrentShape);
         }
         compactGrid(grid);
+        log.debug("After compact grid \n{}", () -> toAscii(grid));
         return grid;
     }
 
@@ -89,13 +90,13 @@ public class ShapeLayouter {
             }
 
             if (currentRowCanBeMovedBelow) {
-                final int finalI = i+1;
+                final int finalI = i + 1;
                 for (Position position : grid.getRow(i)) {
                     grid.remove(position);
                     grid.add(position.toBuilder().y(finalI).build());
                 }
                 grid.removeEmptyRow(i);
-            }else{
+            } else {
                 i++;
             }
         }

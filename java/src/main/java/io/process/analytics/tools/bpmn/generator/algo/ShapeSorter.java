@@ -17,12 +17,7 @@ package io.process.analytics.tools.bpmn.generator.algo;
 
 import static io.process.analytics.tools.bpmn.generator.model.Edge.revertedEdge;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import io.process.analytics.tools.bpmn.generator.model.Edge;
@@ -83,9 +78,9 @@ public class ShapeSorter {
     }
 
     private Diagram doSort(Diagram diagram) {
-        Set<Shape> shapeToSort = new TreeSet<>(Comparator.comparing(Shape::getId));
-        Set<Edge> remainingEdges = new TreeSet<>(Comparator.comparing(Edge::getId));
-        Set<Edge> finalEdges = new TreeSet<>(Comparator.comparing(Edge::getId));
+        List<Shape> shapeToSort = new ArrayList<>();
+        List<Edge> remainingEdges = new ArrayList<>();
+        List<Edge> finalEdges = new ArrayList<>();
         shapeToSort.addAll(diagram.getShapes());
         remainingEdges.addAll(diagram.getEdges());
         finalEdges.addAll(diagram.getEdges());
@@ -94,7 +89,7 @@ public class ShapeSorter {
         Diagram.DiagramBuilder sortedDiagram = Diagram.builder();
 
         while (!shapeToSort.isEmpty()) {
-            Set<Shape> startShapes = getStartNodes(shapeToSort, remainingEdges);
+            List<Shape> startShapes = getStartNodes(shapeToSort, remainingEdges);
             if (!startShapes.isEmpty()) {
                 for (Shape startShape : startShapes) {
                     shapeToSort.remove(startShape);
@@ -116,7 +111,7 @@ public class ShapeSorter {
         return sortedDiagram.edges(finalEdges).build();
     }
 
-    private Set<Edge> revertNonProcessedEdgeOfTheJoin(Set<Edge> edges, Join join) {
+    private List<Edge> revertNonProcessedEdgeOfTheJoin(List<Edge> edges, Join join) {
         return edges.stream().map(edge -> {
             if (join.contains(edge) && !join.wasProcessed(edge.getFrom())) {
                 //revert the edge
@@ -124,27 +119,27 @@ public class ShapeSorter {
             } else {
                 return edge;
             }
-        }).collect(Collectors.toSet());
+        }).collect(Collectors.toList());
     }
 
-    private Join getAJoinThatWasProcessed(List<Join> joins, Set<Shape> shapeToSort) {
+    private Join getAJoinThatWasProcessed(List<Join> joins, List<Shape> shapeToSort) {
         // we should always have a join that was processed at least once when we don't have a start node
         return joins.stream().filter(j -> !j.getProcessedEdges().isEmpty())
                 .filter(j -> shapeToSort.contains(j.to))
                 .findFirst().get();
     }
 
-    private Set<Edge> removeEdgesStartingWithNode(Set<Edge> edges, Shape startShape) {
-        return edges.stream().filter(e -> !e.getFrom().equals(startShape.getId())).collect(Collectors.toSet());
+    private List<Edge> removeEdgesStartingWithNode(List<Edge> edges, Shape startShape) {
+        return edges.stream().filter(e -> !e.getFrom().equals(startShape.getId())).collect(Collectors.toList());
     }
 
-    private Set<Shape> getStartNodes(Set<Shape> nodesToSort, Set<Edge> edges) {
+    private List<Shape> getStartNodes(List<Shape> nodesToSort, List<Edge> edges) {
         return nodesToSort.stream()
                 .filter(n -> hasNoIncomingLink(n, edges))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
-    private List<Join> findAllJoins(Set<Shape> shapes, Set<Edge> edges) {
+    private List<Join> findAllJoins(List<Shape> shapes, List<Edge> edges) {
         //get the nodes that are "join"
         return shapes.stream().map(n -> Join.builder().to(n))
                 .map(j -> j.incomings(edges.stream().filter(e -> e.getTo().equals(j.to.getId())).map(Edge::getFrom).collect(Collectors.toList())))
@@ -156,7 +151,7 @@ public class ShapeSorter {
     }
 
 
-    private boolean hasNoIncomingLink(Shape m, Set<Edge> edges) {
+    private boolean hasNoIncomingLink(Shape m, List<Edge> edges) {
         return edges.stream().noneMatch(e -> e.getTo().equals(m.getId()));
     }
 
