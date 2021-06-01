@@ -169,6 +169,19 @@ public class SVGExporter {
                             .append(" stroke-opacity=\"").append(edgeStrokeOpacity).append("\"")
                             .append(" />\n");
                 }
+                if (edge.wayPoints.size() >= 4) {
+                    start = end;
+                    end = edge.wayPoints.get(3);
+                    content.append("<line")
+                            .append(" x1=\"").append(start.x).append("\"")
+                            .append(" y1=\"").append(start.y).append("\"")
+                            .append(" x2=\"").append(end.x).append("\"")
+                            .append(" y2=\"").append(end.y).append("\"")
+                            .append(" stroke=\"").append(colorEgeStroke).append("\"")
+                            .append(" stroke-width=\"").append(edgeStrokeWidth).append("\"")
+                            .append(" stroke-opacity=\"").append(edgeStrokeOpacity).append("\"")
+                            .append(" />\n");
+                }
             }
         }
 

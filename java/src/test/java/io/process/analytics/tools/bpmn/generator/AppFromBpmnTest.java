@@ -38,11 +38,8 @@ public class AppFromBpmnTest {
     }
 
     @Test
-    public void main_generates_svg_output_file() throws Exception {
-        String outputPath = outputPath("A.2.0_with_diagram.bpmn.svg");
-        runApp(input("bpmn/A.2.0.bpmn.xml"), "--output-type=SVG", "-o", outputPath);
-
-        assertSvgOutFile(outputPath);
+    public void main_generates_svg_output_file_for_A_2_0() throws Exception {
+        runAndCheckSvgGeneration("bpmn/A.2.0.bpmn.xml", "A.2.0_with_diagram.bpmn.svg");
     }
 
     @Test
@@ -55,6 +52,12 @@ public class AppFromBpmnTest {
         assertThat(fileContent(asciiFile)).contains("+---");
     }
 
+    @Test
+    public void main_generates_output_files_for_waypoints_positions_for_gateways() throws Exception {
+        runAndCheckBPMNGeneration("bpmn/waypoints-positions-gateways.bpmn.xml", "waypoints-positions_with_diagram.bpmn.xml");
+        runAndCheckSvgGeneration("bpmn/waypoints-positions-gateways.bpmn.xml", "waypoints-positions_with_diagram.bpmn.svg");
+    }
+
     // =================================================================================================================
     // UTILS
     // =================================================================================================================
@@ -63,6 +66,12 @@ public class AppFromBpmnTest {
         String outputPath = outputPath(outputFileName);
         runApp(input(inputFileName), "-o", outputPath);
         assertBpmnOutFile(outputPath);
+    }
+
+    private static void runAndCheckSvgGeneration(String inputFileName, String outputFileName) throws IOException {
+        String outputPath = outputPath(outputFileName);
+        runApp(input(inputFileName), "--output-type=SVG", "-o", outputPath);
+        assertSvgOutFile(outputPath);
     }
 
     private static String outputPath(String fileName) {

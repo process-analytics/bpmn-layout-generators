@@ -29,6 +29,7 @@ public class AlgoToDisplayModelConverter {
     // TODO this should be fields of the class and configured by the client code
     private static final int CELL_WIDTH = 200;
     private static final int CELL_HEIGHT = 100;
+    private static final int GW_OUT_HORIZ_EDGE_WIDTH = 35;
 
     public DisplayModel convert(Grid grid, Diagram diagram) {
         DisplayModel.DisplayModelBuilder model = DisplayModel.builder();
@@ -126,6 +127,14 @@ public class AlgoToDisplayModelConverter {
                 wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2, dimensionTo.y + dimensionTo.height / 2));
                 wayPoints.add(new DisplayPoint(dimensionTo.x, dimensionTo.y + dimensionTo.height / 2));
                 break;
+            case BottomLeftToTopRight_HorizontalVerticalHorizontal:
+            case TopLeftToBottomRight_HorizontalVerticalHorizontal:
+                int anchorFromX = dimensionFrom.x + dimensionFrom.width;
+                wayPoints.add(new DisplayPoint(anchorFromX, dimensionFrom.y + dimensionFrom.height / 2)); // point on from
+                wayPoints.add(new DisplayPoint(anchorFromX + GW_OUT_HORIZ_EDGE_WIDTH, dimensionFrom.y + dimensionFrom.height / 2));
+                wayPoints.add(new DisplayPoint(anchorFromX + GW_OUT_HORIZ_EDGE_WIDTH, dimensionTo.y + dimensionTo.height / 2));
+                wayPoints.add(new DisplayPoint(dimensionTo.x, dimensionTo.y + dimensionTo.height / 2)); // point on to
+                break;
             case BottomRightToTopLeft_FirstHorizontal: // horizontal then vertical
                 wayPoints.add(new DisplayPoint(dimensionFrom.x, dimensionFrom.y + dimensionFrom.height / 2));
                 wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2,
@@ -206,22 +215,26 @@ public class AlgoToDisplayModelConverter {
             }
         } else if (positionFrom.getX() < positionTo.getX()) {
             if (positionFrom.getY() < positionTo.getY()) {
-                // check if there is a shape at the right of 'positionFrom'
-                boolean shapeExistAtRightPositionFrom = grid.getPositions()
-                        .stream()
-                        .filter(p -> p.getY() == positionFrom.getY())
-                        .anyMatch(p -> p.getX() == positionFrom.getX() + 1);
-
-                edgeDirection = shapeExistAtRightPositionFrom ? EdgeDirection.TopLeftToBottomRight_FirstVertical : EdgeDirection.TopLeftToBottomRight_FirstHorizontal;
+                if (isRefGateway(positionFrom)) {
+                    edgeDirection = EdgeDirection.TopLeftToBottomRight_HorizontalVerticalHorizontal;
+                } else {
+                    boolean shapeExistAtRightPositionFrom = grid.getPositions()
+                            .stream()
+                            .filter(p -> p.getY() == positionFrom.getY())
+                            .anyMatch(p -> p.getX() == positionFrom.getX() + 1);
+                    edgeDirection = shapeExistAtRightPositionFrom ? EdgeDirection.TopLeftToBottomRight_FirstVertical : EdgeDirection.TopLeftToBottomRight_FirstHorizontal;
+                }
             }
             else {
-                // check if there is a shape above 'positionFrom'
+                if (isRefGateway(positionFrom)) {
+                    edgeDirection = EdgeDirection.BottomLeftToTopRight_HorizontalVerticalHorizontal;
+                } else {
                 boolean shapeExistAbovePositionFrom = grid.getPositions()
                         .stream()
                         .filter(p -> p.getX() == positionFrom.getX())
                         .anyMatch(p -> p.getY() == positionFrom.getY() - 1);
-
-                edgeDirection = shapeExistAbovePositionFrom ? EdgeDirection.BottomLeftToTopRight_FirstHorizontal : EdgeDirection.BottomLeftToTopRight_FirstVertical;
+                    edgeDirection = shapeExistAbovePositionFrom || isRefGateway(positionTo) ? EdgeDirection.BottomLeftToTopRight_FirstHorizontal : EdgeDirection.BottomLeftToTopRight_FirstVertical;
+                }
             }
         } else {
             if (positionFrom.getY() < positionTo.getY()) {
@@ -233,7 +246,6 @@ public class AlgoToDisplayModelConverter {
 
                 edgeDirection = shapeExistAtLeftPositionFrom ? EdgeDirection.TopRightToBottomLeft_FirstVertical : EdgeDirection.TopRightToBottomLeft_FirstHorizontal;
             } else {
-                edgeDirection = EdgeDirection.BottomRightToTopLeft_FirstHorizontal;
                 // check if there is a shape above 'positionFrom'
                 boolean shapeExistAbovePositionFrom = grid.getPositions()
                         .stream()
@@ -247,6 +259,10 @@ public class AlgoToDisplayModelConverter {
         return edgeDirection;
     }
 
+    private static boolean isRefGateway(Position position) {
+        return ShapeType.GATEWAY.equals(position.getShapeType());
+    }
+
     // visible for testing
     static enum EdgeDirection {
         HorizontalLeftToRight,
@@ -255,10 +271,12 @@ public class AlgoToDisplayModelConverter {
         VerticalTopToBottom,
         BottomLeftToTopRight_FirstHorizontal,
         BottomLeftToTopRight_FirstVertical,
+        BottomLeftToTopRight_HorizontalVerticalHorizontal,
         BottomRightToTopLeft_FirstHorizontal,
         BottomRightToTopLeft_FirstVertical,
         TopLeftToBottomRight_FirstHorizontal,
         TopLeftToBottomRight_FirstVertical,
+        TopLeftToBottomRight_HorizontalVerticalHorizontal,
         TopRightToBottomLeft_FirstHorizontal,
         TopRightToBottomLeft_FirstVertical,
     }
