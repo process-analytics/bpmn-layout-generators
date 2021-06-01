@@ -58,6 +58,12 @@ public class AppFromBpmnTest {
         runAndCheckSvgGeneration("bpmn/waypoints-positions-gateways.bpmn.xml", "waypoints-positions_with_diagram.bpmn.svg");
     }
 
+    @Test
+    public void main_generates_output_files_for_waypoints_positions_for_gateways_split_merge() throws Exception {
+        runAndCheckBPMNGeneration("bpmn/waypoints-positions-gateways_split_merge.bpmn.xml", "waypoints-positions-gateways_split_merge.bpmn.xml");
+        runAndCheckSvgGeneration("bpmn/waypoints-positions-gateways_split_merge.bpmn.xml", "waypoints-positions-gateways_split_merge.bpmn.svg");
+    }
+
     // =================================================================================================================
     // UTILS
     // =================================================================================================================
