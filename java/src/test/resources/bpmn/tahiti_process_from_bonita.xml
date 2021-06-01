@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bonitaConnector="http://www.bonitasoft.org/studio/connector/definition/6.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di_1="http://www.omg.org/spec/DD/20100524/DI" xmlns:java="http://jcp.org/en/jsr/detail?id=270" xmlns:model="http://www.omg.org/spec/BPMN/20100524/MODEL" xsi:schemaLocation="schemaLocation http://www.omg.org/spec/BPMN/20100524/MODEL schemas/BPMN20.xsd" exporter="BonitaSoft" exporterVersion="7.10.5" expressionLanguage="http://groovy.apache.org/" targetNamespace="http://bonitasoft.com/_X6qzUNADEeWPOd8DjXc1cQ">
+  <model:collaboration id="_X6qzUNADEeWPOd8DjXc1cQ">
+    <model:participant id="_BifVEEqNEeuVx6JeEd_CTg" name="New Vacation Request" processRef="_X6qzUdADEeWPOd8DjXc1cQ"/>
+    <model:participant id="_X6rdA9ADEeWPOd8DjXc1cQ" name="Employee actor">
+      <model:documentation>This is an example of actor that is mapped to any ACME users</model:documentation>
+    </model:participant>
+  </model:collaboration>
+  <model:process id="_X6qzUdADEeWPOd8DjXc1cQ" name="New Vacation Request">
+    <model:ioSpecification id="_BigjMUqNEeuVx6JeEd_CTg">
+      <model:dataInput id="_BigjMkqNEeuVx6JeEd_CTg" itemSubjectRef="_X6rckdADEeWPOd8DjXc1cQ"/>
+      <model:dataInput id="_BigjOEqNEeuVx6JeEd_CTg" itemSubjectRef="_X6rcm9ADEeWPOd8DjXc1cQ"/>
+      <model:inputSet id="_BigjM0qNEeuVx6JeEd_CTg">
+        <model:dataInputRefs>_BigjMkqNEeuVx6JeEd_CTg</model:dataInputRefs>
+      </model:inputSet>
+      <model:inputSet id="_BigjOUqNEeuVx6JeEd_CTg">
+        <model:dataInputRefs>_BigjOEqNEeuVx6JeEd_CTg</model:dataInputRefs>
+      </model:inputSet>
+      <model:outputSet id="_BigjPUqNEeuVx6JeEd_CTg"/>
+    </model:ioSpecification>
+    <model:laneSet id="New Vacation Request_laneSet">
+      <model:lane id="_X6qzUtADEeWPOd8DjXc1cQ" name="Employee lane">
+        <model:flowNodeRef>_X6qzU9ADEeWPOd8DjXc1cQ</model:flowNodeRef>
+        <model:flowNodeRef>_X6qzWdADEeWPOd8DjXc1cQ</model:flowNodeRef>
+      </model:lane>
+      <model:lane id="_X6q0HdADEeWPOd8DjXc1cQ" name="Manager lane">
+        <model:flowNodeRef>_X6q0HtADEeWPOd8DjXc1cQ</model:flowNodeRef>
+        <model:flowNodeRef>_X6q0VdADEeWPOd8DjXc1cQ</model:flowNodeRef>
+        <model:flowNodeRef>_X6q0WtADEeWPOd8DjXc1cQ</model:flowNodeRef>
+        <model:flowNodeRef>_X6q0kdADEeWPOd8DjXc1cQ</model:flowNodeRef>
+        <model:flowNodeRef>_X6rat9ADEeWPOd8DjXc1cQ</model:flowNodeRef>
+        <model:flowNodeRef>_X6ravtADEeWPOd8DjXc1cQ</model:flowNodeRef>
+        <model:flowNodeRef>_X6raw9ADEeWPOd8DjXc1cQ</model:flowNodeRef>
+        <model:flowNodeRef>_X6rayNADEeWPOd8DjXc1cQ</model:flowNodeRef>
+        <model:flowNodeRef>_X6razdADEeWPOd8DjXc1cQ</model:flowNodeRef>
+        <model:flowNodeRef>_X6ra5tADEeWPOd8DjXc1cQ</model:flowNodeRef>
+        <model:flowNodeRef>_X6rbHNADEeWPOd8DjXc1cQ</model:flowNodeRef>
+        <model:flowNodeRef>_X6rbJtADEeWPOd8DjXc1cQ</model:flowNodeRef>
+        <model:flowNodeRef>_7QHMgB6kEeuTVKzm8yFtdQ</model:flowNodeRef>
+        <model:flowNodeRef>__lX8kB6kEeuTVKzm8yFtdQ</model:flowNodeRef>
+        <model:flowNodeRef>_V-fToB6lEeuTVKzm8yFtdQ</model:flowNodeRef>
+      </model:lane>
+    </model:laneSet>
+    <model:dataObject id="DataObject_BigjMEqNEeuVx6JeEd_CTg_X6rckdADEeWPOd8DjXc1cQ" name="vacationRequest" isCollection="false" itemSubjectRef="_X6rckdADEeWPOd8DjXc1cQ"/>
+    <model:dataObject id="DataObject_BigjN0qNEeuVx6JeEd_CTg_X6rcm9ADEeWPOd8DjXc1cQ" name="requesterVacationAvailable" isCollection="false" itemSubjectRef="_X6rcm9ADEeWPOd8DjXc1cQ"/>
+    <model:startEvent id="_X6qzU9ADEeWPOd8DjXc1cQ" name="New Vacation Request Start"/>
+    <model:serviceTask id="_X6qzWdADEeWPOd8DjXc1cQ" name="Deduct requested days from available days"/>
+    <model:userTask id="_X6q0HtADEeWPOd8DjXc1cQ" name="Review request"/>
+    <model:boundaryEvent id="_X6q0PdADEeWPOd8DjXc1cQ" name="reviewRequestTimer" attachedToRef="_X6q0HtADEeWPOd8DjXc1cQ" cancelActivity="false">
+      <model:timerEventDefinition id="eventdef-reviewRequestTimer">
+        <model:timeCycle>604800000L</model:timeCycle>
+      </model:timerEventDefinition>
+    </model:boundaryEvent>
+    <model:boundaryEvent id="_X6q0QdADEeWPOd8DjXc1cQ" name="Catch cancellation message" attachedToRef="_X6q0HtADEeWPOd8DjXc1cQ" cancelActivity="true">
+      <model:messageEventDefinition id="eventdef-Catch cancellation message_BiofAUqNEeuVx6JeEd_CTg" messageRef="cancellationMessage"/>
+    </model:boundaryEvent>
+    <model:exclusiveGateway id="_X6q0VdADEeWPOd8DjXc1cQ" name="Request approved?" default="_X6rcrtADEeWPOd8DjXc1cQ"/>
+    <model:serviceTask id="_X6q0WtADEeWPOd8DjXc1cQ" name="Notify employee request approved" implementation="BonitaConnector" operationRef="Execemail">
+      <model:ioSpecification id="_BipGEUqNEeuVx6JeEd_CTg">
+        <model:dataInput id="_BipGEkqNEeuVx6JeEd_CTg" itemSubjectRef="emailConnectorInput"/>
+        <model:dataOutput id="_BipGFEqNEeuVx6JeEd_CTg" itemSubjectRef="emailConnectorOutput"/>
+        <model:inputSet id="_BipGE0qNEeuVx6JeEd_CTg">
+          <model:dataInputRefs>_BipGEkqNEeuVx6JeEd_CTg</model:dataInputRefs>
+        </model:inputSet>
+        <model:outputSet id="_BipGFUqNEeuVx6JeEd_CTg">
+          <model:dataOutputRefs>_BipGFEqNEeuVx6JeEd_CTg</model:dataOutputRefs>
+        </model:outputSet>
+      </model:ioSpecification>
+      <model:dataInputAssociation>
+        <model:targetRef>_BipGEkqNEeuVx6JeEd_CTg</model:targetRef>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BipGFkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">emailServerAddress</model:from>
+          <model:to id="_BipGF0qNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:smtpHost</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BiptIEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Integer" language="http://www.w3.org/1999/XPath">emailServerPort</model:from>
+          <model:to id="_BiptIUqNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:smtpPort</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjRYMEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean" language="http://www.w3.org/1999/XPath">emailServerUseSSL</model:from>
+          <model:to id="_BjRYMUqNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:sslSupport</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjRYMkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean" language="http://www.w3.org/1999/XPath">false</model:from>
+          <model:to id="_BjRYM0qNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:starttlsSupport</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjRYNEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">emailServerUsername</model:from>
+          <model:to id="_BjRYNUqNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:userName</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjR_QEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">emailServerPassword</model:from>
+          <model:to id="_BjR_QUqNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:password</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjR_QkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">emailNotificationSender</model:from>
+          <model:to id="_BjR_Q0qNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:from</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjSmUEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">emailRedirectRecipient ? emailRecipientRedirection : BonitaUsers.getProcessInstanceInitiator(apiAccessor,processInstanceId).userName</model:from>
+          <model:to id="_BjSmUUqNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:to</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjSmUkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjSmU0qNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:bcc</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjSmVEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjSmVUqNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:cc</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjSmVkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">import java.time.format.DateTimeFormatter
+
+def startDate = vacationRequest.startDay.format(DateTimeFormatter.ofPattern(&quot;EEE dd MMM&quot;, Locale.US))
+def endDate =  vacationRequest.endDay.format(DateTimeFormatter.ofPattern(&quot;EEE dd MMM&quot;, Locale.US))
+
+String.format(&quot;[%s] Approved request from %s %s to %s %s&quot;,emailTitlePrefix,startDate,vacationRequest.getStartTime(),endDate,vacationRequest.getEndTime())</model:from>
+          <model:to id="_BjSmV0qNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:subject</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjSmWEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean" language="http://www.w3.org/1999/XPath">true</model:from>
+          <model:to id="_BjSmWUqNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:html</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjSmWkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">import java.time.format.DateTimeFormatter
+
+def startDate = vacationRequest.startDay.format(DateTimeFormatter.ofPattern(&quot;EEE dd MMM&quot;, Locale.US))
+def endDate =  vacationRequest.endDay.format(DateTimeFormatter.ofPattern(&quot;EEE dd MMM&quot;, Locale.US))
+def tahitiAppURL = String.format(&quot;%s/apps/tahiti/&quot;,applicationURLPrefix)
+
+def manager = apiAccessor.identityAPI.getUser(vacationRequest.getReviewerBonitaBPMId());
+def managerName = String.format(&quot;%s %s&quot;, manager.firstName,manager.lastName);
+
+String.format(&quot;Your request from %s %s to %s %s has been &lt;b>approved&lt;/b> by %s.&lt;br>Please go to &lt;a href=\&quot;%s\&quot;>Tahiti application&lt;/a> if you need to request a cancellation for this request.&quot;,startDate,vacationRequest.getStartTime(),endDate,vacationRequest.getEndTime(),managerName,tahitiAppURL)
+</model:from>
+          <model:to id="_BjSmW0qNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:message</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjSmXEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">UTF-8</model:from>
+          <model:to id="_BjSmXUqNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:charset</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjSmXkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjSmX0qNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:replyTo</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjSmYEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">emailNotificationSender</model:from>
+          <model:to id="_BjSmYUqNEeuVx6JeEd_CTg">getDataInput('_BipGEkqNEeuVx6JeEd_CTg')/bonitaConnector:returnPath</model:to>
+        </model:assignment>
+      </model:dataInputAssociation>
+    </model:serviceTask>
+    <model:serviceTask id="_X6q0kdADEeWPOd8DjXc1cQ" name="Notify employee request refused" implementation="BonitaConnector" operationRef="Execemail">
+      <model:ioSpecification id="_BjTNYUqNEeuVx6JeEd_CTg">
+        <model:dataInput id="_BjTNYkqNEeuVx6JeEd_CTg" itemSubjectRef="emailConnectorInput"/>
+        <model:dataOutput id="_BjTNZEqNEeuVx6JeEd_CTg" itemSubjectRef="emailConnectorOutput"/>
+        <model:inputSet id="_BjTNY0qNEeuVx6JeEd_CTg">
+          <model:dataInputRefs>_BjTNYkqNEeuVx6JeEd_CTg</model:dataInputRefs>
+        </model:inputSet>
+        <model:outputSet id="_BjTNZUqNEeuVx6JeEd_CTg">
+          <model:dataOutputRefs>_BjTNZEqNEeuVx6JeEd_CTg</model:dataOutputRefs>
+        </model:outputSet>
+      </model:ioSpecification>
+      <model:dataInputAssociation>
+        <model:targetRef>_BjTNYkqNEeuVx6JeEd_CTg</model:targetRef>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjTNZkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">emailServerAddress</model:from>
+          <model:to id="_BjTNZ0qNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:smtpHost</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjTNaEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Integer" language="http://www.w3.org/1999/XPath">emailServerPort</model:from>
+          <model:to id="_BjTNaUqNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:smtpPort</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjTNakqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean" language="http://www.w3.org/1999/XPath">emailServerUseSSL</model:from>
+          <model:to id="_BjTNa0qNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:sslSupport</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjTNbEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean" language="http://www.w3.org/1999/XPath">false</model:from>
+          <model:to id="_BjTNbUqNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:starttlsSupport</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjTNbkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">emailServerUsername</model:from>
+          <model:to id="_BjTNb0qNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:userName</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjTNcEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">emailServerPassword</model:from>
+          <model:to id="_BjTNcUqNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:password</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjTNckqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">emailNotificationSender</model:from>
+          <model:to id="_BjTNc0qNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:from</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjTNdEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">emailRedirectRecipient ? emailRecipientRedirection : BonitaUsers.getProcessInstanceInitiator(apiAccessor, processInstanceId).userName</model:from>
+          <model:to id="_BjTNdUqNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:to</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjTNdkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjT0cEqNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:bcc</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjT0cUqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjT0ckqNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:cc</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjT0c0qNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">import java.time.format.DateTimeFormatter
+
+def startDate = vacationRequest.startDay.format(DateTimeFormatter.ofPattern(&quot;EEE dd MMM&quot;, Locale.US))
+def endDate =  vacationRequest.endDay.format(DateTimeFormatter.ofPattern(&quot;EEE dd MMM&quot;, Locale.US))
+
+String.format(&quot;[%s] Refused request from %s %s to %s %s&quot;,emailTitlePrefix,startDate,vacationRequest.getStartTime(),endDate,vacationRequest.getEndTime())</model:from>
+          <model:to id="_BjT0dEqNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:subject</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjT0dUqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean" language="http://www.w3.org/1999/XPath">true</model:from>
+          <model:to id="_BjT0dkqNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:html</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjT0d0qNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">import java.time.format.DateTimeFormatter
+
+def startDate = vacationRequest.startDay.format(DateTimeFormatter.ofPattern(&quot;EEE dd MMM&quot;, Locale.US))
+def endDate =  vacationRequest.endDay.format(DateTimeFormatter.ofPattern(&quot;EEE dd MMM&quot;, Locale.US))
+def tahitiAppURL = String.format(&quot;%s/apps/tahiti/&quot;,applicationURLPrefix)
+
+def manager = apiAccessor.identityAPI.getUser(vacationRequest.getReviewerBonitaBPMId());
+def managerName = String.format(&quot;%s %s&quot;, manager.firstName,manager.lastName);
+
+String.format(&quot;Your request from %s %s to %s %s has been &lt;b>refused&lt;/b> by %s.&lt;br>Please go to &lt;a href=\&quot;%s\&quot;>Tahiti application&lt;/a> if you need more information or fill a new request.&quot;,startDate,vacationRequest.getStartTime(),endDate,vacationRequest.getEndTime(),managerName,tahitiAppURL)
+</model:from>
+          <model:to id="_BjT0eEqNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:message</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjT0eUqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">UTF-8</model:from>
+          <model:to id="_BjT0ekqNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:charset</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjT0e0qNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjT0fEqNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:replyTo</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjT0fUqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">emailNotificationSender</model:from>
+          <model:to id="_BjT0fkqNEeuVx6JeEd_CTg">getDataInput('_BjTNYkqNEeuVx6JeEd_CTg')/bonitaConnector:returnPath</model:to>
+        </model:assignment>
+      </model:dataInputAssociation>
+    </model:serviceTask>
+    <model:endEvent id="_X6rat9ADEeWPOd8DjXc1cQ" name="New Vacation Request End">
+      <model:terminateEventDefinition id="_BjUbgUqNEeuVx6JeEd_CTg"/>
+    </model:endEvent>
+    <model:parallelGateway id="_X6ravtADEeWPOd8DjXc1cQ" name=" after refusal branch"/>
+    <model:parallelGateway id="_X6raw9ADEeWPOd8DjXc1cQ" name="after refusal join"/>
+    <model:exclusiveGateway id="_X6rayNADEeWPOd8DjXc1cQ" name="Gateway1"/>
+    <model:serviceTask id="_X6razdADEeWPOd8DjXc1cQ" name="Credit days from refused request"/>
+    <model:serviceTask id="_X6ra5tADEeWPOd8DjXc1cQ" name="Send reminder" implementation="BonitaConnector" operationRef="Execemail">
+      <model:ioSpecification id="_BjWQsUqNEeuVx6JeEd_CTg">
+        <model:dataInput id="_BjWQskqNEeuVx6JeEd_CTg" itemSubjectRef="emailConnectorInput"/>
+        <model:dataOutput id="_BjW3wEqNEeuVx6JeEd_CTg" itemSubjectRef="emailConnectorOutput"/>
+        <model:inputSet id="_BjWQs0qNEeuVx6JeEd_CTg">
+          <model:dataInputRefs>_BjWQskqNEeuVx6JeEd_CTg</model:dataInputRefs>
+        </model:inputSet>
+        <model:outputSet id="_BjW3wUqNEeuVx6JeEd_CTg">
+          <model:dataOutputRefs>_BjW3wEqNEeuVx6JeEd_CTg</model:dataOutputRefs>
+        </model:outputSet>
+      </model:ioSpecification>
+      <model:dataInputAssociation>
+        <model:targetRef>_BjWQskqNEeuVx6JeEd_CTg</model:targetRef>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjW3wkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">emailServerAddress</model:from>
+          <model:to id="_BjW3w0qNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:smtpHost</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjW3xEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Integer" language="http://www.w3.org/1999/XPath">emailServerPort</model:from>
+          <model:to id="_BjW3xUqNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:smtpPort</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjW3xkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean" language="http://www.w3.org/1999/XPath">emailServerUseSSL</model:from>
+          <model:to id="_BjYF4EqNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:sslSupport</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjYF4UqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean" language="http://www.w3.org/1999/XPath">false</model:from>
+          <model:to id="_BjYF4kqNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:starttlsSupport</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjYF40qNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">emailServerUsername</model:from>
+          <model:to id="_BjYF5EqNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:userName</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjYF5UqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">emailServerPassword</model:from>
+          <model:to id="_BjYF5kqNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:password</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjYF50qNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">emailNotificationSender</model:from>
+          <model:to id="_BjYF6EqNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:from</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjYF6UqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">emailRedirectRecipient ? emailRecipientRedirection : BonitaUsers.getProcessInstanceInitiatorManager(apiAccessor,processInstanceId).userName</model:from>
+          <model:to id="_BjYF6kqNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:to</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjYF60qNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjYF7EqNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:bcc</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjYF7UqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjYF7kqNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:cc</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjYF70qNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">import java.time.format.DateTimeFormatter
+
+def user = apiAccessor.identityAPI.getUser(vacationRequest.getRequesterBonitaBPMId())
+def requesterName = String.format(&quot;%s %s&quot;, user.firstName,user.lastName)
+def startDate = vacationRequest.startDay.format(DateTimeFormatter.ofPattern(&quot;EEE dd MMM&quot;, Locale.US))
+def endDate =  vacationRequest.endDay.format(DateTimeFormatter.ofPattern(&quot;EEE dd MMM&quot;, Locale.US))
+def teamViewURL = String.format(&quot;%s/apps/tahiti-manager/teamVacations&quot;,applicationURLPrefix)
+
+
+String.format(&quot;[%s] Reminder! %s wants to be off from %s %s to %s %s&quot;,emailTitlePrefix,requesterName,startDate,vacationRequest.getStartTime(),endDate,vacationRequest.getEndTime())</model:from>
+          <model:to id="_BjYF8EqNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:subject</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjYF8UqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean" language="http://www.w3.org/1999/XPath">true</model:from>
+          <model:to id="_BjYF8kqNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:html</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjYF80qNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">import java.time.format.DateTimeFormatter
+
+def user = apiAccessor.identityAPI.getUser(vacationRequest.getRequesterBonitaBPMId())
+def startDate = vacationRequest.startDay.format(DateTimeFormatter.ofPattern(&quot;EEE dd MMM&quot;, Locale.US))
+def endDate =  vacationRequest.endDay.format(DateTimeFormatter.ofPattern(&quot;EEE dd MMM&quot;, Locale.US))
+def teamViewURL = String.format(&quot;%s/apps/tahiti-manager/teamVacations&quot;,applicationURLPrefix)
+
+
+String.format(&quot;Please go to Tahiti application to review &lt;a href=\&quot;%s\&quot;> %s's pending request from %s %s to %s %s&lt;/a>.&quot;,teamViewURL,user.firstName,startDate,vacationRequest.getStartTime(),endDate,vacationRequest.getEndTime())
+</model:from>
+          <model:to id="_BjYF9EqNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:message</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjYF9UqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">UTF-8</model:from>
+          <model:to id="_BjYF9kqNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:charset</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjYF90qNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjYF-EqNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:replyTo</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjYF-UqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">emailNotificationSender</model:from>
+          <model:to id="_BjYF-kqNEeuVx6JeEd_CTg">getDataInput('_BjWQskqNEeuVx6JeEd_CTg')/bonitaConnector:returnPath</model:to>
+        </model:assignment>
+      </model:dataInputAssociation>
+    </model:serviceTask>
+    <model:endEvent id="_X6rbHNADEeWPOd8DjXc1cQ" name="End Reminder"/>
+    <model:endEvent id="_X6rbJtADEeWPOd8DjXc1cQ" name="end when request cancelled">
+      <model:terminateEventDefinition id="_BjYs8kqNEeuVx6JeEd_CTg"/>
+    </model:endEvent>
+    <model:parallelGateway id="_7QHMgB6kEeuTVKzm8yFtdQ" name="after approval branch"/>
+    <model:serviceTask id="__lX8kB6kEeuTVKzm8yFtdQ" name="Add event on employee calendar" implementation="BonitaConnector" operationRef="Execgoogle-calendar-v3-create-event">
+      <model:ioSpecification id="_BjZUA0qNEeuVx6JeEd_CTg">
+        <model:dataInput id="_BjZUBEqNEeuVx6JeEd_CTg" itemSubjectRef="google-calendar-v3-create-eventConnectorInput"/>
+        <model:dataOutput id="_BjZUBkqNEeuVx6JeEd_CTg" itemSubjectRef="google-calendar-v3-create-eventConnectorOutput"/>
+        <model:inputSet id="_BjZUBUqNEeuVx6JeEd_CTg">
+          <model:dataInputRefs>_BjZUBEqNEeuVx6JeEd_CTg</model:dataInputRefs>
+        </model:inputSet>
+        <model:outputSet id="_BjZUB0qNEeuVx6JeEd_CTg">
+          <model:dataOutputRefs>_BjZUBkqNEeuVx6JeEd_CTg</model:dataOutputRefs>
+        </model:outputSet>
+      </model:ioSpecification>
+      <model:dataInputAssociation>
+        <model:targetRef>_BjZUBEqNEeuVx6JeEd_CTg</model:targetRef>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUCEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">Tahiti/1.0</model:from>
+          <model:to id="_BjZUCUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:applicationName</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUCkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">JSON</model:from>
+          <model:to id="_BjZUC0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:authMode</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUDEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">googleServiceAccountId</model:from>
+          <model:to id="_BjZUDUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:serviceAccountId</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUDkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZUD0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:serviceAccountP12File</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUEEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">googleServiceAccountToken</model:from>
+          <model:to id="_BjZUEUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:serviceAccountJsonToken</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUEkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">apiAccessor.getIdentityAPI().getUser(vacationRequest.requesterBonitaBPMId).userName</model:from>
+          <model:to id="_BjZUE0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:serviceAccountUser</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUFEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">apiAccessor.getIdentityAPI().getUser(vacationRequest.requesterBonitaBPMId).userName</model:from>
+          <model:to id="_BjZUFUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:calendarId</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUFkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Integer" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZUF0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:maxAttendees</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUGEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean" language="http://www.w3.org/1999/XPath">true</model:from>
+          <model:to id="_BjZUGUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:sendNotifications</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUGkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean" language="http://www.w3.org/1999/XPath">false</model:from>
+          <model:to id="_BjZUG0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:prettyPrint</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUHEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">import com.bonita.tahiti.calendar.DateTimeScripts&#xD;
+&#xD;
+DateTimeScripts.getStartDateForGoogle(vacationRequest)&#xD;
+</model:from>
+          <model:to id="_BjZUHUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:startDate</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUHkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">import com.bonita.tahiti.calendar.DateTimeScripts&#xD;
+&#xD;
+DateTimeScripts.getStartTimeForGoogle(vacationRequest)</model:from>
+          <model:to id="_BjZUH0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:startTime</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUIEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">import com.bonita.tahiti.calendar.DateTimeScripts&#xD;
+&#xD;
+DateTimeScripts.getTimeZoneforGoogle(apiAccessor, vacationRequest)</model:from>
+          <model:to id="_BjZUIUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:startTimeZone</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUIkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">import com.bonita.tahiti.calendar.DateTimeScripts&#xD;
+&#xD;
+DateTimeScripts.getEndDateForGoogle(vacationRequest)</model:from>
+          <model:to id="_BjZUI0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:endDate</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUJEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">import com.bonita.tahiti.calendar.DateTimeScripts&#xD;
+&#xD;
+DateTimeScripts.getEndTimeForGoogle(vacationRequest)</model:from>
+          <model:to id="_BjZUJUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:endTime</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUJkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">import com.bonita.tahiti.calendar.DateTimeScripts&#xD;
+&#xD;
+DateTimeScripts.getTimeZoneforGoogle(apiAccessor, vacationRequest)</model:from>
+          <model:to id="_BjZUJ0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:endTimeZone</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUKEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean">import com.bonita.tahiti.calendar.DateTimeScripts&#xD;
+&#xD;
+DateTimeScripts.isAllDay(vacationRequest)</model:from>
+          <model:to id="_BjZUKUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:allDay</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUKkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZUK0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:description</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZULEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZULUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:location</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZULkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String">createTestCalendarEvent ? '[TEST] Vacation' : 'Vacation'</model:from>
+          <model:to id="_BjZUL0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:summary</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUMEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean" language="http://www.w3.org/1999/XPath">false</model:from>
+          <model:to id="_BjZUMUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:anyoneCanAddSelf</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUMkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">eventColorId</model:from>
+          <model:to id="_BjZUM0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:colorId</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUNEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZUNUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:gadgetDisplay</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZUNkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Integer" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZUN0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:gadgetHeight</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7EEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZ7EUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:gadgetIconLink</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7EkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZ7E0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:gadgetLink</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7FEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZ7FUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:gadgetTitle</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7FkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZ7F0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:gadgetType</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7GEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Integer" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZ7GUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:gadgetWidth</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7GkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean" language="http://www.w3.org/1999/XPath">false</model:from>
+          <model:to id="_BjZ7G0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:guestsCanInviteOthers</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7HEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean" language="http://www.w3.org/1999/XPath">false</model:from>
+          <model:to id="_BjZ7HUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:guestsCanSeeOtherGuests</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7HkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZ7H0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:id</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7IEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZ7IUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:originalStartDate</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7IkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZ7I0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:originalStartTime</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7JEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZ7JUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:originalStartTimeZone</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7JkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean" language="http://www.w3.org/1999/XPath">false</model:from>
+          <model:to id="_BjZ7J0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:reminderUseDefault</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7KEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Integer" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZ7KUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:sequence</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7KkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZ7K0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:sourceTitle</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7LEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZ7LUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:sourceUrl</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7LkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZ7L0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:status</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7MEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath"></model:from>
+          <model:to id="_BjZ7MUqNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:transparency</model:to>
+        </model:assignment>
+        <model:assignment>
+          <model:from xsi:type="model:tFormalExpression" id="_BjZ7MkqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.String" language="http://www.w3.org/1999/XPath">public</model:from>
+          <model:to id="_BjZ7M0qNEeuVx6JeEd_CTg">getDataInput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:visibility</model:to>
+        </model:assignment>
+      </model:dataInputAssociation>
+      <model:dataOutputAssociation>
+        <model:targetRef>_BjZUBkqNEeuVx6JeEd_CTg</model:targetRef>
+        <model:assignment>
+          <model:from id="_BjZ7NEqNEeuVx6JeEd_CTg">getDataOutput('_BjZUBEqNEeuVx6JeEd_CTg')/bonitaConnector:id</model:from>
+          <model:to xsi:type="model:tFormalExpression" id="_BjZ7NUqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:com.bonita.lr.model.VacationRequest" language="http://www.w3.org/1999/XPath">getDataObject('_X6rckdADEeWPOd8DjXc1cQ')</model:to>
+        </model:assignment>
+      </model:dataOutputAssociation>
+    </model:serviceTask>
+    <model:parallelGateway id="_V-fToB6lEeuTVKzm8yFtdQ" name="after approval join"/>
+    <model:sequenceFlow id="_X6rcrtADEeWPOd8DjXc1cQ" name="no" sourceRef="_X6q0VdADEeWPOd8DjXc1cQ" targetRef="_X6ravtADEeWPOd8DjXc1cQ"/>
+    <model:sequenceFlow id="_X6rcstADEeWPOd8DjXc1cQ" name="yes" sourceRef="_X6q0VdADEeWPOd8DjXc1cQ" targetRef="_7QHMgB6kEeuTVKzm8yFtdQ">
+      <model:conditionExpression xsi:type="model:tFormalExpression" id="_BjezkEqNEeuVx6JeEd_CTg" evaluatesToTypeRef="java:java.lang.Boolean"> &quot;approved&quot;.equals(vacationRequest.getStatus())</model:conditionExpression>
+    </model:sequenceFlow>
+    <model:sequenceFlow id="_X6rcu9ADEeWPOd8DjXc1cQ" name="" sourceRef="_X6qzU9ADEeWPOd8DjXc1cQ" targetRef="_X6qzWdADEeWPOd8DjXc1cQ"/>
+    <model:sequenceFlow id="_X6rcw9ADEeWPOd8DjXc1cQ" name="" sourceRef="_X6ravtADEeWPOd8DjXc1cQ" targetRef="_X6razdADEeWPOd8DjXc1cQ"/>
+    <model:sequenceFlow id="_X6rcx9ADEeWPOd8DjXc1cQ" name="" sourceRef="_X6ravtADEeWPOd8DjXc1cQ" targetRef="_X6q0kdADEeWPOd8DjXc1cQ"/>
+    <model:sequenceFlow id="_X6rcz9ADEeWPOd8DjXc1cQ" name="" sourceRef="_X6raw9ADEeWPOd8DjXc1cQ" targetRef="_X6rayNADEeWPOd8DjXc1cQ"/>
+    <model:sequenceFlow id="_X6rc09ADEeWPOd8DjXc1cQ" name="" sourceRef="_X6razdADEeWPOd8DjXc1cQ" targetRef="_X6raw9ADEeWPOd8DjXc1cQ"/>
+    <model:sequenceFlow id="_X6rc19ADEeWPOd8DjXc1cQ" name="" sourceRef="_X6q0kdADEeWPOd8DjXc1cQ" targetRef="_X6raw9ADEeWPOd8DjXc1cQ"/>
+    <model:sequenceFlow id="_X6rc29ADEeWPOd8DjXc1cQ" name="" sourceRef="_X6rayNADEeWPOd8DjXc1cQ" targetRef="_X6rat9ADEeWPOd8DjXc1cQ"/>
+    <model:sequenceFlow id="_X6rc4tADEeWPOd8DjXc1cQ" name="" sourceRef="_X6q0PdADEeWPOd8DjXc1cQ" targetRef="_X6ra5tADEeWPOd8DjXc1cQ"/>
+    <model:sequenceFlow id="_X6rc5dADEeWPOd8DjXc1cQ" name="" sourceRef="_X6ra5tADEeWPOd8DjXc1cQ" targetRef="_X6rbHNADEeWPOd8DjXc1cQ"/>
+    <model:sequenceFlow id="_X6rc8dADEeWPOd8DjXc1cQ" name="" sourceRef="_X6q0QdADEeWPOd8DjXc1cQ" targetRef="_X6rbJtADEeWPOd8DjXc1cQ"/>
+    <model:sequenceFlow id="_3hfAoN_IEeWiNcEF0dpopw" name="" sourceRef="_X6q0HtADEeWPOd8DjXc1cQ" targetRef="_X6q0VdADEeWPOd8DjXc1cQ"/>
+    <model:sequenceFlow id="_g3VaAOHjEeW1WZxhriN5fQ" name="" sourceRef="_V-fToB6lEeuTVKzm8yFtdQ" targetRef="_X6rayNADEeWPOd8DjXc1cQ"/>
+    <model:sequenceFlow id="_1oi9IPWBEeWB37k4YZqV0Q" name="" sourceRef="_X6qzWdADEeWPOd8DjXc1cQ" targetRef="_X6q0HtADEeWPOd8DjXc1cQ"/>
+    <model:sequenceFlow id="__lhGgB6kEeuTVKzm8yFtdQ" name="" sourceRef="_7QHMgB6kEeuTVKzm8yFtdQ" targetRef="__lX8kB6kEeuTVKzm8yFtdQ"/>
+    <model:sequenceFlow id="_V-iW8B6lEeuTVKzm8yFtdQ" name="" sourceRef="__lX8kB6kEeuTVKzm8yFtdQ" targetRef="_V-fToB6lEeuTVKzm8yFtdQ"/>
+    <model:sequenceFlow id="_6nIPAB6mEeuTVKzm8yFtdQ" name="" sourceRef="_7QHMgB6kEeuTVKzm8yFtdQ" targetRef="_X6q0WtADEeWPOd8DjXc1cQ"/>
+    <model:sequenceFlow id="_8PCoAB6mEeuTVKzm8yFtdQ" name="" sourceRef="_X6q0WtADEeWPOd8DjXc1cQ" targetRef="_V-fToB6lEeuTVKzm8yFtdQ"/>
+    <model:association id="_BkQPoEqNEeuVx6JeEd_CTg" sourceRef="_BkPBgUqNEeuVx6JeEd_CTg" targetRef="_X6q0HtADEeWPOd8DjXc1cQ"/>
+    <model:association id="_BkT6AUqNEeuVx6JeEd_CTg" sourceRef="_BkTS8EqNEeuVx6JeEd_CTg" targetRef="_X6q0kdADEeWPOd8DjXc1cQ"/>
+    <model:association id="_BkUhEUqNEeuVx6JeEd_CTg" sourceRef="_BkT6AkqNEeuVx6JeEd_CTg" targetRef="_X6q0WtADEeWPOd8DjXc1cQ"/>
+    <model:textAnnotation id="_Bjk6MEqNEeuVx6JeEd_CTg">
+      <model:text>Form for new vacation request is used to instantiate the process</model:text>
+    </model:textAnnotation>
+    <model:textAnnotation id="_BkPBgUqNEeuVx6JeEd_CTg">
+      <model:text>Form for review task</model:text>
+    </model:textAnnotation>
+    <model:textAnnotation id="_BkTS8EqNEeuVx6JeEd_CTg">
+      <model:text>Email notification of refusal to employee</model:text>
+    </model:textAnnotation>
+    <model:textAnnotation id="_BkT6AkqNEeuVx6JeEd_CTg">
+      <model:text>Email notification of approval to employee</model:text>
+    </model:textAnnotation>
+  </model:process>
+  <model:itemDefinition id="_X6rckdADEeWPOd8DjXc1cQ" structureRef="java:com.bonita.lr.model.VacationRequest"/>
+  <model:itemDefinition id="_X6rcm9ADEeWPOd8DjXc1cQ" structureRef="java:com.bonita.lr.model.VacationAvailable"/>
+  <model:itemDefinition id="emailConnectorInput" structureRef="bonitaConnector:emailInputType"/>
+  <model:message id="emailConnectorMessageInput" itemRef="emailConnectorInput"/>
+  <model:itemDefinition id="emailConnectorOutput" structureRef="bonitaConnector:emailOutputType"/>
+  <model:message id="emailConnectorMessageOutput" itemRef="emailConnectorOutput"/>
+  <model:interface id="email_Bonita_Connector_Interface" name="email_Bonita_Connector_Interface">
+    <model:operation id="Execemail" name="Execemail">
+      <model:inMessageRef>emailConnectorMessageInput</model:inMessageRef>
+      <model:outMessageRef>emailConnectorMessageOutput</model:outMessageRef>
+    </model:operation>
+  </model:interface>
+  <model:itemDefinition id="emailConnectorInput" structureRef="bonitaConnector:emailInputType"/>
+  <model:message id="emailConnectorMessageInput" itemRef="emailConnectorInput"/>
+  <model:itemDefinition id="emailConnectorOutput" structureRef="bonitaConnector:emailOutputType"/>
+  <model:message id="emailConnectorMessageOutput" itemRef="emailConnectorOutput"/>
+  <model:interface id="email_Bonita_Connector_Interface" name="email_Bonita_Connector_Interface">
+    <model:operation id="Execemail" name="Execemail">
+      <model:inMessageRef>emailConnectorMessageInput</model:inMessageRef>
+      <model:outMessageRef>emailConnectorMessageOutput</model:outMessageRef>
+    </model:operation>
+  </model:interface>
+  <model:itemDefinition id="emailConnectorInput" structureRef="bonitaConnector:emailInputType"/>
+  <model:message id="emailConnectorMessageInput" itemRef="emailConnectorInput"/>
+  <model:itemDefinition id="emailConnectorOutput" structureRef="bonitaConnector:emailOutputType"/>
+  <model:message id="emailConnectorMessageOutput" itemRef="emailConnectorOutput"/>
+  <model:interface id="email_Bonita_Connector_Interface" name="email_Bonita_Connector_Interface">
+    <model:operation id="Execemail" name="Execemail">
+      <model:inMessageRef>emailConnectorMessageInput</model:inMessageRef>
+      <model:outMessageRef>emailConnectorMessageOutput</model:outMessageRef>
+    </model:operation>
+  </model:interface>
+  <model:itemDefinition id="google-calendar-v3-create-eventConnectorInput" structureRef="bonitaConnector:google-calendar-v3-create-eventInputType"/>
+  <model:message id="google-calendar-v3-create-eventConnectorMessageInput" itemRef="google-calendar-v3-create-eventConnectorInput"/>
+  <model:itemDefinition id="google-calendar-v3-create-eventConnectorOutput" structureRef="bonitaConnector:google-calendar-v3-create-eventOutputType"/>
+  <model:message id="google-calendar-v3-create-eventConnectorMessageOutput" itemRef="google-calendar-v3-create-eventConnectorOutput"/>
+  <model:interface id="google-calendar-v3-create-event_Bonita_Connector_Interface" name="google-calendar-v3-create-event_Bonita_Connector_Interface">
+    <model:operation id="Execgoogle-calendar-v3-create-event" name="Execgoogle-calendar-v3-create-event">
+      <model:inMessageRef>google-calendar-v3-create-eventConnectorMessageInput</model:inMessageRef>
+      <model:outMessageRef>google-calendar-v3-create-eventConnectorMessageOutput</model:outMessageRef>
+    </model:operation>
+  </model:interface>
+  <di:BPMNDiagram name="NewVacationRequest">
+    <di:BPMNPlane id="plane__X6qzUNADEeWPOd8DjXc1cQ" bpmnElement="_X6qzUNADEeWPOd8DjXc1cQ">
+      <di:BPMNShape id="_X6rdmNADEeWPOd8DjXc1cQ" bpmnElement="_BifVEEqNEeuVx6JeEd_CTg" isHorizontal="true">
+        <dc:Bounds height="1008.0" width="1350.0" x="0.0" y="0.0"/>
+      </di:BPMNShape>
+      <di:BPMNShape id="_bk3npsoWEeehXNfADioIpw" bpmnElement="_X6qzUtADEeWPOd8DjXc1cQ" isHorizontal="true">
+        <dc:Bounds height="334.0" width="1320.0" x="30.0" y="0.0"/>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6rdntADEeWPOd8DjXc1cQ" bpmnElement="_X6qzU9ADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="30.0" width="30.0" x="250.0" y="112.0"/>
+        <di:BPMNLabel id="_BiiYYUqNEeuVx6JeEd_CTg" labelStyle="_BiiYYEqNEeuVx6JeEd_CTg">
+          <dc:Bounds height="17.0" width="192.0" x="169.0" y="147.0"/>
+        </di:BPMNLabel>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6rdqNADEeWPOd8DjXc1cQ" bpmnElement="_X6qzWdADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="70.0" width="140.0" x="195.0" y="194.0"/>
+      </di:BPMNShape>
+      <di:BPMNShape id="_bk3nrsoWEeehXNfADioIpw" bpmnElement="_X6q0HdADEeWPOd8DjXc1cQ" isHorizontal="true">
+        <dc:Bounds height="674.0" width="1320.0" x="30.0" y="334.0"/>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6rdudADEeWPOd8DjXc1cQ" bpmnElement="_X6q0HtADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="67.0" width="134.0" x="198.0" y="606.0"/>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6rdu9ADEeWPOd8DjXc1cQ" bpmnElement="_X6q0PdADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="30.0" width="30.0" x="181.0" y="640.0"/>
+        <di:BPMNLabel id="_BiofAEqNEeuVx6JeEd_CTg" labelStyle="_BiiYYEqNEeuVx6JeEd_CTg">
+          <dc:Bounds height="17.0" width="133.0" x="130.0" y="675.0"/>
+        </di:BPMNLabel>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6rdw9ADEeWPOd8DjXc1cQ" bpmnElement="_X6q0QdADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="30.0" width="30.0" x="289.0" y="665.0"/>
+        <di:BPMNLabel id="_BiofAkqNEeuVx6JeEd_CTg" labelStyle="_BiiYYEqNEeuVx6JeEd_CTg">
+          <dc:Bounds height="17.0" width="192.0" x="208.0" y="700.0"/>
+        </di:BPMNLabel>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6rdyNADEeWPOd8DjXc1cQ" bpmnElement="_X6q0VdADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="43.0" width="43.0" x="442.0" y="618.0"/>
+        <di:BPMNLabel id="_BipGEEqNEeuVx6JeEd_CTg" labelStyle="_BiiYYEqNEeuVx6JeEd_CTg">
+          <dc:Bounds height="17.0" width="126.0" x="473.0" y="639.0"/>
+        </di:BPMNLabel>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6rdzNADEeWPOd8DjXc1cQ" bpmnElement="_X6q0WtADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="68.0" width="136.0" x="653.0" y="422.0"/>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6rdz9ADEeWPOd8DjXc1cQ" bpmnElement="_X6q0kdADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="65.0" width="130.0" x="656.0" y="792.0"/>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6rd1dADEeWPOd8DjXc1cQ" bpmnElement="_X6rat9ADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="30.0" width="30.0" x="1110.0" y="625.0"/>
+        <di:BPMNLabel id="_BjUbgkqNEeuVx6JeEd_CTg" labelStyle="_BiiYYEqNEeuVx6JeEd_CTg">
+          <dc:Bounds height="17.0" width="178.0" x="1036.0" y="660.0"/>
+        </di:BPMNLabel>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6rd5dADEeWPOd8DjXc1cQ" bpmnElement="_X6ravtADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="43.0" width="43.0" x="564.0" y="733.0"/>
+        <di:BPMNLabel id="_BjVCkEqNEeuVx6JeEd_CTg" labelStyle="_BiiYYEqNEeuVx6JeEd_CTg">
+          <dc:Bounds height="17.0" width="155.0" x="508.0" y="781.0"/>
+        </di:BPMNLabel>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6rd6dADEeWPOd8DjXc1cQ" bpmnElement="_X6raw9ADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="43.0" width="43.0" x="844.0" y="733.0"/>
+        <di:BPMNLabel id="_BjVpoEqNEeuVx6JeEd_CTg" labelStyle="_BiiYYEqNEeuVx6JeEd_CTg">
+          <dc:Bounds height="17.0" width="133.0" x="799.0" y="781.0"/>
+        </di:BPMNLabel>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6rd7dADEeWPOd8DjXc1cQ" bpmnElement="_X6rayNADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="43.0" width="43.0" x="979.0" y="618.0"/>
+        <di:BPMNLabel id="_BjVpoUqNEeuVx6JeEd_CTg" labelStyle="_BiiYYEqNEeuVx6JeEd_CTg">
+          <dc:Bounds height="17.0" width="59.0" x="971.0" y="666.0"/>
+        </di:BPMNLabel>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6rd8dADEeWPOd8DjXc1cQ" bpmnElement="_X6razdADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="60.0" width="120.0" x="661.0" y="671.0"/>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6rd-tADEeWPOd8DjXc1cQ" bpmnElement="_X6ra5tADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="50.0" width="100.0" x="101.0" y="737.0"/>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6rd_dADEeWPOd8DjXc1cQ" bpmnElement="_X6rbHNADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="30.0" width="30.0" x="136.0" y="810.0"/>
+        <di:BPMNLabel id="_BjYs8UqNEeuVx6JeEd_CTg" labelStyle="_BiiYYEqNEeuVx6JeEd_CTg">
+          <dc:Bounds height="17.0" width="89.0" x="107.0" y="845.0"/>
+        </di:BPMNLabel>
+      </di:BPMNShape>
+      <di:BPMNShape id="_X6reBdADEeWPOd8DjXc1cQ" bpmnElement="_X6rbJtADEeWPOd8DjXc1cQ">
+        <dc:Bounds height="30.0" width="30.0" x="287.0" y="810.0"/>
+        <di:BPMNLabel id="_BjZUAEqNEeuVx6JeEd_CTg" labelStyle="_BiiYYEqNEeuVx6JeEd_CTg">
+          <dc:Bounds height="17.0" width="192.0" x="206.0" y="845.0"/>
+        </di:BPMNLabel>
+      </di:BPMNShape>
+      <di:BPMNShape id="_7QSLoB6kEeuTVKzm8yFtdQ" bpmnElement="_7QHMgB6kEeuTVKzm8yFtdQ">
+        <dc:Bounds height="43.0" width="43.0" x="564.0" y="506.0"/>
+        <di:BPMNLabel id="_BjZUAkqNEeuVx6JeEd_CTg" labelStyle="_BjZUAUqNEeuVx6JeEd_CTg">
+          <dc:Bounds height="17.0" width="155.0" x="508.0" y="554.0"/>
+        </di:BPMNLabel>
+      </di:BPMNShape>
+      <di:BPMNShape id="__lZxwB6kEeuTVKzm8yFtdQ" bpmnElement="__lX8kB6kEeuTVKzm8yFtdQ">
+        <dc:Bounds height="60.0" width="120.0" x="661.0" y="548.0"/>
+      </di:BPMNShape>
+      <di:BPMNShape id="_V-f6sB6lEeuTVKzm8yFtdQ" bpmnElement="_V-fToB6lEeuTVKzm8yFtdQ">
+        <dc:Bounds height="43.0" width="43.0" x="844.0" y="506.0"/>
+        <di:BPMNLabel id="_BjdlcEqNEeuVx6JeEd_CTg" labelStyle="_BjZUAUqNEeuVx6JeEd_CTg">
+          <dc:Bounds height="17.0" width="140.0" x="795.0" y="554.0"/>
+        </di:BPMNLabel>
+      </di:BPMNShape>
+      <di:BPMNEdge id="_X6reOdADEeWPOd8DjXc1cQ" bpmnElement="_X6rcrtADEeWPOd8DjXc1cQ">
+        <di_1:waypoint x="452.0" y="661.0"/>
+        <di_1:waypoint x="452.0" y="750.0"/>
+        <di_1:waypoint x="564.0" y="750.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_X6reP9ADEeWPOd8DjXc1cQ" bpmnElement="_X6rcstADEeWPOd8DjXc1cQ">
+        <di_1:waypoint x="460.0" y="618.0"/>
+        <di_1:waypoint x="460.0" y="537.0"/>
+        <di_1:waypoint x="564.0" y="537.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_X6reS9ADEeWPOd8DjXc1cQ" bpmnElement="_X6rcu9ADEeWPOd8DjXc1cQ">
+        <di_1:waypoint x="265.0" y="142.0"/>
+        <di_1:waypoint x="265.0" y="194.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_X6reZNADEeWPOd8DjXc1cQ" bpmnElement="_X6rcw9ADEeWPOd8DjXc1cQ">
+        <di_1:waypoint x="599.0" y="733.0"/>
+        <di_1:waypoint x="599.0" y="712.0"/>
+        <di_1:waypoint x="661.0" y="712.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_X6rea9ADEeWPOd8DjXc1cQ" bpmnElement="_X6rcx9ADEeWPOd8DjXc1cQ">
+        <di_1:waypoint x="593.0" y="776.0"/>
+        <di_1:waypoint x="593.0" y="827.0"/>
+        <di_1:waypoint x="656.0" y="827.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_X6red9ADEeWPOd8DjXc1cQ" bpmnElement="_X6rcz9ADEeWPOd8DjXc1cQ">
+        <di_1:waypoint x="887.0" y="754.0"/>
+        <di_1:waypoint x="1000.0" y="754.0"/>
+        <di_1:waypoint x="1000.0" y="661.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_X6refNADEeWPOd8DjXc1cQ" bpmnElement="_X6rc09ADEeWPOd8DjXc1cQ">
+        <di_1:waypoint x="781.0" y="701.0"/>
+        <di_1:waypoint x="853.0" y="701.0"/>
+        <di_1:waypoint x="853.0" y="733.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_X6regtADEeWPOd8DjXc1cQ" bpmnElement="_X6rc19ADEeWPOd8DjXc1cQ">
+        <di_1:waypoint x="786.0" y="826.0"/>
+        <di_1:waypoint x="856.0" y="826.0"/>
+        <di_1:waypoint x="856.0" y="776.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_X6reiNADEeWPOd8DjXc1cQ" bpmnElement="_X6rc29ADEeWPOd8DjXc1cQ">
+        <di_1:waypoint x="1022.0" y="639.0"/>
+        <di_1:waypoint x="1110.0" y="639.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_X6relNADEeWPOd8DjXc1cQ" bpmnElement="_X6rc4tADEeWPOd8DjXc1cQ">
+        <di_1:waypoint x="181.0" y="653.0"/>
+        <di_1:waypoint x="151.0" y="653.0"/>
+        <di_1:waypoint x="151.0" y="737.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_X6remdADEeWPOd8DjXc1cQ" bpmnElement="_X6rc5dADEeWPOd8DjXc1cQ">
+        <di_1:waypoint x="151.0" y="787.0"/>
+        <di_1:waypoint x="151.0" y="810.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_X6rertADEeWPOd8DjXc1cQ" bpmnElement="_X6rc8dADEeWPOd8DjXc1cQ">
+        <di_1:waypoint x="303.0" y="695.0"/>
+        <di_1:waypoint x="303.0" y="810.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_3hoxoN_IEeWiNcEF0dpopw" bpmnElement="_3hfAoN_IEeWiNcEF0dpopw">
+        <di_1:waypoint x="332.0" y="633.0"/>
+        <di_1:waypoint x="442.0" y="633.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_g3WoIOHjEeW1WZxhriN5fQ" bpmnElement="_g3VaAOHjEeW1WZxhriN5fQ">
+        <di_1:waypoint x="887.0" y="534.0"/>
+        <di_1:waypoint x="1001.0" y="534.0"/>
+        <di_1:waypoint x="1001.0" y="618.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_1otVMPWBEeWB37k4YZqV0Q" bpmnElement="_1oi9IPWBEeWB37k4YZqV0Q">
+        <di_1:waypoint x="267.0" y="264.0"/>
+        <di_1:waypoint x="267.0" y="606.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="__liUoB6kEeuTVKzm8yFtdQ" bpmnElement="__lhGgB6kEeuTVKzm8yFtdQ">
+        <di_1:waypoint x="599.0" y="549.0"/>
+        <di_1:waypoint x="599.0" y="566.0"/>
+        <di_1:waypoint x="661.0" y="566.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_V-i-AB6lEeuTVKzm8yFtdQ" bpmnElement="_V-iW8B6lEeuTVKzm8yFtdQ">
+        <di_1:waypoint x="781.0" y="568.0"/>
+        <di_1:waypoint x="851.0" y="568.0"/>
+        <di_1:waypoint x="851.0" y="549.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_6nI2EB6mEeuTVKzm8yFtdQ" bpmnElement="_6nIPAB6mEeuTVKzm8yFtdQ">
+        <di_1:waypoint x="593.0" y="506.0"/>
+        <di_1:waypoint x="593.0" y="452.0"/>
+        <di_1:waypoint x="653.0" y="452.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNEdge id="_8PDPEB6mEeuTVKzm8yFtdQ" bpmnElement="_8PCoAB6mEeuTVKzm8yFtdQ">
+        <di_1:waypoint x="789.0" y="457.0"/>
+        <di_1:waypoint x="854.0" y="457.0"/>
+        <di_1:waypoint x="854.0" y="506.0"/>
+        <di:BPMNLabel/>
+      </di:BPMNEdge>
+      <di:BPMNShape id="_bk3nt8oWEeehXNfADioIpw" bpmnElement="_Bjk6MEqNEeuVx6JeEd_CTg">
+        <dc:Bounds height="66.0" width="141.0" x="50.0" y="31.0"/>
+      </di:BPMNShape>
+      <di:BPMNShape id="_bk3nw8oWEeehXNfADioIpw" bpmnElement="_BkPBgUqNEeuVx6JeEd_CTg">
+        <dc:Bounds height="50.0" width="100.0" x="115.0" y="195.0"/>
+      </di:BPMNShape>
+      <di:BPMNEdge id="_B2vXsB6kEeuTVKzm8yFtdQ" bpmnElement="_BkQPoEqNEeuVx6JeEd_CTg">
+        <di_1:waypoint x="211.0" y="245.0"/>
+        <di_1:waypoint x="211.0" y="606.0"/>
+      </di:BPMNEdge>
+      <di:BPMNShape id="_bk3nzcoWEeehXNfADioIpw" bpmnElement="_BkTS8EqNEeuVx6JeEd_CTg">
+        <dc:Bounds height="50.0" width="119.0" x="828.0" y="528.0"/>
+      </di:BPMNShape>
+      <di:BPMNEdge id="_B2wl0B6kEeuTVKzm8yFtdQ" bpmnElement="_BkT6AUqNEeuVx6JeEd_CTg">
+        <di_1:waypoint x="872.0" y="578.0"/>
+        <di_1:waypoint x="872.0" y="685.0"/>
+        <di_1:waypoint x="741.0" y="685.0"/>
+        <di_1:waypoint x="741.0" y="792.0"/>
+      </di:BPMNEdge>
+      <di:BPMNShape id="_bk3n1soWEeehXNfADioIpw" bpmnElement="_BkT6AkqNEeuVx6JeEd_CTg">
+        <dc:Bounds height="59.0" width="138.0" x="819.0" y="18.0"/>
+      </di:BPMNShape>
+      <di:BPMNEdge id="_B2v-wB6kEeuTVKzm8yFtdQ" bpmnElement="_BkUhEUqNEeuVx6JeEd_CTg">
+        <di_1:waypoint x="875.0" y="77.0"/>
+        <di_1:waypoint x="875.0" y="249.0"/>
+        <di_1:waypoint x="734.0" y="249.0"/>
+        <di_1:waypoint x="734.0" y="422.0"/>
+      </di:BPMNEdge>
+    </di:BPMNPlane>
+    <di:BPMNLabelStyle id="_BiiYYEqNEeuVx6JeEd_CTg">
+      <dc:Font isBold="false" isItalic="false" isStrikeThrough="false" isUnderline="false" name="Segoe UI" size="9.0"/>
+    </di:BPMNLabelStyle>
+    <di:BPMNLabelStyle id="_BjZUAUqNEeuVx6JeEd_CTg">
+      <dc:Font isBold="false" isItalic="false" isStrikeThrough="false" isUnderline="false" name=".AppleSystemUIFont" size="9.0"/>
+    </di:BPMNLabelStyle>
+  </di:BPMNDiagram>
+</model:definitions>

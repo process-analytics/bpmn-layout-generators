@@ -59,6 +59,13 @@ public class AppFromBpmnTest {
                 "waypoints-positions-gateways_split_merge.bpmn");
     }
 
+    @Test
+    public void main_generates_outputs_for_tahiti_bpmn_file() throws Exception {
+        String inputFileName = "bpmn/tahiti_process_from_bonita.xml";
+        runAndCheckBPMNGeneration(inputFileName, "tahiti_process_from_bonita.xml");
+        runAndCheckSvgGeneration(inputFileName, "tahiti_process_from_bonita.bpmn.svg");
+    }
+
     // =================================================================================================================
     // UTILS
     // =================================================================================================================
