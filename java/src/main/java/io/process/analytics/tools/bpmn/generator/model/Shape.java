@@ -29,13 +29,17 @@ public class Shape {
     private final String id; // the bpmnElement id
     private final String name;
     private final ShapeType type;
+    private final boolean isSplitGateway;
 
     public static Shape shape(String name) {
-        return new Shape(name, name, ACTIVITY);
+        return new Shape(name, name, ACTIVITY, false);
     }
 
     public static Shape shape(String id, String name) {
-        return new Shape(id, name, ACTIVITY);
+        return new Shape(id, name, ACTIVITY, false);
     }
 
+    public static Shape shape(String id, String name, ShapeType type) {
+        return new Shape(id, name, type, false);
+    }
 }

@@ -55,12 +55,14 @@ public class BpmnToAlgoModelConverter {
     // visible for testing
     static Shape toShape(TFlowElement flowNode) {
         ShapeType shapeType = ACTIVITY;
+        boolean isSplitGateway = false;
         if (flowNode instanceof TGateway) {
             shapeType = GATEWAY;
+            isSplitGateway = ((TGateway) flowNode).getOutgoing().size() > 1;
         } else if (flowNode instanceof TEvent) {
             shapeType = EVENT;
         }
-        return new Shape(flowNode.getId(), flowNode.getName(), shapeType);
+        return new Shape(flowNode.getId(), flowNode.getName(), shapeType, isSplitGateway);
     }
 
 }

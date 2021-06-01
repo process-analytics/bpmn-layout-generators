@@ -210,11 +210,11 @@ public class AlgoToDisplayModelConverter {
                         .stream()
                         .filter(p -> p.getY() == positionFrom.getY())
                         .anyMatch(p -> p.getX() == positionFrom.getX() + 1);
-                edgeDirection = shapeExistAtRightPositionFrom || (isGatewayAt(positionFrom) && !isGatewayAt(positionTo)) ? EdgeDirection.TopLeftToBottomRight_FirstVertical : EdgeDirection.TopLeftToBottomRight_FirstHorizontal;
+                edgeDirection = shapeExistAtRightPositionFrom || (isGatewayAt(positionFrom) && (!isGatewayAt(positionTo) || isGatewaySplitAt(positionTo))) ? EdgeDirection.TopLeftToBottomRight_FirstVertical : EdgeDirection.TopLeftToBottomRight_FirstHorizontal;
             }
             else {
                 if (isGatewayAt(positionFrom)) {
-                    edgeDirection = isGatewayAt(positionTo) ? EdgeDirection.BottomLeftToTopRight_FirstHorizontal : EdgeDirection.BottomLeftToTopRight_FirstVertical;
+                    edgeDirection = !isGatewaySplitAt(positionFrom) || isGatewayAt(positionTo) && !isGatewaySplitAt(positionTo) ? EdgeDirection.BottomLeftToTopRight_FirstHorizontal : EdgeDirection.BottomLeftToTopRight_FirstVertical;
                 } else {
                     boolean shapeExistAbovePositionFrom = grid.getPositions()
                         .stream()
@@ -244,6 +244,10 @@ public class AlgoToDisplayModelConverter {
 
     private static boolean isGatewayAt(Position position) {
         return ShapeType.GATEWAY.equals(position.getShapeType());
+    }
+
+    private static boolean isGatewaySplitAt(Position position) {
+        return isGatewayAt(position) && position.isSplitGateway();
     }
 
     // visible for testing

@@ -9,10 +9,12 @@ public class Position {
     private final String shape;
     private final String shapeName;
     private final ShapeType shapeType;
+    private final boolean isSplitGateway;
+
     private final int x;
     private final int y;
 
     public static Position position(Shape shape, int x, int y) {
-        return new Position(shape.getId(), shape.getName(), shape.getType(), x, y);
+        return new Position(shape.getId(), shape.getName(), shape.getType(), shape.isSplitGateway(), x, y);
     }
 }
