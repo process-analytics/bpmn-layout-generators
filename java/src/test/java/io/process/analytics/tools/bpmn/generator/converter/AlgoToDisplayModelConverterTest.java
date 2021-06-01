@@ -99,7 +99,7 @@ class AlgoToDisplayModelConverterTest {
         //  | from-gw         |
         //  +-----------------+
         assertThat(computeEdgeDirection(positionGateway(10, 100), position(50, 50)))
-                .isEqualTo(BottomLeftToTopRight_HorizontalVerticalHorizontal);
+                .isEqualTo(BottomLeftToTopRight_FirstVertical);
     }
 
     @Test
@@ -109,7 +109,7 @@ class AlgoToDisplayModelConverterTest {
         //  | from-gw         |
         //  +-----------------+
         assertThat(computeEdgeDirection(positionGateway(10, 100), positionGateway(50, 50)))
-                .isEqualTo(BottomLeftToTopRight_HorizontalVerticalHorizontal);
+                .isEqualTo(BottomLeftToTopRight_FirstHorizontal);
     }
 
     @Test
@@ -119,7 +119,7 @@ class AlgoToDisplayModelConverterTest {
         //  |            to   |
         //  +-----------------+
         assertThat(computeEdgeDirection(positionGateway(10, 10), position(50, 50)))
-                .isEqualTo(TopLeftToBottomRight_HorizontalVerticalHorizontal);
+                .isEqualTo(TopLeftToBottomRight_FirstVertical);
     }
 
     @Test
@@ -129,7 +129,17 @@ class AlgoToDisplayModelConverterTest {
         //  |           to-gw |
         //  +-----------------+
         assertThat(computeEdgeDirection(positionGateway(10, 10), positionGateway(50, 50)))
-                .isEqualTo(TopLeftToBottomRight_HorizontalVerticalHorizontal);
+                .isEqualTo(TopLeftToBottomRight_FirstHorizontal);
+    }
+
+    @Test
+    public void computeEdgeDirection_from_gateway_on_top_left_to_on_bottom_right_is_gateway_with_element_on_top_left() {
+        //  +-----------------+
+        //  | from-gw   elt   |
+        //  |           to-gw |
+        //  +-----------------+
+        assertThat(computeEdgeDirection(positionGateway(1, 1), positionGateway(2, 2), Grid.of(position(2, 1))))
+                .isEqualTo(TopLeftToBottomRight_FirstVertical);
     }
 
     @Test
