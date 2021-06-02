@@ -8,4 +8,5 @@
   rJava::.jinit()
   rJava::.jpackage(pkgname, lib.loc = libname)
   rJava::.jaddClassPath(paste(libname,"/",pkgname,"/","java"))
+  writeLines(rJava::.jclassPath())
 }
