@@ -1,7 +1,6 @@
 #' @export
 generateBpmnLayout <- function(flow_node, sequence_flow, outputType = "BPMN") {
   rJava::.jinit()
-  rJava::.jaddClassPath("../../java/target/bpmn-layout-generator-0.1.0-SNAPSHOT-jar-with-dependencies.jar")
   bpmnLayoutJava <- rJava::.jnew("io/process/analytics/tools/bpmn/generator/BPMNLayoutGenerator")
   type <- rJava::J(class = "io/process/analytics.tools/bpmn/generator/BPMNLayoutGenerator$ExportType", "valueOf", outputType)
 
