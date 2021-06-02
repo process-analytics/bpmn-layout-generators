@@ -1,0 +1,26 @@
+"","from_id","node","type","value"
+"1",1,"Add event on employee calendar","task",52
+"2",2,"after approval branch","task",53
+"3",3,"after approval join","task",53
+"4",4,"ARTIFICIAL_END","task",56
+"5",5,"ARTIFICIAL_START","task",56
+"6",6,"Deduct requested days from available days","task",53
+"7",7,"End Reminder","task",3
+"8",8,"end when request cancelled","task",3
+"9",9,"Gateway1","task",53
+"10",10,"New Vacation Request End","task",53
+"11",11,"New Vacation Request Start","task",53
+"12",12,"Notify employee request approved","task",53
+"13",13,"Request approved?","task",53
+"14",14,"Review request","task",56
+"15",15,"Send reminder","task",3
+"16",1002,"gateway1","gateway",53
+"17",1005,"gateway2","gateway",56
+"18",1006,"gateway3","gateway",53
+"19",1008,"gateway4","gateway",3
+"20",1014,"gateway5","gateway",56
+"21",2004,"gateways_merge_1","gateway",56
+"22",2008,"gateways_merge_2","gateway",3
+"23",2012,"gateways_merge_3","gateway",53
+"24",2014,"gateways_merge_4","gateway",56
+"25",2015,"gateways_merge_5","gateway",3
