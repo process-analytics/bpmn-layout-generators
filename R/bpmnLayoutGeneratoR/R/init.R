@@ -1,8 +1,10 @@
 .onLoad <- function(libname, pkgname) {
   writeLines("Calling on load")
-  writeLines(file.path(getwd()))
-  writeLines(dir(file.path(getwd())))
-  writeLines(dir(file.path(getwd(), "java")))
+  writeLines(dir(file.path(getwd(), "inst/java")))
+  writeLines("lib name is")
+  writeLines(libname)
+  writeLines("pkgname is")
+  writeLines(pkgname)
   rJava::.jpackage(pkgname, lib.loc = libname)
-  rJava::.jaddClassPath(dir(file.path(getwd(), "java"), full.names = TRUE))
+  rJava::.jaddClassPath(dir(file.path(getwd(), "inst/java"), full.names = TRUE))
 }
