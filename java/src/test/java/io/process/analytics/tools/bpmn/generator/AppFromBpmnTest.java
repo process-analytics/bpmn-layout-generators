@@ -28,18 +28,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AppFromBpmnTest {
 
     @Test
-    public void main_generates_bpmn_output_file_for_A_2_0() throws Exception {
+    public void main_generates_output_files_for_A_2_0() throws Exception {
         runAndCheckBPMNGeneration("bpmn/A.2.0.bpmn.xml", "A.2.0_with_diagram.bpmn.xml");
-    }
-
-    @Test
-    public void main_generates_bpmn_output_file_for_A_2_1() throws Exception {
-        runAndCheckBPMNGeneration("bpmn/A.2.1.bpmn.xml", "A.2.1_with_diagram.bpmn.xml");
-    }
-
-    @Test
-    public void main_generates_svg_output_file_for_A_2_0() throws Exception {
         runAndCheckSvgGeneration("bpmn/A.2.0.bpmn.xml", "A.2.0_with_diagram.bpmn.svg");
+    }
+
+    @Test
+    public void main_generates_output_files_for_A_2_1() throws Exception {
+        runAndCheckBPMNGeneration("bpmn/A.2.1.bpmn.xml", "A.2.1_with_diagram.bpmn.xml");
+        runAndCheckSvgGeneration("bpmn/A.2.1.bpmn.xml", "A.2.1_with_diagram.bpmn.svg");
     }
 
     @Test
