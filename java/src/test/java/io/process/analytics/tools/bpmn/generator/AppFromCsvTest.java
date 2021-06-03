@@ -17,39 +17,59 @@ package io.process.analytics.tools.bpmn.generator;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static io.process.analytics.tools.bpmn.generator.App.runApp;
-import static io.process.analytics.tools.bpmn.generator.AppTest.assertBpmnOutFile;
-import static io.process.analytics.tools.bpmn.generator.AppTest.input;
+import static io.process.analytics.tools.bpmn.generator.AppTest.*;
 
 public class AppFromCsvTest {
 
     @Test
     public void main_generates_bpmn_with_simple_discovery_data() throws Exception {
-        String outputPath = outputPath("from_simple_csv_diagram.bpmn.xml");
-        runApp("--input-type=CSV", "--output", outputPath, input("csv/PatientsProcess/nodeSimple.csv"), input("csv/PatientsProcess/edgeSimple.csv"));
-
-        assertBpmnOutFile(outputPath);
+        runAndCheckBpmnAndSvgGeneration("csv/PatientsProcess/nodeSimple.csv", "csv/PatientsProcess/edgeSimple.csv",
+                "from_simple_csv_diagram.bpmn");
     }
 
     @Test
     public void main_generates_bpmn_with_gateways() throws Exception {
-        String outputPath = outputPath("from_csv_with_gateways.bpmn");
-        runApp("--input-type=CSV", "--output", outputPath, input("csv/PatientsProcess/gateway_node_simple.csv"), input("csv/PatientsProcess/gateway_edge_simple.csv"));
-
-        assertBpmnOutFile(outputPath);
+        runAndCheckBpmnAndSvgGeneration("csv/PatientsProcess/gateway_node_simple.csv",
+                "csv/PatientsProcess/gateway_edge_simple.csv", "from_csv_with_gateways.bpmn");
     }
 
     @Test
     public void main_generates_bpmn_with_patients_process_discovery_data() throws Exception {
-        String outputPath = outputPath("from_patients_csv_diagram.bpmn.xml");
-        runApp("--input-type=CSV", "--output", outputPath, input("csv/PatientsProcess/node.csv"), input("csv/PatientsProcess/edge.csv"));
+        runAndCheckBpmnAndSvgGeneration("csv/PatientsProcess/node.csv", "csv/PatientsProcess/edge.csv",
+                "from_patients_csv_diagram.bpmn");
+    }
 
-        assertBpmnOutFile(outputPath);
+    @Test
+    public void main_generates_bpmn_with_vacation_request_bonita_discovery_data() throws Exception {
+        runAndCheckBpmnAndSvgGeneration("csv/VacationRequestBonita/nodes.csv", "csv/VacationRequestBonita/edges.csv",
+                "from_vacation_request_bonita_csv_diagram.bpmn");
     }
 
     // =================================================================================================================
     // UTILS
     // =================================================================================================================
+
+    private static void runAndCheckBpmnAndSvgGeneration(String inputNodesFileName, String inputEdgesFileName,
+            String outputFileBaseName) throws IOException {
+        runAndCheckBpmnGeneration(inputNodesFileName, inputEdgesFileName, outputFileBaseName + ".xml");
+        runAndCheckSvgGeneration(inputNodesFileName, inputEdgesFileName, outputFileBaseName + ".svg");
+    }
+
+    private static void runAndCheckBpmnGeneration(String inputNodesFileName, String inputEdgesFileName,
+            String outputFileName) throws IOException {
+        String outputPath = outputPath(outputFileName);
+        runApp("--input-type=CSV", "--output", outputPath, input(inputNodesFileName), input(inputEdgesFileName));
+        assertBpmnOutFile(outputPath);
+    }
+
+    private static void runAndCheckSvgGeneration(String inputNodesFileName, String inputEdgesFileName, String outputFileName) throws IOException {
+        String outputPath = outputPath(outputFileName);
+        runApp("--input-type=CSV", "--output-type=SVG", "--output", outputPath, input(inputNodesFileName), input(inputEdgesFileName));
+        assertSvgOutFile(outputPath);
+    }
 
     private static String outputPath(String fileName) {
         return "target/test/output/AppFromCsvTest/" + fileName;
