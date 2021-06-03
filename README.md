@@ -34,6 +34,7 @@ Plan work for the 1st implementation
 ## Implementations
 
 - [java](java/README.md)
+- [R](R/bpmnLayoutGeneratoR/README.adoc) This is only a wrapper of the java library
 
 ## Existing alternatives
 

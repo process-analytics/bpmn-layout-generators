@@ -1,7 +1,5 @@
 #' @export
 generateBpmnLayout <- function(flow_node, sequence_flow, outputType = "BPMN") {
-  writeLines("classpath is")
-  writeLines(rJava::.jclassPath())
   bpmnLayoutJava <- rJava::.jnew("io/process/analytics/tools/bpmn/generator/BPMNLayoutGenerator")
   type <- rJava::J(class = "io/process/analytics.tools/bpmn/generator/BPMNLayoutGenerator$ExportType", "valueOf", outputType)
 
@@ -17,7 +15,3 @@ to_csv <- function(x) {
   utils::write.csv(x, connection)
   return(fn_as_csv)
 }
-
-"1,1,Add event on employee calendar,task"
-
-"1,1,1,2012"

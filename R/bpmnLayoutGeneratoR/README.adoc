@@ -1,0 +1,28 @@
+= bpmnLayoutGeneratoR
+
+This library wraps the bpmn-layout-generator java library
+
+== Usage
+
+[source,R]
+----
+# install the package, you will need a github personal access token
+devtools::install_github("process-analytics/bpmn-layout-generators", auth_token="<GITHUB_PERSONAL_ACCESS_TOKEN>", ref="bpmnLayoutGeneratoR-x.y.z", subdir="R/bpmnLayoutGeneratoR")
+
+# example source sequence_flow and flow_node
+sequence_flow <- data.frame(id="1",from_id="1",to_id="2")
+flow_node <- data.frame(id=c(1,2),node=c("task1","task2"),type=c("task","task"))
+
+# Call the library and generate the diagram using "ASCII", "BPMN" or "SVG"
+diagram <- bpmnLayoutGeneratoR::generateBpmnLayout(flow_node, sequence_flow, "ASCII")
+----
+
+* `bpmnLayoutGeneratoR-x.y.z` is the version you want to install, see the available branches on github
+* Personal access token can be generated in your github's settings in the `Developer settings` section.
+
+== Build and release new version
+
+* on the master branch create a branch named `bpmnLayoutGeneratoR-x.y.z` (replace with version)
+* execute `make install` in the directory `R/bpmnLayoutGeneratoR`
+* commit and push everything with title `release(R): bpmnLayoutGeneratoR-x.y.z`
+
