@@ -206,45 +206,44 @@ public class AlgoToDisplayModelConverter {
             }
         } else if (positionFrom.getX() < positionTo.getX()) {
             if (positionFrom.getY() < positionTo.getY()) {
-                // check if there is a shape at the right of 'positionFrom'
                 boolean shapeExistAtRightPositionFrom = grid.getPositions()
                         .stream()
                         .filter(p -> p.getY() == positionFrom.getY())
                         .anyMatch(p -> p.getX() == positionFrom.getX() + 1);
-
-                edgeDirection = shapeExistAtRightPositionFrom ? EdgeDirection.TopLeftToBottomRight_FirstVertical : EdgeDirection.TopLeftToBottomRight_FirstHorizontal;
+                edgeDirection = shapeExistAtRightPositionFrom || (isGatewayAt(positionFrom) && !isGatewayAt(positionTo)) ? EdgeDirection.TopLeftToBottomRight_FirstVertical : EdgeDirection.TopLeftToBottomRight_FirstHorizontal;
             }
             else {
-                // check if there is a shape above 'positionFrom'
-                boolean shapeExistAbovePositionFrom = grid.getPositions()
+                if (isGatewayAt(positionFrom)) {
+                    edgeDirection = isGatewayAt(positionTo) ? EdgeDirection.BottomLeftToTopRight_FirstHorizontal : EdgeDirection.BottomLeftToTopRight_FirstVertical;
+                } else {
+                    boolean shapeExistAbovePositionFrom = grid.getPositions()
                         .stream()
                         .filter(p -> p.getX() == positionFrom.getX())
                         .anyMatch(p -> p.getY() == positionFrom.getY() - 1);
-
-                edgeDirection = shapeExistAbovePositionFrom ? EdgeDirection.BottomLeftToTopRight_FirstHorizontal : EdgeDirection.BottomLeftToTopRight_FirstVertical;
+                    edgeDirection = shapeExistAbovePositionFrom || isGatewayAt(positionTo) ? EdgeDirection.BottomLeftToTopRight_FirstHorizontal : EdgeDirection.BottomLeftToTopRight_FirstVertical;
+                }
             }
         } else {
             if (positionFrom.getY() < positionTo.getY()) {
-                // check if there is a shape at the left of 'positionFrom'
                 boolean shapeExistAtLeftPositionFrom = grid.getPositions()
                         .stream()
                         .filter(p -> p.getY() == positionFrom.getY())
                         .anyMatch(p -> p.getX() == positionFrom.getX() - 1);
-
                 edgeDirection = shapeExistAtLeftPositionFrom ? EdgeDirection.TopRightToBottomLeft_FirstVertical : EdgeDirection.TopRightToBottomLeft_FirstHorizontal;
             } else {
-                edgeDirection = EdgeDirection.BottomRightToTopLeft_FirstHorizontal;
-                // check if there is a shape above 'positionFrom'
                 boolean shapeExistAbovePositionFrom = grid.getPositions()
                         .stream()
                         .filter(p -> p.getX() == positionFrom.getX())
                         .anyMatch(p -> p.getY() == positionFrom.getY() - 1);
-
                 edgeDirection = shapeExistAbovePositionFrom ? EdgeDirection.BottomRightToTopLeft_FirstHorizontal : EdgeDirection.BottomRightToTopLeft_FirstVertical;
             }
         }
 
         return edgeDirection;
+    }
+
+    private static boolean isGatewayAt(Position position) {
+        return ShapeType.GATEWAY.equals(position.getShapeType());
     }
 
     // visible for testing

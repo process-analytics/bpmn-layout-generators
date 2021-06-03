@@ -15,6 +15,8 @@ package io.process.analytics.tools.bpmn.generator.converter;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.EdgeDirection;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.Position;
+import io.process.analytics.tools.bpmn.generator.model.Shape;
+import io.process.analytics.tools.bpmn.generator.model.ShapeType;
 import org.junit.jupiter.api.Test;
 
 import static io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.EdgeDirection.*;
@@ -84,6 +86,80 @@ class AlgoToDisplayModelConverterTest {
         //  +-----------------+
         assertThat(computeEdgeDirection(position(50, 50), position(10, 10)))
                 .isEqualTo(BottomRightToTopLeft_FirstVertical);
+    }
+
+    // =================================================================================================================
+    // Add waypoints when from is a gateway
+    // =================================================================================================================
+
+    @Test
+    public void computeEdgeDirection_from_gateway_on_bottom_left_to_on_top_right() {
+        //  +-----------------+
+        //  |            to   |
+        //  | from-gw         |
+        //  +-----------------+
+        assertThat(computeEdgeDirection(positionGateway(10, 100), position(50, 50)))
+                .isEqualTo(BottomLeftToTopRight_FirstVertical);
+    }
+
+    @Test
+    public void computeEdgeDirection_from_gateway_on_bottom_left_to_gateway_on_top_right() {
+        //  +-----------------+
+        //  |           to-gw |
+        //  | from-gw         |
+        //  +-----------------+
+        assertThat(computeEdgeDirection(positionGateway(10, 100), positionGateway(50, 50)))
+                .isEqualTo(BottomLeftToTopRight_FirstHorizontal);
+    }
+
+    @Test
+    public void computeEdgeDirection_from_gateway_on_top_left_to_on_bottom_right() {
+        //  +-----------------+
+        //  | from-gw         |
+        //  |            to   |
+        //  +-----------------+
+        assertThat(computeEdgeDirection(positionGateway(10, 10), position(50, 50)))
+                .isEqualTo(TopLeftToBottomRight_FirstVertical);
+    }
+
+    @Test
+    public void computeEdgeDirection_from_gateway_on_top_left_to_on_bottom_right_is_gateway() {
+        //  +-----------------+
+        //  | from-gw         |
+        //  |           to-gw |
+        //  +-----------------+
+        assertThat(computeEdgeDirection(positionGateway(10, 10), positionGateway(50, 50)))
+                .isEqualTo(TopLeftToBottomRight_FirstHorizontal);
+    }
+
+    @Test
+    public void computeEdgeDirection_from_gateway_on_top_left_to_on_bottom_right_is_gateway_with_element_on_top_left() {
+        //  +-----------------+
+        //  | from-gw   elt   |
+        //  |           to-gw |
+        //  +-----------------+
+        assertThat(computeEdgeDirection(positionGateway(1, 1), positionGateway(2, 2), Grid.of(position(2, 1))))
+                .isEqualTo(TopLeftToBottomRight_FirstVertical);
+    }
+
+    @Test
+    public void computeEdgeDirection_from_on_top_left_to_gateway_on_bottom_right() {
+        //  +-----------------+
+        //  | from            |
+        //  |           to-gw |
+        //  +-----------------+
+        assertThat(computeEdgeDirection(position(10, 10), positionGateway(50, 50)))
+                .isEqualTo(TopLeftToBottomRight_FirstHorizontal);
+    }
+
+    @Test
+    public void computeEdgeDirection_from_on_bottom_left_to_gateway_on_top_right() {
+        //  +-----------------+
+        //  |          to-gw  |
+        //  | from            |
+        //  +-----------------+
+        assertThat(computeEdgeDirection(position(10, 100), positionGateway(50, 50)))
+                .isEqualTo(BottomLeftToTopRight_FirstHorizontal);
     }
 
     // =================================================================================================================
@@ -192,6 +268,10 @@ class AlgoToDisplayModelConverterTest {
 
     private static Position position(int x, int y) {
         return Position.builder().x(x).y(y).build();
+    }
+
+    private static Position positionGateway(int x, int y) {
+        return Position.position(new Shape(null, null, ShapeType.GATEWAY), x, y);
     }
 
 }

@@ -8,10 +8,11 @@ import lombok.Data;
 public class Position {
     private final String shape;
     private final String shapeName;
+    private final ShapeType shapeType;
     private final int x;
     private final int y;
 
     public static Position position(Shape shape, int x, int y) {
-        return new Position(shape.getId(), shape.getName(), x, y);
+        return new Position(shape.getId(), shape.getName(), shape.getType(), x, y);
     }
 }
