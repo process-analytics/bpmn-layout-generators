@@ -14,6 +14,7 @@ package io.process.analytics.tools.bpmn.generator.converter;
 
 import static io.process.analytics.tools.bpmn.generator.internal.SemanticTest.definitionsFromBpmnFile;
 import static io.process.analytics.tools.bpmn.generator.model.Edge.edge;
+import static io.process.analytics.tools.bpmn.generator.model.Shape.shape;
 import static io.process.analytics.tools.bpmn.generator.model.ShapeType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,9 +48,9 @@ class BpmnToAlgoModelConverterTest {
         Diagram diagram = new BpmnToAlgoModelConverter().toAlgoModel(definitions);
 
         assertThat(diagram.getShapes()).containsOnly(
-                new Shape("startEvent_1", "Start Event", EVENT),
-                new Shape("task_1", "Task 1", ACTIVITY),
-                new Shape("endEvent_1", "End Event", EVENT));
+                shape("startEvent_1", "Start Event", EVENT),
+                shape("task_1", "Task 1", ACTIVITY),
+                shape("endEvent_1", "End Event", EVENT));
         assertThat(diagram.getEdges()).containsOnly(
                 edge("sequenceFlow_1", "startEvent_1", "task_1"),
                 edge("sequenceFlow_2", "task_1", "endEvent_1"));
@@ -58,7 +59,7 @@ class BpmnToAlgoModelConverterTest {
     @Test
     void should_convert_activities_to_shape() {
         assertThat(toShape(new TUserTask(), new TSendTask(), new TSubProcess()))
-                .containsOnly(new Shape("bpmn_id", "bpmn_name", ACTIVITY));
+                .containsOnly(shape("bpmn_id", "bpmn_name", ACTIVITY));
     }
 
     private static Stream<Shape> toShape(TFlowNode... flowNodes) {
@@ -75,13 +76,13 @@ class BpmnToAlgoModelConverterTest {
     @Test
     void should_convert_events_to_shape() {
         assertThat(toShape(new TStartEvent(), new TIntermediateCatchEvent(), new TEndEvent()))
-                .containsOnly(new Shape("bpmn_id", "bpmn_name", EVENT));
+                .containsOnly(shape("bpmn_id", "bpmn_name", EVENT));
     }
 
     @Test
     void should_convert_gateways_to_shape() {
         assertThat(toShape(new TParallelGateway(), new TComplexGateway()))
-                .containsOnly(new Shape("bpmn_id", "bpmn_name", GATEWAY));
+                .containsOnly(shape("bpmn_id", "bpmn_name", GATEWAY));
     }
 
 }

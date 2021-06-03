@@ -28,18 +28,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AppFromBpmnTest {
 
     @Test
-    public void main_generates_bpmn_output_file_for_A_2_0() throws Exception {
-        runAndCheckBPMNGeneration("bpmn/A.2.0.bpmn.xml", "A.2.0_with_diagram.bpmn.xml");
+    public void main_generates_output_files_for_A_2_0() throws Exception {
+        runAndCheckBpmnAndSvgGeneration("bpmn/A.2.0.bpmn.xml", "A.2.0_with_diagram.bpmn");
     }
 
     @Test
-    public void main_generates_bpmn_output_file_for_A_2_1() throws Exception {
-        runAndCheckBPMNGeneration("bpmn/A.2.1.bpmn.xml", "A.2.1_with_diagram.bpmn.xml");
-    }
-
-    @Test
-    public void main_generates_svg_output_file_for_A_2_0() throws Exception {
-        runAndCheckSvgGeneration("bpmn/A.2.0.bpmn.xml", "A.2.0_with_diagram.bpmn.svg");
+    public void main_generates_output_files_for_A_2_1() throws Exception {
+        runAndCheckBpmnAndSvgGeneration("bpmn/A.2.1.bpmn.xml", "A.2.1_with_diagram.bpmn");
     }
 
     @Test
@@ -54,21 +49,26 @@ public class AppFromBpmnTest {
 
     @Test
     public void main_generates_output_files_for_waypoints_positions_for_gateways() throws Exception {
-        runAndCheckBPMNGeneration("bpmn/waypoints-positions-gateways.bpmn.xml", "waypoints-positions_with_diagram.bpmn.xml");
-        runAndCheckSvgGeneration("bpmn/waypoints-positions-gateways.bpmn.xml", "waypoints-positions_with_diagram.bpmn.svg");
+        runAndCheckBpmnAndSvgGeneration("bpmn/waypoints-positions-gateways.bpmn.xml",
+                "waypoints-positions_with_diagram.bpmn");
     }
 
     @Test
     public void main_generates_output_files_for_waypoints_positions_for_gateways_split_merge() throws Exception {
-        runAndCheckBPMNGeneration("bpmn/waypoints-positions-gateways_split_merge.bpmn.xml", "waypoints-positions-gateways_split_merge.bpmn.xml");
-        runAndCheckSvgGeneration("bpmn/waypoints-positions-gateways_split_merge.bpmn.xml", "waypoints-positions-gateways_split_merge.bpmn.svg");
+        runAndCheckBpmnAndSvgGeneration("bpmn/waypoints-positions-gateways_split_merge.bpmn.xml",
+                "waypoints-positions-gateways_split_merge.bpmn");
     }
 
     // =================================================================================================================
     // UTILS
     // =================================================================================================================
 
-    private static void runAndCheckBPMNGeneration(String inputFileName, String outputFileName) throws IOException {
+    private static void runAndCheckBpmnAndSvgGeneration(String inputFileName, String outputFileBaseName) throws IOException {
+        runAndCheckBpmnGeneration(inputFileName, outputFileBaseName + ".xml");
+        runAndCheckSvgGeneration(inputFileName, outputFileBaseName + ".svg");
+    }
+
+    private static void runAndCheckBpmnGeneration(String inputFileName, String outputFileName) throws IOException {
         String outputPath = outputPath(outputFileName);
         runApp(input(inputFileName), "-o", outputPath);
         assertBpmnOutFile(outputPath);

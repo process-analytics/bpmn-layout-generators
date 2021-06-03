@@ -20,6 +20,7 @@ import io.process.analytics.tools.bpmn.generator.model.ShapeType;
 import org.junit.jupiter.api.Test;
 
 import static io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.EdgeDirection.*;
+import static io.process.analytics.tools.bpmn.generator.model.Shape.shape;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class AlgoToDisplayModelConverterTest {
@@ -93,29 +94,49 @@ class AlgoToDisplayModelConverterTest {
     // =================================================================================================================
 
     @Test
-    public void computeEdgeDirection_from_gateway_on_bottom_left_to_on_top_right() {
-        //  +-----------------+
-        //  |            to   |
-        //  | from-gw         |
-        //  +-----------------+
-        assertThat(computeEdgeDirection(positionGateway(10, 100), position(50, 50)))
+    public void computeEdgeDirection_from_split_gateway_on_bottom_left_to_on_top_right() {
+        //  +---------------------+
+        //  |                  to |
+        //  | from-gw-split       |
+        //  +---------------------+
+        assertThat(computeEdgeDirection(positionGatewaySplit(10, 100), position(50, 50)))
                 .isEqualTo(BottomLeftToTopRight_FirstVertical);
     }
 
     @Test
-    public void computeEdgeDirection_from_gateway_on_bottom_left_to_gateway_on_top_right() {
-        //  +-----------------+
-        //  |           to-gw |
-        //  | from-gw         |
-        //  +-----------------+
-        assertThat(computeEdgeDirection(positionGateway(10, 100), positionGateway(50, 50)))
+    public void computeEdgeDirection_from_merge_gateway_on_bottom_left_to_on_top_right() {
+        //  +---------------------+
+        //  |                  to |
+        //  | from-gw-merge       |
+        //  +---------------------+
+        assertThat(computeEdgeDirection(positionGatewayMerge(10, 100), position(50, 50)))
                 .isEqualTo(BottomLeftToTopRight_FirstHorizontal);
+    }
+
+    @Test
+    public void computeEdgeDirection_from_gateway_on_bottom_left_to_gateway_merge_on_top_right() {
+        //  +-----------------------+
+        //  |           to-gw-merge |
+        //  | from-gw               |  --> merge gateway
+        //  +-----------------------+
+        assertThat(computeEdgeDirection(positionGateway(10, 100), positionGatewayMerge(50, 50)))
+                .isEqualTo(BottomLeftToTopRight_FirstHorizontal);
+    }
+
+    @Test
+    public void computeEdgeDirection_from_gateway_on_bottom_left_to_gateway_split_on_top_right() {
+        //  +-----------------------------+
+        //  |                 to-gw-split |
+        //  | from-gw-split               |
+        //  +-----------------------------+
+        assertThat(computeEdgeDirection(positionGatewaySplit(10, 100), positionGatewaySplit(50, 50)))
+                .isEqualTo(BottomLeftToTopRight_FirstVertical);
     }
 
     @Test
     public void computeEdgeDirection_from_gateway_on_top_left_to_on_bottom_right() {
         //  +-----------------+
-        //  | from-gw         |
+        //  | from-gw         |  --> split gateway
         //  |            to   |
         //  +-----------------+
         assertThat(computeEdgeDirection(positionGateway(10, 10), position(50, 50)))
@@ -123,17 +144,27 @@ class AlgoToDisplayModelConverterTest {
     }
 
     @Test
-    public void computeEdgeDirection_from_gateway_on_top_left_to_on_bottom_right_is_gateway() {
-        //  +-----------------+
-        //  | from-gw         |
-        //  |           to-gw |
-        //  +-----------------+
-        assertThat(computeEdgeDirection(positionGateway(10, 10), positionGateway(50, 50)))
+    public void computeEdgeDirection_from_gateway_on_top_left_to_gateway_merge_on_bottom_right() {
+        //  +-----------------------+
+        //  | from-gw               |  --> split gateway
+        //  |           to-gw-merge |
+        //  +-----------------------+
+        assertThat(computeEdgeDirection(positionGateway(10, 10), positionGatewayMerge(50, 50)))
                 .isEqualTo(TopLeftToBottomRight_FirstHorizontal);
     }
 
     @Test
-    public void computeEdgeDirection_from_gateway_on_top_left_to_on_bottom_right_is_gateway_with_element_on_top_left() {
+    public void computeEdgeDirection_from_gateway_on_top_left_to_gateway_split_on_bottom_right() {
+        //  +-----------------------+
+        //  | from-gw               |  --> split gateway
+        //  |           to-gw-split |
+        //  +-----------------------+
+        assertThat(computeEdgeDirection(positionGateway(10, 10), positionGatewaySplit(50, 50)))
+                .isEqualTo(TopLeftToBottomRight_FirstVertical);
+    }
+
+    @Test
+    public void computeEdgeDirection_from_gateway_on_top_left_to_gateway_on_bottom_right_with_element_on_top_left() {
         //  +-----------------+
         //  | from-gw   elt   |
         //  |           to-gw |
@@ -146,7 +177,7 @@ class AlgoToDisplayModelConverterTest {
     public void computeEdgeDirection_from_on_top_left_to_gateway_on_bottom_right() {
         //  +-----------------+
         //  | from            |
-        //  |           to-gw |
+        //  |           to-gw |  --> merge gateway
         //  +-----------------+
         assertThat(computeEdgeDirection(position(10, 10), positionGateway(50, 50)))
                 .isEqualTo(TopLeftToBottomRight_FirstHorizontal);
@@ -155,7 +186,7 @@ class AlgoToDisplayModelConverterTest {
     @Test
     public void computeEdgeDirection_from_on_bottom_left_to_gateway_on_top_right() {
         //  +-----------------+
-        //  |          to-gw  |
+        //  |          to-gw  |  --> merge gateway
         //  | from            |
         //  +-----------------+
         assertThat(computeEdgeDirection(position(10, 100), positionGateway(50, 50)))
@@ -271,7 +302,15 @@ class AlgoToDisplayModelConverterTest {
     }
 
     private static Position positionGateway(int x, int y) {
-        return Position.position(new Shape(null, null, ShapeType.GATEWAY), x, y);
+        return Position.position(shape(null, null, ShapeType.GATEWAY), x, y);
+    }
+
+    private static Position positionGatewaySplit(int x, int y) {
+        return Position.position(new Shape(null, null, ShapeType.GATEWAY, true), x, y);
+    }
+
+    private static Position positionGatewayMerge(int x, int y) {
+        return Position.position(new Shape(null, null, ShapeType.GATEWAY, false), x, y);
     }
 
 }
