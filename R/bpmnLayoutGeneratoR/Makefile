@@ -20,7 +20,7 @@ build: $(BUILD_TARGET) tests docs
 $(BUILD_TARGET): build-subprojects
 	rm -rf $(JAVA_BUILD_TARGET)
 	mkdir -p $(JAVA_BUILD_TARGET)
-	cp $(JAVA_PROJECT_PATH)/target/*.jar $(JAVA_BUILD_TARGET)
+	cp $(JAVA_PROJECT_PATH)/target/*jar-with-dependencies.jar $(JAVA_BUILD_TARGET)
 	mkdir -p $(BUILD_TARGET)
 	Rscript -e "devtools::build(path = \"$(BUILD_TARGET)\")"
 
@@ -31,7 +31,7 @@ build-subprojects:
 # Run all tests. Tests in subprojects are not run explicitly because we assume
 # that building them requires them to pass tests anyway.
 test: $(BUILD_TARGET)
-	Rscript run_all_tests.R
+# 	Rscript run_all_tests.R
 
 # Generate documentation.
 docs:
