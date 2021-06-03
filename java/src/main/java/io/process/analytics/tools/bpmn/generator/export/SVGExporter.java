@@ -24,6 +24,8 @@ import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.ShapeType;
 import lombok.extern.log4j.Log4j2;
 
+import java.util.stream.Collectors;
+
 @Log4j2
 public class SVGExporter {
 
@@ -142,33 +144,18 @@ public class SVGExporter {
         }
 
         for (DisplayEdge edge : model.edges) {
-            // TODO manage couples in a generic way or build svg path instead of line (remove duplication)
             if (edge.wayPoints.size() >= 2) {
-                DisplayPoint start = edge.wayPoints.get(0);
-                DisplayPoint end = edge.wayPoints.get(1);
-                content.append("<line")
-                        .append(" x1=\"").append(start.x).append("\"")
-                        .append(" y1=\"").append(start.y).append("\"")
-                        .append(" x2=\"").append(end.x).append("\"")
-                        .append(" y2=\"").append(end.y).append("\"")
+                String points = edge.wayPoints.stream()
+                        .map(point -> point.x + "," + point.y)
+                        .collect(Collectors.joining(" "));
+
+                content.append("<polyline")
+                        .append(" points=\"").append(points).append("\"")
                         .append(" stroke=\"").append(colorEgeStroke).append("\"")
                         .append(" stroke-width=\"").append(edgeStrokeWidth).append("\"")
                         .append(" stroke-opacity=\"").append(edgeStrokeOpacity).append("\"")
+                        .append(" fill=\"none\"")
                         .append(" />\n");
-
-                if (edge.wayPoints.size() >= 3) {
-                    start = end;
-                    end = edge.wayPoints.get(2);
-                    content.append("<line")
-                            .append(" x1=\"").append(start.x).append("\"")
-                            .append(" y1=\"").append(start.y).append("\"")
-                            .append(" x2=\"").append(end.x).append("\"")
-                            .append(" y2=\"").append(end.y).append("\"")
-                            .append(" stroke=\"").append(colorEgeStroke).append("\"")
-                            .append(" stroke-width=\"").append(edgeStrokeWidth).append("\"")
-                            .append(" stroke-opacity=\"").append(edgeStrokeOpacity).append("\"")
-                            .append(" />\n");
-                }
             }
         }
 
