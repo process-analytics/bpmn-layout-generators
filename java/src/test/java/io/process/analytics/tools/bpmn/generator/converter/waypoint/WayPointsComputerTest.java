@@ -10,20 +10,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.process.analytics.tools.bpmn.generator.converter;
+package io.process.analytics.tools.bpmn.generator.converter.waypoint;
 
-import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.EdgeDirection;
+import io.process.analytics.tools.bpmn.generator.converter.waypoint.WayPointsComputer.EdgeDirection;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.Position;
 import io.process.analytics.tools.bpmn.generator.model.Shape;
 import io.process.analytics.tools.bpmn.generator.model.ShapeType;
 import org.junit.jupiter.api.Test;
 
-import static io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.EdgeDirection.*;
+import static io.process.analytics.tools.bpmn.generator.converter.waypoint.WayPointsComputer.EdgeDirection.*;
 import static io.process.analytics.tools.bpmn.generator.model.Shape.shape;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class AlgoToDisplayModelConverterTest {
+class WayPointsComputerTest {
 
     @Test
     public void computeEdgeDirection_same_row_from_on_left() {
@@ -286,7 +286,7 @@ class AlgoToDisplayModelConverterTest {
     }
 
     private static EdgeDirection computeEdgeDirection(Position positionFrom, Position positionTo, Grid grid) {
-        return AlgoToDisplayModelConverter.computeEdgeDirection(positionFrom, positionTo, grid);
+        return new WayPointsComputer(grid, null).computeEdgeDirection(positionFrom, positionTo);
     }
 
     private static Position positionSameRow(int x) {

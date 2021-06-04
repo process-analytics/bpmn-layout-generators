@@ -15,9 +15,9 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import io.process.analytics.tools.bpmn.generator.converter.waypoint.WayPointsComputer;
 import io.process.analytics.tools.bpmn.generator.model.*;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -82,195 +82,20 @@ public class AlgoToDisplayModelConverter {
                     .rx(y(10)).strokeWidth(y(5)).build());
         }
 
+        WayPointsComputer wayPointsComputer = new WayPointsComputer(grid, model.flowNodes);
         diagram.getEdges()
                 .stream()
-                .map(edge -> new DisplayEdge(edge.getId(), inferWayPoints(edge, grid, model.flowNodes)))
+                .map(edge -> new DisplayEdge(edge.getId(), wayPointsComputer.inferWayPoints(edge)))
                 .forEach(model::edge);
 
         return model.build();
     }
 
-    private List<DisplayPoint> inferWayPoints(Edge edge, Grid grid, List<DisplayFlowNode> flowNodes) {
-        Position positionFrom = getPositionOfShape(grid, edge.getFrom());
-        Position positionTo = getPositionOfShape(grid, edge.getTo());
-
-        EdgeDirection edgeDirection = computeEdgeDirection(positionFrom, positionTo, grid);
-
-        DisplayFlowNode flowNodeFrom = getFlowNode(flowNodes, positionFrom.getShape());
-        DisplayFlowNode flowNodeTo = getFlowNode(flowNodes, positionTo.getShape());
-
-        return computeWayPoints(edgeDirection, flowNodeFrom, flowNodeTo);
-    }
-
-    private List<DisplayPoint> computeWayPoints(EdgeDirection edgeDirection, DisplayFlowNode flowNodeFrom, DisplayFlowNode flowNodeTo) {
-        DisplayDimension dimensionFrom = flowNodeFrom.dimension;
-        DisplayDimension dimensionTo = flowNodeTo.dimension;
-
-        List<DisplayPoint> wayPoints = new ArrayList<>();
-        switch (edgeDirection) {
-            case HorizontalLeftToRight:
-                wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width, dimensionFrom.y + dimensionFrom.height / 2));
-                wayPoints.add(new DisplayPoint(dimensionTo.x, dimensionTo.y + dimensionTo.height / 2));
-                break;
-            case HorizontalRightToLeft:
-                wayPoints.add(new DisplayPoint(dimensionFrom.x, dimensionFrom.y + dimensionFrom.height / 2));
-                wayPoints.add(new DisplayPoint(dimensionTo.x  + dimensionTo.width, dimensionTo.y + dimensionTo.height / 2));
-                break;
-            case BottomLeftToTopRight_FirstHorizontal: // horizontal then vertical
-                wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width, dimensionFrom.y + dimensionFrom.height / 2));
-                wayPoints.add(new DisplayPoint(dimensionTo.x  + dimensionTo.width / 2, dimensionFrom.y + dimensionFrom.height / 2));
-                wayPoints.add(new DisplayPoint(dimensionTo.x  + dimensionTo.width / 2, dimensionTo.y + dimensionTo.height));
-                break;
-            case BottomLeftToTopRight_FirstVertical: // vertical then horizontal
-                wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2, dimensionFrom.y));
-                wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2, dimensionTo.y + dimensionTo.height / 2));
-                wayPoints.add(new DisplayPoint(dimensionTo.x, dimensionTo.y + dimensionTo.height / 2));
-                break;
-            case BottomRightToTopLeft_FirstHorizontal: // horizontal then vertical
-                wayPoints.add(new DisplayPoint(dimensionFrom.x, dimensionFrom.y + dimensionFrom.height / 2));
-                wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2,
-                        dimensionFrom.y + dimensionFrom.height / 2));
-                wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2, dimensionTo.y + dimensionTo.height));
-                break;
-            case BottomRightToTopLeft_FirstVertical: // vertical then horizontal
-                wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2, dimensionFrom.y));
-                wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2, dimensionTo.y + dimensionTo.height / 2));
-                wayPoints.add(new DisplayPoint(dimensionTo.x  + dimensionTo.width / 2, dimensionTo.y + dimensionTo.height / 2));
-                break;
-            case TopLeftToBottomRight_FirstHorizontal: // horizontal then vertical
-                wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width, dimensionFrom.y + dimensionFrom.height / 2));
-                wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2, dimensionFrom.y + dimensionFrom.height / 2));
-                wayPoints.add(new DisplayPoint(dimensionTo.x  + dimensionTo.width / 2, dimensionTo.y));
-                break;
-            case TopLeftToBottomRight_FirstVertical: // vertical then horizontal
-                wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2, dimensionFrom.y + dimensionTo.height));
-                wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2, dimensionTo.y + dimensionTo.height / 2));
-                wayPoints.add(new DisplayPoint(dimensionTo.x, dimensionTo.y + dimensionTo.height / 2));
-                break;
-            case TopRightToBottomLeft_FirstHorizontal: // horizontal then vertical
-                wayPoints.add(new DisplayPoint(dimensionFrom.x, dimensionFrom.y + dimensionFrom.height / 2));
-                wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2, dimensionFrom.y + dimensionFrom.height / 2));
-                wayPoints.add(new DisplayPoint(dimensionTo.x  + dimensionTo.width / 2, dimensionTo.y));
-                break;
-            case TopRightToBottomLeft_FirstVertical: // vertical then horizontal
-                wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2, dimensionFrom.y + dimensionTo.height));
-                wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2, dimensionTo.y + dimensionTo.height / 2));
-                wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2, dimensionTo.y + dimensionTo.height / 2));
-                break;
-            case VerticalBottomToTop:
-                wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2, dimensionFrom.y));
-                wayPoints.add(new DisplayPoint(dimensionTo.x  + dimensionTo.width / 2, dimensionTo.y + dimensionTo.height));
-                break;
-            case VerticalTopToBottom:
-                wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2, dimensionFrom.y + dimensionFrom.height));
-                wayPoints.add(new DisplayPoint(dimensionTo.x  + dimensionTo.width / 2, dimensionTo.y));
-                break;
-            default:
-                // do nothing
-        }
-        return wayPoints;
-    }
-
-    private DisplayFlowNode getFlowNode(List<DisplayFlowNode> flowNodes, String flowNodeId) {
-        return flowNodes.stream()
-                .filter(f -> flowNodeId.equals(f.bpmnElementId))
-                .findFirst()
-                .get(); // always exist, otherwise error occur on flow node generation
-    }
-
-    private Position getPositionOfShape(Grid grid, String shapeId) {
-        return grid.getPositions()
-                .stream()
-                .filter(p -> shapeId.equals(p.getShape()))
-                .findFirst()
-                .get(); // always exist, otherwise error occur on flow node generation
-    }
-
-    // visible for testing
-    static EdgeDirection computeEdgeDirection(Position positionFrom, Position positionTo, Grid grid) {
-        EdgeDirection edgeDirection = null;
-        if (positionFrom.getX() == positionTo.getX()) {
-            if (positionFrom.getY() < positionTo.getY()) {
-                edgeDirection = EdgeDirection.VerticalTopToBottom;
-            }
-            else {
-                edgeDirection = EdgeDirection.VerticalBottomToTop;
-            }
-        }
-        else  if (positionFrom.getY() == positionTo.getY()) {
-            if (positionFrom.getX() < positionTo.getX()) {
-                edgeDirection = EdgeDirection.HorizontalLeftToRight;
-            }
-            else {
-                edgeDirection = EdgeDirection.HorizontalRightToLeft;
-            }
-        } else if (positionFrom.getX() < positionTo.getX()) {
-            if (positionFrom.getY() < positionTo.getY()) {
-                boolean shapeExistAtRightPositionFrom = grid.getPositions()
-                        .stream()
-                        .filter(p -> p.getY() == positionFrom.getY())
-                        .anyMatch(p -> p.getX() == positionFrom.getX() + 1);
-                edgeDirection = shapeExistAtRightPositionFrom || (isGatewayAt(positionFrom) && (!isGatewayAt(positionTo) || isGatewaySplitAt(positionTo))) ? EdgeDirection.TopLeftToBottomRight_FirstVertical : EdgeDirection.TopLeftToBottomRight_FirstHorizontal;
-            }
-            else {
-                if (isGatewayAt(positionFrom)) {
-                    edgeDirection = !isGatewaySplitAt(positionFrom) || isGatewayAt(positionTo) && !isGatewaySplitAt(positionTo) ? EdgeDirection.BottomLeftToTopRight_FirstHorizontal : EdgeDirection.BottomLeftToTopRight_FirstVertical;
-                } else {
-                    boolean shapeExistAbovePositionFrom = grid.getPositions()
-                        .stream()
-                        .filter(p -> p.getX() == positionFrom.getX())
-                        .anyMatch(p -> p.getY() == positionFrom.getY() - 1);
-                    edgeDirection = shapeExistAbovePositionFrom || isGatewayAt(positionTo) ? EdgeDirection.BottomLeftToTopRight_FirstHorizontal : EdgeDirection.BottomLeftToTopRight_FirstVertical;
-                }
-            }
-        } else {
-            if (positionFrom.getY() < positionTo.getY()) {
-                boolean shapeExistAtLeftPositionFrom = grid.getPositions()
-                        .stream()
-                        .filter(p -> p.getY() == positionFrom.getY())
-                        .anyMatch(p -> p.getX() == positionFrom.getX() - 1);
-                edgeDirection = shapeExistAtLeftPositionFrom ? EdgeDirection.TopRightToBottomLeft_FirstVertical : EdgeDirection.TopRightToBottomLeft_FirstHorizontal;
-            } else {
-                boolean shapeExistAbovePositionFrom = grid.getPositions()
-                        .stream()
-                        .filter(p -> p.getX() == positionFrom.getX())
-                        .anyMatch(p -> p.getY() == positionFrom.getY() - 1);
-                edgeDirection = shapeExistAbovePositionFrom ? EdgeDirection.BottomRightToTopLeft_FirstHorizontal : EdgeDirection.BottomRightToTopLeft_FirstVertical;
-            }
-        }
-
-        return edgeDirection;
-    }
-
-    private static boolean isGatewayAt(Position position) {
-        return ShapeType.GATEWAY.equals(position.getShapeType());
-    }
-
-    private static boolean isGatewaySplitAt(Position position) {
-        return isGatewayAt(position) && position.isSplitGateway();
-    }
-
-    // visible for testing
-    static enum EdgeDirection {
-        HorizontalLeftToRight,
-        HorizontalRightToLeft,
-        VerticalBottomToTop,
-        VerticalTopToBottom,
-        BottomLeftToTopRight_FirstHorizontal,
-        BottomLeftToTopRight_FirstVertical,
-        BottomRightToTopLeft_FirstHorizontal,
-        BottomRightToTopLeft_FirstVertical,
-        TopLeftToBottomRight_FirstHorizontal,
-        TopLeftToBottomRight_FirstVertical,
-        TopRightToBottomLeft_FirstHorizontal,
-        TopRightToBottomLeft_FirstVertical,
-    }
-
-    private int x(int percentage) {
+    private static int x(int percentage) {
         return CELL_WIDTH * percentage / 100;
     }
 
-    private int y(int percentage) {
+    private static int y(int percentage) {
         return CELL_HEIGHT * percentage / 100;
     }
 
