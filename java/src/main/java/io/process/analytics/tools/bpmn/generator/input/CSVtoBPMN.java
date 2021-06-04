@@ -71,7 +71,7 @@ public class CSVtoBPMN {
                     flowNode = new TEndEvent();
                     break;
                 case "gateway":
-                    flowNode = new TGateway();
+                    flowNode = new TParallelGateway();
                     break;
                 case "parallel_gateway":
                     flowNode = new TParallelGateway();

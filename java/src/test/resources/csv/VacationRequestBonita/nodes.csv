@@ -2,8 +2,8 @@
 "1",1,"Add event on employee calendar","task",52
 "2",2,"after approval branch","task",53
 "3",3,"after approval join","task",53
-"4",4,"ARTIFICIAL_END","task",56
-"5",5,"ARTIFICIAL_START","task",56
+"4",4,"ARTIFICIAL_END","end_event",56
+"5",5,"ARTIFICIAL_START","start_event",56
 "6",6,"Deduct requested days from available days","task",53
 "7",7,"End Reminder","task",3
 "8",8,"end when request cancelled","task",3

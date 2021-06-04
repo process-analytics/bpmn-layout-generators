@@ -125,10 +125,18 @@ public class Semantic {
     //TODO add other type of flow node elements
     private static final Map<Class<? extends TFlowNode>, String> bpmnElementBindings = new HashMap<Class<? extends TFlowNode>, String>() {{
         put(TParallelGateway.class, "parallelGateway");
+        put(TInclusiveGateway.class, "inclusiveGateway");
+        put(TExclusiveGateway.class, "exclusiveGateway");
+        put(TGateway.class, "gateway");
+        put(TTask.class, "task");
+        put(TUserTask.class, "userTask");
+        put(TServiceTask.class, "serviceTask");
+        put(TEndEvent.class, "endEvent");
+        put(TStartEvent.class, "startEvent");
     }};
 
     private static QName bpmnElementQName(TFlowNode flowNode) {
-        return bpmnElementQName(bpmnElementBindings.getOrDefault(flowNode.getClass(), "userTask"));
+        return bpmnElementQName(bpmnElementBindings.getOrDefault(flowNode.getClass(), "task"));
     }
 
     @RequiredArgsConstructor
