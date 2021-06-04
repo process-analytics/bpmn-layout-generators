@@ -12,14 +12,14 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter.waypoint;
 
-import io.process.analytics.tools.bpmn.generator.converter.waypoint.WayPointsComputer.EdgeDirection;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.Position;
 import io.process.analytics.tools.bpmn.generator.model.Shape;
 import io.process.analytics.tools.bpmn.generator.model.ShapeType;
 import org.junit.jupiter.api.Test;
 
-import static io.process.analytics.tools.bpmn.generator.converter.waypoint.WayPointsComputer.EdgeDirection.*;
+import static io.process.analytics.tools.bpmn.generator.converter.waypoint.Direction.*;
+import static io.process.analytics.tools.bpmn.generator.converter.waypoint.Orientation.*;
 import static io.process.analytics.tools.bpmn.generator.model.Shape.shape;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,22 +27,30 @@ class WayPointsComputerTest {
 
     @Test
     public void computeEdgeDirection_same_row_from_on_left() {
-        assertThat(computeEdgeDirection(positionSameRow(10), positionSameRow(100))).isEqualTo(HorizontalLeftToRight);
+        EdgeDirection edgeDirection = computeEdgeDirection(positionSameRow(10), positionSameRow(100));
+        assertThat(edgeDirection.direction).isEqualTo(LeftToRight);
+        assertThat(edgeDirection.orientation).isEqualTo(Horizontal);
     }
 
     @Test
     public void computeEdgeDirection_same_row_from_on_right() {
-        assertThat(computeEdgeDirection(positionSameRow(100), positionSameRow(20))).isEqualTo(HorizontalRightToLeft);
+        EdgeDirection edgeDirection = computeEdgeDirection(positionSameRow(100), positionSameRow(20));
+        assertThat(edgeDirection.direction).isEqualTo(RightToLeft);
+        assertThat(edgeDirection.orientation).isEqualTo(Horizontal);
     }
 
     @Test
     public void computeEdgeDirection_same_column_from_on_top() {
-        assertThat(computeEdgeDirection(positionSameColumn(10), positionSameColumn(100))).isEqualTo(VerticalTopToBottom);
+        EdgeDirection edgeDirection = computeEdgeDirection(positionSameColumn(10), positionSameColumn(100));
+        assertThat(edgeDirection.direction).isEqualTo(TopToBottom);
+        assertThat(edgeDirection.orientation).isEqualTo(Vertical);
     }
 
     @Test
     public void computeEdgeDirection_same_column_from_on_bottom() {
-        assertThat(computeEdgeDirection(positionSameColumn(100), positionSameColumn(20))).isEqualTo(VerticalBottomToTop);
+        EdgeDirection edgeDirection = computeEdgeDirection(positionSameColumn(100), positionSameColumn(20));
+        assertThat(edgeDirection.direction).isEqualTo(BottomToTop);
+        assertThat(edgeDirection.orientation).isEqualTo(Vertical);
     }
 
     // =================================================================================================================
@@ -55,8 +63,9 @@ class WayPointsComputerTest {
         //  | from            |
         //  |          to     |
         //  +-----------------+
-        assertThat(computeEdgeDirection(position(10, 10), position(50, 50)))
-                .isEqualTo(TopLeftToBottomRight_FirstHorizontal);
+        EdgeDirection edgeDirection = computeEdgeDirection(position(10, 10), position(50, 50));
+        assertThat(edgeDirection.direction).isEqualTo(TopLeftToBottomRight);
+        assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
     @Test
@@ -65,8 +74,9 @@ class WayPointsComputerTest {
         //  |          from   |
         //  | to              |
         //  +-----------------+
-        assertThat(computeEdgeDirection(position(50, 10), position(10, 50)))
-                .isEqualTo(TopRightToBottomLeft_FirstHorizontal);
+        EdgeDirection edgeDirection = computeEdgeDirection(position(50, 10), position(10, 50));
+        assertThat(edgeDirection.direction).isEqualTo(TopRightToBottomLeft);
+        assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
     @Test
@@ -75,8 +85,9 @@ class WayPointsComputerTest {
         //  |          to     |
         //  | from            |
         //  +-----------------+
-        assertThat(computeEdgeDirection(position(10, 100), position(50, 50)))
-                .isEqualTo(BottomLeftToTopRight_FirstVertical);
+        EdgeDirection edgeDirection = computeEdgeDirection(position(10, 100), position(50, 50));
+        assertThat(edgeDirection.direction).isEqualTo(BottomLeftToTopRight);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
     }
 
     @Test
@@ -85,8 +96,9 @@ class WayPointsComputerTest {
         //  | to              |
         //  |          from   |
         //  +-----------------+
-        assertThat(computeEdgeDirection(position(50, 50), position(10, 10)))
-                .isEqualTo(BottomRightToTopLeft_FirstVertical);
+        EdgeDirection edgeDirection = computeEdgeDirection(position(50, 50), position(10, 10));
+        assertThat(edgeDirection.direction).isEqualTo(BottomRightToTopLeft);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
     }
 
     // =================================================================================================================
@@ -99,8 +111,9 @@ class WayPointsComputerTest {
         //  |                  to |
         //  | from-gw-split       |
         //  +---------------------+
-        assertThat(computeEdgeDirection(positionGatewaySplit(10, 100), position(50, 50)))
-                .isEqualTo(BottomLeftToTopRight_FirstVertical);
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGatewaySplit(10, 100), position(50, 50));
+        assertThat(edgeDirection.direction).isEqualTo(BottomLeftToTopRight);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
     }
 
     @Test
@@ -109,8 +122,9 @@ class WayPointsComputerTest {
         //  |                  to |
         //  | from-gw-merge       |
         //  +---------------------+
-        assertThat(computeEdgeDirection(positionGatewayMerge(10, 100), position(50, 50)))
-                .isEqualTo(BottomLeftToTopRight_FirstHorizontal);
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGatewayMerge(10, 100), position(50, 50));
+        assertThat(edgeDirection.direction).isEqualTo(BottomLeftToTopRight);
+        assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
     @Test
@@ -119,8 +133,9 @@ class WayPointsComputerTest {
         //  |           to-gw-merge |
         //  | from-gw               |  --> merge gateway
         //  +-----------------------+
-        assertThat(computeEdgeDirection(positionGateway(10, 100), positionGatewayMerge(50, 50)))
-                .isEqualTo(BottomLeftToTopRight_FirstHorizontal);
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGateway(10, 100), positionGatewayMerge(50, 50));
+        assertThat(edgeDirection.direction).isEqualTo(BottomLeftToTopRight);
+        assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
     @Test
@@ -129,8 +144,9 @@ class WayPointsComputerTest {
         //  |                 to-gw-split |
         //  | from-gw-split               |
         //  +-----------------------------+
-        assertThat(computeEdgeDirection(positionGatewaySplit(10, 100), positionGatewaySplit(50, 50)))
-                .isEqualTo(BottomLeftToTopRight_FirstVertical);
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGatewaySplit(10, 100), positionGatewaySplit(50, 50));
+        assertThat(edgeDirection.direction).isEqualTo(BottomLeftToTopRight);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
     }
 
     @Test
@@ -139,8 +155,9 @@ class WayPointsComputerTest {
         //  | from-gw         |  --> split gateway
         //  |            to   |
         //  +-----------------+
-        assertThat(computeEdgeDirection(positionGateway(10, 10), position(50, 50)))
-                .isEqualTo(TopLeftToBottomRight_FirstVertical);
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGateway(10, 10), position(50, 50));
+        assertThat(edgeDirection.direction).isEqualTo(TopLeftToBottomRight);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
     }
 
     @Test
@@ -149,8 +166,9 @@ class WayPointsComputerTest {
         //  | from-gw               |  --> split gateway
         //  |           to-gw-merge |
         //  +-----------------------+
-        assertThat(computeEdgeDirection(positionGateway(10, 10), positionGatewayMerge(50, 50)))
-                .isEqualTo(TopLeftToBottomRight_FirstHorizontal);
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGateway(10, 10), positionGatewayMerge(50, 50));
+        assertThat(edgeDirection.direction).isEqualTo(TopLeftToBottomRight);
+        assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
     @Test
@@ -159,8 +177,9 @@ class WayPointsComputerTest {
         //  | from-gw               |  --> split gateway
         //  |           to-gw-split |
         //  +-----------------------+
-        assertThat(computeEdgeDirection(positionGateway(10, 10), positionGatewaySplit(50, 50)))
-                .isEqualTo(TopLeftToBottomRight_FirstVertical);
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGateway(10, 10), positionGatewaySplit(50, 50));
+        assertThat(edgeDirection.direction).isEqualTo(TopLeftToBottomRight);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
     }
 
     @Test
@@ -169,8 +188,10 @@ class WayPointsComputerTest {
         //  | from-gw   elt   |
         //  |           to-gw |
         //  +-----------------+
-        assertThat(computeEdgeDirection(positionGateway(1, 1), positionGateway(2, 2), Grid.of(position(2, 1))))
-                .isEqualTo(TopLeftToBottomRight_FirstVertical);
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGateway(1, 1), positionGateway(2, 2),
+                Grid.of(position(2, 1)));
+        assertThat(edgeDirection.direction).isEqualTo(TopLeftToBottomRight);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
     }
 
     @Test
@@ -179,8 +200,9 @@ class WayPointsComputerTest {
         //  | from            |
         //  |           to-gw |  --> merge gateway
         //  +-----------------+
-        assertThat(computeEdgeDirection(position(10, 10), positionGateway(50, 50)))
-                .isEqualTo(TopLeftToBottomRight_FirstHorizontal);
+        EdgeDirection edgeDirection = computeEdgeDirection(position(10, 10), positionGateway(50, 50));
+        assertThat(edgeDirection.direction).isEqualTo(TopLeftToBottomRight);
+        assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
     @Test
@@ -189,8 +211,9 @@ class WayPointsComputerTest {
         //  |          to-gw  |  --> merge gateway
         //  | from            |
         //  +-----------------+
-        assertThat(computeEdgeDirection(position(10, 100), positionGateway(50, 50)))
-                .isEqualTo(BottomLeftToTopRight_FirstHorizontal);
+        EdgeDirection edgeDirection = computeEdgeDirection(position(10, 100), positionGateway(50, 50));
+        assertThat(edgeDirection.direction).isEqualTo(BottomLeftToTopRight);
+        assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
     // =================================================================================================================
@@ -203,8 +226,9 @@ class WayPointsComputerTest {
         //  | from            |
         //  | element  to     |
         //  +-----------------+
-        assertThat(computeEdgeDirection(position(1, 1), position(2, 2), Grid.of(position(1, 2))))
-                .isEqualTo(TopLeftToBottomRight_FirstHorizontal);
+        EdgeDirection edgeDirection = computeEdgeDirection(position(1, 1), position(2, 2), Grid.of(position(1, 2)));
+        assertThat(edgeDirection.direction).isEqualTo(TopLeftToBottomRight);
+        assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
     @Test
@@ -213,8 +237,9 @@ class WayPointsComputerTest {
         //  | from   element  |
         //  |          to     |
         //  +-----------------+
-        assertThat(computeEdgeDirection(position(1, 1), position(2, 2), Grid.of(position(2, 1))))
-                .isEqualTo(TopLeftToBottomRight_FirstVertical);
+        EdgeDirection edgeDirection = computeEdgeDirection(position(1, 1), position(2, 2), Grid.of(position(2, 1)));
+        assertThat(edgeDirection.direction).isEqualTo(TopLeftToBottomRight);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
     }
 
     @Test
@@ -223,8 +248,9 @@ class WayPointsComputerTest {
         //  | element  to     |
         //  | from            |
         //  +-----------------+
-        assertThat(computeEdgeDirection(position(1, 2), position(2, 1), Grid.of(position(1, 1))))
-                .isEqualTo(BottomLeftToTopRight_FirstHorizontal);
+        EdgeDirection edgeDirection = computeEdgeDirection(position(1, 2), position(2, 1), Grid.of(position(1, 1)));
+        assertThat(edgeDirection.direction).isEqualTo(BottomLeftToTopRight);
+        assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
     @Test
@@ -233,8 +259,9 @@ class WayPointsComputerTest {
         //  |          to     |
         //  | from   element  |
         //  +-----------------+
-        assertThat(computeEdgeDirection(position(1, 2), position(2, 1), Grid.of(position(2, 2))))
-                .isEqualTo(BottomLeftToTopRight_FirstVertical);
+        EdgeDirection edgeDirection = computeEdgeDirection(position(1, 2), position(2, 1), Grid.of(position(2, 2)));
+        assertThat(edgeDirection.direction).isEqualTo(BottomLeftToTopRight);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
     }
 
     @Test
@@ -243,8 +270,9 @@ class WayPointsComputerTest {
         //  | element  from   |
         //  | to              |
         //  +-----------------+
-        assertThat(computeEdgeDirection(position(2, 1), position(1, 2), Grid.of(position(1, 1))))
-                .isEqualTo(TopRightToBottomLeft_FirstVertical);
+        EdgeDirection edgeDirection = computeEdgeDirection(position(2, 1), position(1, 2), Grid.of(position(1, 1)));
+        assertThat(edgeDirection.direction).isEqualTo(TopRightToBottomLeft);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
     }
 
     @Test
@@ -253,8 +281,9 @@ class WayPointsComputerTest {
         //  |        from     |
         //  | to     element  |
         //  +-----------------+
-        assertThat(computeEdgeDirection(position(2, 1), position(1, 2), Grid.of(position(2, 2))))
-                .isEqualTo(TopRightToBottomLeft_FirstHorizontal);
+        EdgeDirection edgeDirection = computeEdgeDirection(position(2, 1), position(1, 2), Grid.of(position(2, 2)));
+        assertThat(edgeDirection.direction).isEqualTo(TopRightToBottomLeft);
+        assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
     @Test
@@ -263,8 +292,9 @@ class WayPointsComputerTest {
         //  | to              |
         //  | element  from   |
         //  +-----------------+
-        assertThat(computeEdgeDirection(position(2, 2), position(1, 1), Grid.of(position(1, 2))))
-                .isEqualTo(BottomRightToTopLeft_FirstVertical);
+        EdgeDirection edgeDirection = computeEdgeDirection(position(2, 2), position(1, 1), Grid.of(position(1, 2)));
+        assertThat(edgeDirection.direction).isEqualTo(BottomRightToTopLeft);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
     }
 
     @Test
@@ -273,8 +303,9 @@ class WayPointsComputerTest {
         //  | to     element  |
         //  |        from     |
         //  +-----------------+
-        assertThat(computeEdgeDirection(position(2, 2), position(1, 1), Grid.of(position(2, 1))))
-                .isEqualTo(BottomRightToTopLeft_FirstHorizontal);
+        EdgeDirection edgeDirection = computeEdgeDirection(position(2, 2), position(1, 1), Grid.of(position(2, 1)));
+        assertThat(edgeDirection.direction).isEqualTo(BottomRightToTopLeft);
+        assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
     // =================================================================================================================
