@@ -35,7 +35,7 @@ class CSVtoBPMNTest {
         TFlowElement flowElement0 = flowNodes.get(0);
         assertThat(flowElement0.getId()).isEqualTo("bpmnElement_1");
         assertThat(flowElement0.getName()).isEqualTo("End");
-        assertThat(flowElement0).isExactlyInstanceOf(TUserTask.class);
+        assertThat(flowElement0).isExactlyInstanceOf(TTask.class);
 
         List<? extends TSequenceFlow> sequenceFlows = bpmnElements.getSequenceFlows();
         assertThat(sequenceFlows).hasSize(13);
@@ -56,10 +56,10 @@ class CSVtoBPMNTest {
         BpmnElements bpmnElements = semantic.getBpmnElements(semantic.getProcesses().get(0));
         List<? extends TFlowElement> flowNodes = bpmnElements.getFlowNodes();
         assertThat(flowNodes).hasSize(5);
-        assertThat(flowNodes).anyMatch(f -> f.getName().equals("End") && (f instanceof TUserTask));
-        assertThat(flowNodes).anyMatch(f -> f.getName().equals("Start") && (f instanceof TUserTask));
-        assertThat(flowNodes).anyMatch(f -> f.getName().equals("Task1") && (f instanceof TUserTask));
-        assertThat(flowNodes).anyMatch(f -> f.getName().equals("Task2") && (f instanceof TUserTask));
+        assertThat(flowNodes).anyMatch(f -> f.getName().equals("End") && (f instanceof TEndEvent));
+        assertThat(flowNodes).anyMatch(f -> f.getName().equals("Start") && (f instanceof TStartEvent));
+        assertThat(flowNodes).anyMatch(f -> f.getName().equals("Task1") && (f instanceof TTask));
+        assertThat(flowNodes).anyMatch(f -> f.getName().equals("UserTask") && (f instanceof TUserTask));
         assertThat(flowNodes).anyMatch(f -> f.getName().equals("Gateway1") && (f instanceof TGateway));
     }
 

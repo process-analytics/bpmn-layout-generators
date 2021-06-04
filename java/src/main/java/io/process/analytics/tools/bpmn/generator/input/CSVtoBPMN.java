@@ -64,13 +64,33 @@ public class CSVtoBPMN {
             String type = removeEnclosingDoubleQuote(node[3]);
             TFlowNode flowNode;
             switch (type) {
-                //TODO manage other type of gateways
+                case "start_event":
+                    flowNode = new TStartEvent();
+                    break;
+                case "end_event":
+                    flowNode = new TEndEvent();
+                    break;
                 case "gateway":
+                    flowNode = new TGateway();
+                    break;
+                case "parallel_gateway":
                     flowNode = new TParallelGateway();
+                    break;
+                case "exclusive_gateway":
+                    flowNode = new TExclusiveGateway();
+                    break;
+                case "inclusive_gateway":
+                    flowNode = new TInclusiveGateway();
+                    break;
+                case "user_task":
+                    flowNode = new TUserTask();
+                    break;
+                case "service_task":
+                    flowNode = new TServiceTask();
                     break;
                 case "task":
                 default:
-                    flowNode = new TUserTask();
+                    flowNode = new TTask();
             }
             flowNode.setName(removeEnclosingDoubleQuote(node[2]));
 
