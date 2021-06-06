@@ -117,29 +117,29 @@ class WayPointsComputerTest {
     }
 
     @Test
-    public void computeEdgeDirection_from_merge_gateway_on_bottom_left_to_on_top_right() {
+    public void computeEdgeDirection_from_join_gateway_on_bottom_left_to_on_top_right() {
         //  +---------------------+
         //  |                  to |
-        //  | from-gw-merge       |
+        //  | from-gw-join        |
         //  +---------------------+
-        EdgeDirection edgeDirection = computeEdgeDirection(positionGatewayMerge(10, 100), position(50, 50));
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGatewayJoin(10, 100), position(50, 50));
         assertThat(edgeDirection.direction).isEqualTo(BottomLeftToTopRight);
         assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
     @Test
-    public void computeEdgeDirection_from_gateway_on_bottom_left_to_gateway_merge_on_top_right() {
-        //  +-----------------------+
-        //  |           to-gw-merge |
-        //  | from-gw               |  --> merge gateway
-        //  +-----------------------+
-        EdgeDirection edgeDirection = computeEdgeDirection(positionGateway(10, 100), positionGatewayMerge(50, 50));
+    public void computeEdgeDirection_from_gateway_split_on_bottom_left_to_gateway_join_on_top_right() {
+        //  +-----------------------------+
+        //  |                 to-gw-join  |
+        //  | from-gw-split               |
+        //  +-----------------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGatewaySplit(10, 100), positionGatewayJoin(50, 50));
         assertThat(edgeDirection.direction).isEqualTo(BottomLeftToTopRight);
         assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
     @Test
-    public void computeEdgeDirection_from_gateway_on_bottom_left_to_gateway_split_on_top_right() {
+    public void computeEdgeDirection_from_gateway_split_on_bottom_left_to_gateway_split_on_top_right() {
         //  +-----------------------------+
         //  |                 to-gw-split |
         //  | from-gw-split               |
@@ -150,69 +150,107 @@ class WayPointsComputerTest {
     }
 
     @Test
-    public void computeEdgeDirection_from_gateway_on_top_left_to_on_bottom_right() {
-        //  +-----------------+
-        //  | from-gw         |  --> split gateway
-        //  |            to   |
-        //  +-----------------+
-        EdgeDirection edgeDirection = computeEdgeDirection(positionGateway(10, 10), position(50, 50));
+    public void computeEdgeDirection_from_gateway_split_on_top_left_to_on_bottom_right() {
+        //  +-----------------------+
+        //  | from-gw-split         |
+        //  |                  to   |
+        //  +-----------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGatewaySplit(10, 10), position(50, 50));
         assertThat(edgeDirection.direction).isEqualTo(TopLeftToBottomRight);
         assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
     }
 
     @Test
-    public void computeEdgeDirection_from_gateway_on_top_left_to_gateway_merge_on_bottom_right() {
-        //  +-----------------------+
-        //  | from-gw               |  --> split gateway
-        //  |           to-gw-merge |
-        //  +-----------------------+
-        EdgeDirection edgeDirection = computeEdgeDirection(positionGateway(10, 10), positionGatewayMerge(50, 50));
+    public void computeEdgeDirection_from_gateway_split_on_top_left_to_gateway_join_on_bottom_right() {
+        //  +------------------------------+
+        //  | from-gw-split                |
+        //  |                  to-gw-join  |
+        //  +------------------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGatewaySplit(10, 10), positionGatewayJoin(50, 50));
         assertThat(edgeDirection.direction).isEqualTo(TopLeftToBottomRight);
         assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
     @Test
-    public void computeEdgeDirection_from_gateway_on_top_left_to_gateway_split_on_bottom_right() {
-        //  +-----------------------+
-        //  | from-gw               |  --> split gateway
-        //  |           to-gw-split |
-        //  +-----------------------+
-        EdgeDirection edgeDirection = computeEdgeDirection(positionGateway(10, 10), positionGatewaySplit(50, 50));
+    public void computeEdgeDirection_from_gateway_split_on_top_left_to_gateway_split_on_bottom_right() {
+        //  +-----------------------------+
+        //  | from-gw-split               |
+        //  |                 to-gw-split |
+        //  +-----------------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGatewaySplit(10, 10), positionGatewaySplit(50, 50));
         assertThat(edgeDirection.direction).isEqualTo(TopLeftToBottomRight);
         assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
     }
 
     @Test
-    public void computeEdgeDirection_from_gateway_on_top_left_to_gateway_on_bottom_right_with_element_on_top_left() {
-        //  +-----------------+
-        //  | from-gw   elt   |
-        //  |           to-gw |
-        //  +-----------------+
-        EdgeDirection edgeDirection = computeEdgeDirection(positionGateway(1, 1), positionGateway(2, 2),
+    public void computeEdgeDirection_from_gateway_split_on_top_left_to_gateway_join_on_bottom_right_with_element_on_top_left() {
+        //  +------------------------------+
+        //  | from-gw-split            elt |
+        //  |                  to-gw-join  |
+        //  +------------------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGatewaySplit(1, 1), positionGatewayJoin(2, 2),
                 Grid.of(position(2, 1)));
         assertThat(edgeDirection.direction).isEqualTo(TopLeftToBottomRight);
         assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
     }
 
+    // =================================================================================================================
+    // Add waypoints when 'to' is a gateway and not already covered by other tests
+    // =================================================================================================================
+
     @Test
-    public void computeEdgeDirection_from_on_top_left_to_gateway_on_bottom_right() {
-        //  +-----------------+
-        //  | from            |
-        //  |           to-gw |  --> merge gateway
-        //  +-----------------+
-        EdgeDirection edgeDirection = computeEdgeDirection(position(10, 10), positionGateway(50, 50));
+    public void computeEdgeDirection_from_on_top_left_to_gateway_join_on_bottom_right() {
+        //  +--------------------+
+        //  | from               |
+        //  |        to-gw-join  |
+        //  +--------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(position(10, 10), positionGatewayJoin(50, 50));
         assertThat(edgeDirection.direction).isEqualTo(TopLeftToBottomRight);
         assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
     @Test
-    public void computeEdgeDirection_from_on_bottom_left_to_gateway_on_top_right() {
-        //  +-----------------+
-        //  |          to-gw  |  --> merge gateway
-        //  | from            |
-        //  +-----------------+
-        EdgeDirection edgeDirection = computeEdgeDirection(position(10, 100), positionGateway(50, 50));
+    public void computeEdgeDirection_from_on_bottom_left_to_gateway_join_on_top_right() {
+        //  +-----------------------+
+        //  |           to-gw-join  |
+        //  | from                  |
+        //  +-----------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(position(10, 100), positionGatewayJoin(50, 50));
         assertThat(edgeDirection.direction).isEqualTo(BottomLeftToTopRight);
+        assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
+    }
+
+    @Test
+    public void computeEdgeDirection_from_on_top_right_to_gateway_join_on_bottom_left() {
+        //  +-----------------------+
+        //  |                  from |
+        //  | to-gw-join            |
+        //  +-----------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(position(50, 50), positionGatewayJoin(10, 100));
+        assertThat(edgeDirection.direction).isEqualTo(TopRightToBottomLeft);
+        assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
+    }
+
+    @Test
+    public void computeEdgeDirection_from_gateway_split_on_top_right_to_bottom_left() {
+        //  +-----------------------+
+        //  |         from-gw-split |
+        //  | elt                   |
+        //  +-----------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGatewaySplit(2, 1), position(1, 2),
+                Grid.of(position(2, 2)));
+        assertThat(edgeDirection.direction).isEqualTo(TopRightToBottomLeft);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
+    }
+
+    @Test
+    public void computeEdgeDirection_from_on_bottom_right_to_gateway_on_top_left() {
+        //  +--------------------+
+        //  | to-gw-join         |
+        //  |               from |
+        //  +--------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(position(50, 50), positionGatewayJoin(10, 10));
+        assertThat(edgeDirection.direction).isEqualTo(BottomRightToTopLeft);
         assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
     }
 
@@ -332,15 +370,11 @@ class WayPointsComputerTest {
         return Position.builder().x(x).y(y).build();
     }
 
-    private static Position positionGateway(int x, int y) {
-        return Position.position(shape(null, null, ShapeType.GATEWAY), x, y);
-    }
-
     private static Position positionGatewaySplit(int x, int y) {
         return Position.position(new Shape(null, null, ShapeType.GATEWAY, true), x, y);
     }
 
-    private static Position positionGatewayMerge(int x, int y) {
+    private static Position positionGatewayJoin(int x, int y) {
         return Position.position(new Shape(null, null, ShapeType.GATEWAY, false), x, y);
     }
 

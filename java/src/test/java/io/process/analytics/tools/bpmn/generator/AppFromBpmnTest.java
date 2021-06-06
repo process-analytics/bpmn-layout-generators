@@ -53,8 +53,18 @@ public class AppFromBpmnTest {
     }
 
     @Test
-    public void main_generates_output_files_for_waypoints_positions_for_gateways_split_merge() throws Exception {
-        runAndCheckBpmnAndSvgGeneration("waypoints-positions-gateways_split_merge.bpmn.xml");
+    public void main_generates_output_files_for_waypoints_positions_for_gateways_split_join() throws Exception {
+        runAndCheckBpmnAndSvgGeneration("waypoints-positions-gateways_split_join.bpmn.xml");
+    }
+
+    @Test
+    public void main_generates_output_files_for_waypoints_positions_cycle_01_simple() throws Exception {
+        runAndCheckBpmnAndSvgGeneration("waypoints-positions-cycle_01_simple.bpmn.xml");
+    }
+
+    @Test
+    public void main_generates_output_files_for_waypoints_positions_cycle_02_gateways_in_cycle() throws Exception {
+        runAndCheckBpmnAndSvgGeneration("waypoints-positions-cycle_02_gateways_in_cycle.bpmn.xml");
     }
 
     // =================================================================================================================

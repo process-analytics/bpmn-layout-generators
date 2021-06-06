@@ -12,6 +12,7 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter.waypoint;
 
+import io.process.analytics.tools.bpmn.generator.model.Edge;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.Position;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,20 @@ public class GridSearcher {
 
     private final Grid grid;
 
-    public Position getPositionOfShape(String shapeId) {
+    public Position getPositionFrom(Edge edge) {
+        return getPosition(edge, true);
+    }
+
+    public Position getPositionTo(Edge edge) {
+        return getPosition(edge, false);
+    }
+
+    private Position getPosition(Edge edge, boolean isFrom) {
+        String shapeId = isFrom && !edge.isReverted() || (!isFrom && edge.isReverted()) ? edge.getFrom() : edge.getTo();
+        return getPositionOfShape(shapeId);
+    }
+
+    private Position getPositionOfShape(String shapeId) {
         return grid.getPositions()
                 .stream()
                 .filter(p -> shapeId.equals(p.getShape()))

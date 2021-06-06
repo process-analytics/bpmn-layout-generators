@@ -12,6 +12,13 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter.waypoint;
 
+import static io.process.analytics.tools.bpmn.generator.converter.Configuration.CELL_HEIGHT;
+import static io.process.analytics.tools.bpmn.generator.converter.waypoint.Direction.*;
+import static io.process.analytics.tools.bpmn.generator.converter.waypoint.Orientation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayDimension;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayFlowNode;
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayPoint;
@@ -20,11 +27,6 @@ import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.Position;
 import io.process.analytics.tools.bpmn.generator.model.ShapeType;
 import lombok.extern.log4j.Log4j2;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static io.process.analytics.tools.bpmn.generator.converter.waypoint.Orientation.*;
 
 @Log4j2
 public class WayPointsComputer {
@@ -38,8 +40,9 @@ public class WayPointsComputer {
     }
 
     public List<DisplayPoint> inferWayPoints(Edge edge) {
-        Position positionFrom = gridSearcher.getPositionOfShape(edge.getFrom());
-        Position positionTo = gridSearcher.getPositionOfShape(edge.getTo());
+        log.debug("Inferring waypoints of edge {}", edge);
+        Position positionFrom = gridSearcher.getPositionFrom(edge);
+        Position positionTo = gridSearcher.getPositionTo(edge);
 
         EdgeDirection edgeDirection = computeEdgeDirection(positionFrom, positionTo);
         DisplayFlowNode flowNodeFrom = getFlowNode(flowNodes, positionFrom.getShape());
@@ -56,95 +59,90 @@ public class WayPointsComputer {
         List<DisplayPoint> wayPoints = new ArrayList<>();
 
         Orientation orientation = edgeDirection.orientation;
+        EdgeTerminalPoints edgeTerminalPoints = new EdgeTerminalPoints();
         switch (edgeDirection.direction) {
             case LeftToRight:
                 if (orientation == Horizontal) {
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width,
-                            dimensionFrom.y + dimensionFrom.height / 2));
-                    wayPoints.add(new DisplayPoint(dimensionTo.x, dimensionTo.y + dimensionTo.height / 2));
+                    wayPoints.add(edgeTerminalPoints.rightMiddle(dimensionFrom));
+                    wayPoints.add(edgeTerminalPoints.leftMiddle(dimensionTo));
                 }
                 break;
             case RightToLeft:
                 if (orientation == Horizontal) {
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x, dimensionFrom.y + dimensionFrom.height / 2));
-                    wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width,
-                            dimensionTo.y + dimensionTo.height / 2));
+                    wayPoints.add(edgeTerminalPoints.leftMiddle(dimensionFrom));
+                    wayPoints.add(edgeTerminalPoints.rightMiddle(dimensionTo));
                 }
                 break;
             case BottomLeftToTopRight:
                 if (orientation == HorizontalVertical) {
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width,
-                            dimensionFrom.y + dimensionFrom.height / 2));
-                    wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2,
-                            dimensionFrom.y + dimensionFrom.height / 2));
-                    wayPoints.add(
-                            new DisplayPoint(dimensionTo.x + dimensionTo.width / 2,
-                                    dimensionTo.y + dimensionTo.height));
+                    DisplayPoint from = edgeTerminalPoints.rightMiddle(dimensionFrom);
+                    DisplayPoint to = edgeTerminalPoints.centerBottom(dimensionTo);
+                    wayPoints.add(from);
+                    wayPoints.add(new DisplayPoint(to.x, from.y));
+                    wayPoints.add(to);
                 } else if (orientation == VerticalHorizontal) {
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2, dimensionFrom.y));
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2,
-                            dimensionTo.y + dimensionTo.height / 2));
-                    wayPoints.add(new DisplayPoint(dimensionTo.x, dimensionTo.y + dimensionTo.height / 2));
+                    DisplayPoint from = edgeTerminalPoints.centerTop(dimensionFrom);
+                    DisplayPoint to = edgeTerminalPoints.leftMiddle(dimensionTo);
+                    wayPoints.add(from);
+                    wayPoints.add(new DisplayPoint(from.x, to.y));
+                    wayPoints.add(to);
                 }
                 break;
             case BottomRightToTopLeft:
-                if (orientation == HorizontalVertical) { // TODO duplication with BottomLeftToTopRight
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x, dimensionFrom.y + dimensionFrom.height / 2));
-                    wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2,
-                            dimensionFrom.y + dimensionFrom.height / 2));
-                    wayPoints.add(
-                            new DisplayPoint(dimensionTo.x + dimensionTo.width / 2,
-                                    dimensionTo.y + dimensionTo.height));
+                if (orientation == HorizontalVertical) {
+                    DisplayPoint from = edgeTerminalPoints.leftMiddle(dimensionFrom);
+                    DisplayPoint to = edgeTerminalPoints.centerBottom(dimensionTo);
+                    wayPoints.add(from);
+                    wayPoints.add(new DisplayPoint(to.x, from.y));
+                    wayPoints.add(to);
                 } else if (orientation == VerticalHorizontal) {
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2, dimensionFrom.y));
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2,
-                            dimensionTo.y + dimensionTo.height / 2));
-                    wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2,
-                            dimensionTo.y + dimensionTo.height / 2));
+                    DisplayPoint from = edgeTerminalPoints.centerTop(dimensionFrom);
+                    DisplayPoint to = edgeTerminalPoints.rightMiddle(dimensionTo);
+                    wayPoints.add(from);
+                    wayPoints.add(new DisplayPoint(from.x, to.y));
+                    wayPoints.add(to);
                 }
                 break;
             case TopLeftToBottomRight:
-                if (orientation == HorizontalVertical) { // TODO duplication with TopLeftToBottomRight
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width,
-                            dimensionFrom.y + dimensionFrom.height / 2));
-                    wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2,
-                            dimensionFrom.y + dimensionFrom.height / 2));
-                    wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2, dimensionTo.y));
+                if (orientation == HorizontalVertical) { // TODO duplication with BottomLeftToTopRight HorizontalVertical
+                    DisplayPoint from = edgeTerminalPoints.rightMiddle(dimensionFrom);
+                    DisplayPoint to = edgeTerminalPoints.centerTop(dimensionTo);
+                    wayPoints.add(from);
+                    wayPoints.add(new DisplayPoint(to.x, from.y));
+                    wayPoints.add(to);
                 } else if (orientation == VerticalHorizontal) {
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2,
-                            dimensionFrom.y + dimensionTo.height));
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2,
-                            dimensionTo.y + dimensionTo.height / 2));
-                    wayPoints.add(new DisplayPoint(dimensionTo.x, dimensionTo.y + dimensionTo.height / 2));
+                    DisplayPoint from = edgeTerminalPoints.centerBottom(dimensionFrom);
+                    DisplayPoint to = edgeTerminalPoints.leftMiddle(dimensionTo);
+                    wayPoints.add(from);
+                    wayPoints.add(new DisplayPoint(from.x, to.y));
+                    wayPoints.add(to);
                 }
                 break;
             case TopRightToBottomLeft:
-                if (orientation == HorizontalVertical) { // TODO duplication with TopLeftToBottomRight
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x, dimensionFrom.y + dimensionFrom.height / 2));
-                    wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2,
-                            dimensionFrom.y + dimensionFrom.height / 2));
-                    wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2, dimensionTo.y));
+                if (orientation == HorizontalVertical) {
+                    DisplayPoint from = edgeTerminalPoints.leftMiddle(dimensionFrom);
+                    DisplayPoint to = edgeTerminalPoints.centerTop(dimensionTo);
+                    wayPoints.add(from);
+                    wayPoints.add(new DisplayPoint(to.x, from.y));
+                    wayPoints.add(to);
                 } else if (orientation == VerticalHorizontal) {
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2,
-                            dimensionFrom.y + dimensionTo.height));
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2,
-                            dimensionTo.y + dimensionTo.height / 2));
-                    wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2,
-                            dimensionTo.y + dimensionTo.height / 2));
+                    DisplayPoint from = edgeTerminalPoints.centerBottom(dimensionFrom);
+                    DisplayPoint to = edgeTerminalPoints.rightMiddle(dimensionTo);
+                    wayPoints.add(from);
+                    wayPoints.add(new DisplayPoint(from.x, to.y));
+                    wayPoints.add(to);
                 }
                 break;
             case BottomToTop:
                 if (orientation == Vertical) {
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2, dimensionFrom.y));
-                    wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2,
-                            dimensionTo.y + dimensionTo.height));
+                    wayPoints.add(edgeTerminalPoints.centerTop(dimensionFrom));
+                    wayPoints.add(edgeTerminalPoints.centerBottom(dimensionTo));
                 }
                 break;
             case TopToBottom:
                 if (orientation == Vertical) {
-                    wayPoints.add(new DisplayPoint(dimensionFrom.x + dimensionFrom.width / 2,
-                            dimensionFrom.y + dimensionFrom.height));
-                    wayPoints.add(new DisplayPoint(dimensionTo.x + dimensionTo.width / 2, dimensionTo.y));
+                    wayPoints.add(edgeTerminalPoints.centerBottom(dimensionFrom));
+                    wayPoints.add(edgeTerminalPoints.centerTop(dimensionTo));
                 }
                 break;
             default:
@@ -168,29 +166,29 @@ public class WayPointsComputer {
         if (positionFrom.getX() == positionTo.getX()) {
             orientation = Orientation.Vertical;
             if (positionFrom.getY() < positionTo.getY()) {
-                direction = Direction.TopToBottom;
+                direction = TopToBottom;
             } else {
-                direction = Direction.BottomToTop;
+                direction = BottomToTop;
             }
         } else if (positionFrom.getY() == positionTo.getY()) {
             orientation = Horizontal;
             int positionFromX = positionFrom.getX();
             int positionToX = positionTo.getX();
             if (positionFromX < positionToX) {
-                direction = Direction.LeftToRight;
+                direction = LeftToRight;
             } else {
-                direction = Direction.RightToLeft;
+                direction = RightToLeft;
             }
         } else if (positionFrom.getX() < positionTo.getX()) {
             if (positionFrom.getY() < positionTo.getY()) {
-                direction = Direction.TopLeftToBottomRight;
+                direction = TopLeftToBottomRight;
                 boolean shapeExistAtRightPositionFrom = gridSearcher.isShapeExistAtRight(positionFrom);
                 orientation = shapeExistAtRightPositionFrom
                         || (isGatewayAt(positionFrom) && (!isGatewayAt(positionTo) || isGatewaySplitAt(positionTo)))
                         ? Orientation.VerticalHorizontal
                         : Orientation.HorizontalVertical;
             } else {
-                direction = Direction.BottomLeftToTopRight;
+                direction = BottomLeftToTopRight;
                 if (isGatewayAt(positionFrom)) {
                     orientation = !isGatewaySplitAt(positionFrom)
                             || isGatewayAt(positionTo) && !isGatewaySplitAt(positionTo)
@@ -205,14 +203,16 @@ public class WayPointsComputer {
             }
         } else {
             if (positionFrom.getY() < positionTo.getY()) {
-                direction = Direction.TopRightToBottomLeft;
+                direction = TopRightToBottomLeft;
                 boolean shapeExistAtLeftPositionFrom = gridSearcher.isShapeExistAtLeft(positionFrom);
-                orientation = shapeExistAtLeftPositionFrom ? Orientation.VerticalHorizontal
+                orientation = shapeExistAtLeftPositionFrom || isGatewaySplitAt(positionFrom)
+                        ? Orientation.VerticalHorizontal
                         : Orientation.HorizontalVertical;
             } else {
-                direction = Direction.BottomRightToTopLeft;
+                direction = BottomRightToTopLeft;
                 boolean shapeExistAbovePositionFrom = gridSearcher.isShapeExistAbove(positionFrom);
-                orientation = shapeExistAbovePositionFrom ? Orientation.HorizontalVertical
+                orientation = shapeExistAbovePositionFrom || isGatewayAt(positionTo)
+                        ? Orientation.HorizontalVertical
                         : Orientation.VerticalHorizontal;
             }
         }
