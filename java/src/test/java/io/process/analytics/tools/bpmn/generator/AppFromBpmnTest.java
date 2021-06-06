@@ -29,12 +29,12 @@ public class AppFromBpmnTest {
 
     @Test
     public void main_generates_output_files_for_A_2_0() throws Exception {
-        runAndCheckBpmnAndSvgGeneration("bpmn/A.2.0.bpmn.xml", "A.2.0_with_diagram.bpmn");
+        runAndCheckBpmnAndSvgGeneration("A.2.0.bpmn.xml");
     }
 
     @Test
     public void main_generates_output_files_for_A_2_1() throws Exception {
-        runAndCheckBpmnAndSvgGeneration("bpmn/A.2.1.bpmn.xml", "A.2.1_with_diagram.bpmn");
+        runAndCheckBpmnAndSvgGeneration("A.2.1.bpmn.xml");
     }
 
     @Test
@@ -49,34 +49,32 @@ public class AppFromBpmnTest {
 
     @Test
     public void main_generates_output_files_for_waypoints_positions_for_gateways() throws Exception {
-        runAndCheckBpmnAndSvgGeneration("bpmn/waypoints-positions-gateways.bpmn.xml",
-                "waypoints-positions_with_diagram.bpmn");
+        runAndCheckBpmnAndSvgGeneration("waypoints-positions-gateways.bpmn.xml");
     }
 
     @Test
     public void main_generates_output_files_for_waypoints_positions_for_gateways_split_merge() throws Exception {
-        runAndCheckBpmnAndSvgGeneration("bpmn/waypoints-positions-gateways_split_merge.bpmn.xml",
-                "waypoints-positions-gateways_split_merge.bpmn");
+        runAndCheckBpmnAndSvgGeneration("waypoints-positions-gateways_split_merge.bpmn.xml");
     }
 
     // =================================================================================================================
     // UTILS
     // =================================================================================================================
 
-    private static void runAndCheckBpmnAndSvgGeneration(String inputFileName, String outputFileBaseName) throws IOException {
-        runAndCheckBpmnGeneration(inputFileName, outputFileBaseName + ".xml");
-        runAndCheckSvgGeneration(inputFileName, outputFileBaseName + ".svg");
+    private static void runAndCheckBpmnAndSvgGeneration(String inputFileName) throws IOException {
+        runAndCheckBpmnGeneration(inputFileName);
+        runAndCheckSvgGeneration(inputFileName);
     }
 
-    private static void runAndCheckBpmnGeneration(String inputFileName, String outputFileName) throws IOException {
-        String outputPath = outputPath(outputFileName);
-        runApp(input(inputFileName), "-o", outputPath);
+    private static void runAndCheckBpmnGeneration(String inputFileName) throws IOException {
+        String outputPath = outputPath(inputFileName);
+        runApp(input("bpmn/" + inputFileName), "-o", outputPath);
         assertBpmnOutFile(outputPath);
     }
 
-    private static void runAndCheckSvgGeneration(String inputFileName, String outputFileName) throws IOException {
-        String outputPath = outputPath(outputFileName);
-        runApp(input(inputFileName), "--output-type=SVG", "-o", outputPath);
+    private static void runAndCheckSvgGeneration(String inputFileName) throws IOException {
+        String outputPath = outputPath(inputFileName + ".svg");
+        runApp(input("bpmn/" + inputFileName), "--output-type=SVG", "-o", outputPath);
         assertSvgOutFile(outputPath);
     }
 
