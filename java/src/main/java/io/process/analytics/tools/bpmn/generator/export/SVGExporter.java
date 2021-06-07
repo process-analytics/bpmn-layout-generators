@@ -116,31 +116,32 @@ public class SVGExporter {
                         .append(" />\n");
             }
 
-            String labelFillColor = "#374962";
-            String labelTextAnchor = "middle";
-
-            content.append("<text")
-                    .append(" x=\"").append(labelDimension.x).append("\"")
-                    .append(" y=\"").append(labelDimension.y).append("\"")
-                    .append(" text-anchor=\"").append(labelTextAnchor).append("\"")
-                    .append(" font-size=\"").append(label.fontSize).append("\"")
-                    .append(" fill=\"").append(labelFillColor).append("\"")
-                    .append(">\n");
-            // handle multi-lines label text
             String labelText = defaultIfNull(label.text);
-            boolean isFirstLabelTextLine = true;
-            for (String labelTextLine : labelText.split("\n")) {
-                content.append("  <tspan")
-                        .append(" x=\"").append(labelDimension.x).append("\"");
-                if (!isFirstLabelTextLine) {
-                    content.append(" dy=\"1.2em\"");
+            if (!labelText.isEmpty()) {
+                String labelFillColor = "#374962";
+                String labelTextAnchor = "middle";
+                content.append("<text")
+                        .append(" x=\"").append(labelDimension.x).append("\"")
+                        .append(" y=\"").append(labelDimension.y).append("\"")
+                        .append(" text-anchor=\"").append(labelTextAnchor).append("\"")
+                        .append(" font-size=\"").append(label.fontSize).append("\"")
+                        .append(" fill=\"").append(labelFillColor).append("\"")
+                        .append(">\n");
+                // handle multi-lines label text
+                boolean isFirstLabelTextLine = true;
+                for (String labelTextLine : labelText.split("\n")) {
+                    content.append("  <tspan")
+                            .append(" x=\"").append(labelDimension.x).append("\"");
+                    if (!isFirstLabelTextLine) {
+                        content.append(" dy=\"1.2em\"");
+                    }
+                    content.append(">")
+                            .append(labelTextLine)
+                            .append("</tspan>\n");
+                    isFirstLabelTextLine = false;
                 }
-                content.append(">")
-                        .append(labelTextLine)
-                        .append("</tspan>\n");
-                isFirstLabelTextLine = false;
+                content.append("</text>\n");
             }
-            content.append("</text>\n");
         }
 
         for (DisplayEdge edge : model.edges) {
@@ -155,6 +156,18 @@ public class SVGExporter {
                         .append(" stroke-width=\"").append(edgeStrokeWidth).append("\"")
                         .append(" stroke-opacity=\"").append(edgeStrokeOpacity).append("\"")
                         .append(" fill=\"none\"")
+                        .append(" />\n");
+
+                // highlight target point
+                DisplayPoint targetPoint = edge.wayPoints.get(edge.wayPoints.size() - 1);
+                content.append("<circle")
+                        .append(" cx=\"").append(targetPoint.x).append("\"")
+                        .append(" cy=\"").append(targetPoint.y).append("\"")
+                        .append(" r=\"").append("5").append("\"")
+                        .append(" stroke=\"").append(colorEgeStroke).append("\"")
+                        .append(" stroke-width=\"").append(edgeStrokeWidth).append("\"")
+                        .append(" stroke-opacity=\"").append(edgeStrokeOpacity).append("\"")
+                        .append(" fill=\"").append(colorEgeStroke).append("\"")
                         .append(" />\n");
             }
         }
