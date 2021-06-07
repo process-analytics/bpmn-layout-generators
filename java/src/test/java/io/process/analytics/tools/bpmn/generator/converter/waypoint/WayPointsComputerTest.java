@@ -12,18 +12,22 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter.waypoint;
 
+import static io.process.analytics.tools.bpmn.generator.converter.waypoint.Direction.*;
+import static io.process.analytics.tools.bpmn.generator.converter.waypoint.Orientation.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
+
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.Position;
 import io.process.analytics.tools.bpmn.generator.model.Shape;
 import io.process.analytics.tools.bpmn.generator.model.ShapeType;
-import org.junit.jupiter.api.Test;
-
-import static io.process.analytics.tools.bpmn.generator.converter.waypoint.Direction.*;
-import static io.process.analytics.tools.bpmn.generator.converter.waypoint.Orientation.*;
-import static io.process.analytics.tools.bpmn.generator.model.Shape.shape;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class WayPointsComputerTest {
+
+    // =================================================================================================================
+    // from and to in the same row - left to right
+    // =================================================================================================================
 
     @Test
     public void computeEdgeDirection_same_row_from_on_left() {
@@ -33,11 +37,161 @@ class WayPointsComputerTest {
     }
 
     @Test
+    public void computeEdgeDirection_same_row_left_to_right_with_elements_between_none_on_bottom() {
+        //  +--------------------+
+        //  | from    elt     to |
+        //  |                    |
+        //  +--------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(position(1,1), position(4,1), Grid.of(position(3, 1)));
+        assertThat(edgeDirection.direction).isEqualTo(LeftToRight);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontalVertical);
+        assertBendConfigurationOnBottom(edgeDirection.bendConfiguration, 1);
+    }
+
+    @Test
+    public void computeEdgeDirection_same_row_left_to_right_with_elements_between_no_elements_on_top() {
+        //  +--------------------+
+        //  |                    |
+        //  | from    elt     to |
+        //  |         elt        |
+        //  +--------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(position(1,2), position(4,2), Grid.of(position(3, 2), position(3, 3)));
+        assertThat(edgeDirection.direction).isEqualTo(LeftToRight);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontalVertical);
+        assertBendConfigurationOnTop(edgeDirection.bendConfiguration, 1);
+    }
+
+    @Test
+    public void computeEdgeDirection_same_row_left_to_right_with_elements_between_more_occupied_rows_on_top() {
+        //  +--------------------+
+        //  |         elt        |
+        //  |         elt        |
+        //  | from    elt     to |
+        //  |         elt        |
+        //  +--------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(position(1,3), position(4,3),
+                Grid.of(position(3, 1), position(3, 2), position(3, 3), position(3, 4)));
+        assertThat(edgeDirection.direction).isEqualTo(LeftToRight);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontalVertical);
+        assertBendConfigurationOnBottom(edgeDirection.bendConfiguration, 2);
+    }
+
+    @Test
+    public void computeEdgeDirection_same_row_left_to_right_with_elements_between_more_occupied_rows_on_bottom() {
+        //  +--------------------+
+        //  |         elt        |
+        //  | from    elt     to |
+        //  |         elt        |
+        //  |         elt        |
+        //  +--------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(position(1,2), position(4,2),
+                Grid.of(position(3, 1), position(3, 2), position(3, 3), position(3, 4)));
+        assertThat(edgeDirection.direction).isEqualTo(LeftToRight);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontalVertical);
+        assertBendConfigurationOnTop(edgeDirection.bendConfiguration, 2);
+    }
+
+    @Test
+    public void computeEdgeDirection_same_row_left_to_right_with_elements_between_as_much_on_bottom_as_on_top() {
+        //  +--------------------+
+        //  |         elt        |
+        //  |         elt        |
+        //  | from    elt     to |
+        //  |         elt        |
+        //  |         elt        |
+        //  +--------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(position(1,3), position(4,3),
+                Grid.of(position(3, 1), position(2, 2), position(3, 3), position(3, 4), position(2, 5)));
+        assertThat(edgeDirection.direction).isEqualTo(LeftToRight);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontalVertical);
+        assertBendConfigurationOnBottom(edgeDirection.bendConfiguration, 3);
+    }
+
+    // =================================================================================================================
+    // from and to in the same row - right to left
+    // =================================================================================================================
+
+    @Test
     public void computeEdgeDirection_same_row_from_on_right() {
         EdgeDirection edgeDirection = computeEdgeDirection(positionSameRow(100), positionSameRow(20));
         assertThat(edgeDirection.direction).isEqualTo(RightToLeft);
         assertThat(edgeDirection.orientation).isEqualTo(Horizontal);
     }
+
+    @Test
+    public void computeEdgeDirection_same_row_right_to_left_with_elements_between_none_on_bottom() {
+        //  +--------------------+
+        //  | to    elt     from |
+        //  |                    |
+        //  +--------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(position(4,1), position(1,1), Grid.of(position(3, 1)));
+        assertThat(edgeDirection.direction).isEqualTo(RightToLeft);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontalVertical);
+        assertBendConfigurationOnBottom(edgeDirection.bendConfiguration, 1);
+    }
+
+    @Test
+    public void computeEdgeDirection_same_row_right_to_left_with_elements_between_no_elements_on_top() {
+        //  +--------------------+
+        //  |                    |
+        //  | to      elt   from |
+        //  |         elt        |
+        //  +--------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(position(4,2), position(1,2), Grid.of(position(3, 2), position(3, 3)));
+        assertThat(edgeDirection.direction).isEqualTo(RightToLeft);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontalVertical);
+        assertBendConfigurationOnTop(edgeDirection.bendConfiguration, 1);
+    }
+
+    @Test
+    public void computeEdgeDirection_same_row_right_to_left_with_elements_between_more_occupied_rows_on_top() {
+        //  +--------------------+
+        //  |         elt        |
+        //  |         elt        |
+        //  | to      elt   from |
+        //  |         elt        |
+        //  +--------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(position(4,3), position(1,3),
+                Grid.of(position(3, 1), position(3, 2), position(3, 3), position(3, 4)));
+        assertThat(edgeDirection.direction).isEqualTo(RightToLeft);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontalVertical);
+        assertBendConfigurationOnBottom(edgeDirection.bendConfiguration, 2);
+    }
+
+    @Test
+    public void computeEdgeDirection_same_row_right_to_left_with_elements_between_more_occupied_rows_on_bottom() {
+        //  +--------------------+
+        //  |         elt        |
+        //  | to      elt   from |
+        //  |         elt        |
+        //  |         elt        |
+        //  +--------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(position(4,2), position(1,2),
+                Grid.of(position(3, 1), position(3, 2), position(3, 3), position(3, 4)));
+        assertThat(edgeDirection.direction).isEqualTo(RightToLeft);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontalVertical);
+        assertBendConfigurationOnTop(edgeDirection.bendConfiguration, 2);
+    }
+
+    @Test
+    public void computeEdgeDirection_same_row_right_to_left_with_elements_between_as_much_on_bottom_as_on_top() {
+        //  +--------------------+
+        //  |         elt        |
+        //  |         elt        |
+        //  | to      elt   from |
+        //  |         elt        |
+        //  |         elt        |
+        //  +--------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(position(4,3), position(1,3),
+                Grid.of(position(3, 1), position(2, 2), position(3, 3), position(3, 4), position(2, 5)));
+        assertThat(edgeDirection.direction).isEqualTo(RightToLeft);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontalVertical);
+        assertBendConfigurationOnBottom(edgeDirection.bendConfiguration, 3);
+    }
+
+    // =================================================================================================================
+    // from and to in the same column
+    // =================================================================================================================
 
     @Test
     public void computeEdgeDirection_same_column_from_on_top() {
@@ -58,7 +212,7 @@ class WayPointsComputerTest {
     // =================================================================================================================
 
     @Test
-    public void computeEdgeDirection_no_elements_between_from_and_top_with_from_on_top_left() {
+    public void computeEdgeDirection_no_elements_between_from_on_top_left_to_on_bottom_right() {
         //  +-----------------+
         //  | from            |
         //  |          to     |
@@ -69,7 +223,7 @@ class WayPointsComputerTest {
     }
 
     @Test
-    public void computeEdgeDirection_no_elements_between_from_and_top_with_from_on_top_right() {
+    public void computeEdgeDirection_no_elements_between_from_on_top_right_to_on_bottom_right() {
         //  +-----------------+
         //  |          from   |
         //  | to              |
@@ -80,7 +234,7 @@ class WayPointsComputerTest {
     }
 
     @Test
-    public void computeEdgeDirection_no_elements_between_from_and_top_with_from_on_bottom_left() {
+    public void computeEdgeDirection_no_elements_between_from_on_bottom_left_to_on_top_right() {
         //  +-----------------+
         //  |          to     |
         //  | from            |
@@ -91,7 +245,7 @@ class WayPointsComputerTest {
     }
 
     @Test
-    public void computeEdgeDirection_no_elements_between_from_and_top_with_from_on_bottom_right() {
+    public void computeEdgeDirection_no_elements_between_from_on_bottom_right_to_on_top_left() {
         //  +-----------------+
         //  | to              |
         //  |          from   |
@@ -376,6 +530,16 @@ class WayPointsComputerTest {
 
     private static Position positionGatewayJoin(int x, int y) {
         return Position.position(new Shape(null, null, ShapeType.GATEWAY, false), x, y);
+    }
+
+    private static void assertBendConfigurationOnBottom(BendConfiguration bendConfiguration, int offset) {
+        assertThat(bendConfiguration.direction).isEqualTo(BendDirection.BOTTOM);
+        assertThat(bendConfiguration.offset).isEqualTo(offset);
+    }
+
+    private static void assertBendConfigurationOnTop(BendConfiguration bendConfiguration, int offset) {
+        assertThat(bendConfiguration.direction).isEqualTo(BendDirection.TOP);
+        assertThat(bendConfiguration.offset).isEqualTo(offset);
     }
 
 }

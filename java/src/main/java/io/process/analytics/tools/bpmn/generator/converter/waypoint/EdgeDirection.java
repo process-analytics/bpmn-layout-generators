@@ -13,11 +13,12 @@
 package io.process.analytics.tools.bpmn.generator.converter.waypoint;
 
 import lombok.Builder;
-import lombok.RequiredArgsConstructor;
 
 @Builder
 public class EdgeDirection {
 
     public final Direction direction;
     public final Orientation orientation;
+    public final BendConfiguration bendConfiguration;
+
 }

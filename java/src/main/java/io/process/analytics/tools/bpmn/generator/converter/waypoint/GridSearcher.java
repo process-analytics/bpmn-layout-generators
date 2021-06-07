@@ -12,14 +12,14 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter.waypoint;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import io.process.analytics.tools.bpmn.generator.model.Edge;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.Position;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Log4j2
@@ -67,6 +67,32 @@ public class GridSearcher {
                 .stream()
                 .filter(p -> p.getX() == positionFrom.getX())
                 .anyMatch(p -> p.getY() == positionFrom.getY() - 1);
+    }
+
+
+    public BendConfiguration searchEmptyRow(Position positionFrom, Position positionTo, BendDirection searchDirection) {
+        int positionFromY = positionFrom.getY();
+        int offset = -1;
+        boolean isElementBetween = true;
+
+        log.debug("Search empty rows in direction {}", searchDirection);
+        while (isElementBetween) {
+            offset++;
+            isElementBetween = this.hasElementsBetweenPositionsHorizontally(
+                    positionFromY + searchDirection.numericFactor() * offset,
+                    positionFrom.getX(), positionTo.getX());
+        }
+        log.debug("Found empty row at offset {}", offset);
+        return BendConfiguration.builder().direction(searchDirection).offset(offset).build();
+    }
+
+    private boolean hasElementsBetweenPositionsHorizontally(final int y, final int x1, final int x2) {
+        log.debug("Searching for elements horizontally between positions. y={} x1={} x2={}", y, x1, x2);
+        return grid.getPositions()
+                .stream()
+                .filter(p -> p.getY() == y)
+                .filter(p -> p.getX() > Math.min(x1, x2))
+                .anyMatch(p -> p.getX() < Math.max(x1, x2));
     }
 
 }
