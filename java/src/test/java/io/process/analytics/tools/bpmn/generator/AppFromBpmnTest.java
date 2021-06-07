@@ -98,7 +98,7 @@ public class AppFromBpmnTest {
     // =================================================================================================================
 
     private static void runAndCheckBpmnAndSvgGeneration(String inputFileName) throws IOException {
-//        runAndCheckBpmnGeneration(inputFileName);
+        runAndCheckBpmnGeneration(inputFileName);
         runAndCheckSvgGeneration(inputFileName);
     }
 
