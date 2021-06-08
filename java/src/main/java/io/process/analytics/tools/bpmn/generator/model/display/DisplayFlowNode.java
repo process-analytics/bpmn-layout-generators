@@ -10,10 +10,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.process.analytics.tools.bpmn.generator.converter;
+package io.process.analytics.tools.bpmn.generator.model.display;
 
-public class Configuration {
-    // TODO this should be configurable for by the client code
-    public static final int CELL_WIDTH = 200;
-    public static final int CELL_HEIGHT = 100;
+import io.process.analytics.tools.bpmn.generator.model.ShapeType;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Builder
+public class DisplayFlowNode {
+
+    public final String bpmnElementId;
+    public final DisplayDimension dimension;
+    public final DisplayLabel label;
+    // for non BPMN exporters only
+    public final ShapeType type;
+    public final int rx;
+    public final int strokeWidth;
+
 }

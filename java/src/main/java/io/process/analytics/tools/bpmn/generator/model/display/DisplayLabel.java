@@ -10,15 +10,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.process.analytics.tools.bpmn.generator.converter.waypoint;
+package io.process.analytics.tools.bpmn.generator.model.display;
 
-import lombok.Builder;
+import lombok.RequiredArgsConstructor;
 
-@Builder
-public class EdgeDirection {
+@RequiredArgsConstructor
+public class DisplayLabel {
 
-    public final Direction direction;
-    public final Orientation orientation;
-    public final BendConfiguration bendConfiguration;
-
+    public final String text; // for non BPMN exporters only
+    public final int fontSize;
+    public final DisplayDimension dimension;
 }

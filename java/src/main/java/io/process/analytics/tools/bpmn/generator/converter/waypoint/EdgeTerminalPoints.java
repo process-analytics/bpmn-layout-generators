@@ -12,8 +12,8 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter.waypoint;
 
-import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayDimension;
-import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayPoint;
+import io.process.analytics.tools.bpmn.generator.model.display.DisplayDimension;
+import io.process.analytics.tools.bpmn.generator.model.display.DisplayPoint;
 
 /**
  * Compute coordinates of the terminal points (source or target) of an Edge.

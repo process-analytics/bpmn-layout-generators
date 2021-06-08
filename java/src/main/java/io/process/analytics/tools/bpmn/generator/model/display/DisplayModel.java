@@ -10,10 +10,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.process.analytics.tools.bpmn.generator.converter;
+package io.process.analytics.tools.bpmn.generator.model.display;
 
-public class Configuration {
-    // TODO this should be configurable for by the client code
-    public static final int CELL_WIDTH = 200;
-    public static final int CELL_HEIGHT = 100;
+import lombok.Builder;
+import lombok.RequiredArgsConstructor;
+import lombok.Singular;
+
+import java.util.List;
+
+@RequiredArgsConstructor
+@Builder
+public class DisplayModel {
+    public final int width;
+    public final int height;
+
+    @Singular
+    public final List<DisplayFlowNode> flowNodes;
+    @Singular
+    public final List<DisplayEdge> edges;
+
 }
