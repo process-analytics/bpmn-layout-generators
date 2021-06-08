@@ -252,7 +252,7 @@ public class WayPointsComputer {
                 direction = TopLeftToBottomRight;
                 boolean shapeExistAtRightPositionFrom = gridSearcher.isShapeExistAtRight(positionFrom);
                 orientation = shapeExistAtRightPositionFrom
-                        || (isGatewayAt(positionFrom) && (!isGatewayAt(positionTo) || isGatewaySplitAt(positionTo)))
+                        || (isGatewayAt(positionFrom) && isGatewaySplitAt(positionFrom) && (!isGatewayAt(positionTo) || isGatewaySplitAt(positionTo)))
                         ? Orientation.VerticalHorizontal
                         : Orientation.HorizontalVertical;
             } else {

@@ -260,17 +260,6 @@ class WayPointsComputerTest {
     // =================================================================================================================
 
     @Test
-    public void computeEdgeDirection_from_split_gateway_on_bottom_left_to_on_top_right() {
-        //  +---------------------+
-        //  |                  to |
-        //  | from-gw-split       |
-        //  +---------------------+
-        EdgeDirection edgeDirection = computeEdgeDirection(positionGatewaySplit(10, 100), position(50, 50));
-        assertThat(edgeDirection.direction).isEqualTo(BottomLeftToTopRight);
-        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
-    }
-
-    @Test
     public void computeEdgeDirection_from_join_gateway_on_bottom_left_to_on_top_right() {
         //  +---------------------+
         //  |                  to |
@@ -279,6 +268,28 @@ class WayPointsComputerTest {
         EdgeDirection edgeDirection = computeEdgeDirection(positionGatewayJoin(10, 100), position(50, 50));
         assertThat(edgeDirection.direction).isEqualTo(BottomLeftToTopRight);
         assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
+    }
+
+    @Test
+    public void computeEdgeDirection_from_join_gateway_on_top_left_to_on_bottom_right() {
+        //  +---------------------+
+        //  | from-gw-join        |
+        //  |                  to |
+        //  +---------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGatewayJoin(1, 1), position(5, 5));
+        assertThat(edgeDirection.direction).isEqualTo(TopLeftToBottomRight);
+        assertThat(edgeDirection.orientation).isEqualTo(HorizontalVertical);
+    }
+
+    @Test
+    public void computeEdgeDirection_from_split_gateway_on_bottom_left_to_on_top_right() {
+        //  +---------------------+
+        //  |                  to |
+        //  | from-gw-split       |
+        //  +---------------------+
+        EdgeDirection edgeDirection = computeEdgeDirection(positionGatewaySplit(10, 100), position(50, 50));
+        assertThat(edgeDirection.direction).isEqualTo(BottomLeftToTopRight);
+        assertThat(edgeDirection.orientation).isEqualTo(VerticalHorizontal);
     }
 
     @Test
