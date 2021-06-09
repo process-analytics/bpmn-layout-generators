@@ -15,6 +15,9 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter;
 
+import static io.process.analytics.tools.bpmn.generator.converter.Configuration.CELL_HEIGHT;
+import static io.process.analytics.tools.bpmn.generator.converter.Configuration.CELL_WIDTH;
+
 import java.util.List;
 
 import io.process.analytics.tools.bpmn.generator.converter.waypoint.WayPointsComputer;
@@ -25,10 +28,6 @@ import lombok.Singular;
 import lombok.ToString;
 
 public class AlgoToDisplayModelConverter {
-
-    // TODO this should be fields of the class and configured by the client code
-    private static final int CELL_WIDTH = 200;
-    private static final int CELL_HEIGHT = 100;
 
     public DisplayModel convert(Grid grid, Diagram diagram) {
         DisplayModel.DisplayModelBuilder model = DisplayModel.builder();
