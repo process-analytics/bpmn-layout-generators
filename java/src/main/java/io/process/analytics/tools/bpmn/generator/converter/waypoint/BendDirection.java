@@ -15,7 +15,12 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter.waypoint;
 
-public enum Orientation {
-    Horizontal, Vertical, HorizontalVertical, VerticalHorizontal, // standard orientations
-    VerticalHorizontalVertical // extra orientations to avoid edges overlapping shapes
+public enum BendDirection {
+
+    BOTTOM, TOP;
+
+    public int numericFactor() {
+        return this == BOTTOM ? 1 : -1;
+    }
+
 }

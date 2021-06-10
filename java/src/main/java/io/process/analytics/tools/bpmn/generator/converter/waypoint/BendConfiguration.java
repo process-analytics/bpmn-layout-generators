@@ -15,7 +15,12 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter.waypoint;
 
-public enum Orientation {
-    Horizontal, Vertical, HorizontalVertical, VerticalHorizontal, // standard orientations
-    VerticalHorizontalVertical // extra orientations to avoid edges overlapping shapes
+import lombok.Builder;
+import lombok.ToString;
+
+@Builder
+@ToString
+public class BendConfiguration {
+    public final BendDirection direction;
+    public final int offset;
 }

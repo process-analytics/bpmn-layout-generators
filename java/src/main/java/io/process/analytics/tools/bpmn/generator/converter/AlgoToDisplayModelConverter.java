@@ -31,7 +31,11 @@ public class AlgoToDisplayModelConverter {
 
     public DisplayModel convert(Grid grid, Diagram diagram) {
         DisplayModel.DisplayModelBuilder model = DisplayModel.builder();
-        model.width(grid.width() * CELL_WIDTH).height(grid.height() * CELL_HEIGHT);
+        // dimensions must be increased when generating alternate path to avoid edge overlapping on shapes
+        // mainly impact on svg exporter. If the dimensions are not updated, the alternate paths are not fully displayed
+        // as they are out of the viewport of the svg
+        // increase to display edges with extra paths to avoid shape overlapping
+        model.width(grid.width() * CELL_WIDTH).height((grid.height() + 1) * CELL_HEIGHT);
 
         for (Position position : grid.getPositions()) {
             int xOffset = position.getX() * CELL_WIDTH;

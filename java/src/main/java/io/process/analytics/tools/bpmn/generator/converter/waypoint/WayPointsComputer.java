@@ -51,6 +51,8 @@ public class WayPointsComputer {
         return computeWayPoints(edgeDirection, flowNodeFrom, flowNodeTo);
     }
 
+    private final static EdgeTerminalPoints edgeTerminalPoints = new EdgeTerminalPoints();
+
     private static List<DisplayPoint> computeWayPoints(EdgeDirection edgeDirection, DisplayFlowNode flowNodeFrom,
                                                        DisplayFlowNode flowNodeTo) {
         DisplayDimension dimensionFrom = flowNodeFrom.dimension;
@@ -59,18 +61,47 @@ public class WayPointsComputer {
         List<DisplayPoint> wayPoints = new ArrayList<>();
 
         Orientation orientation = edgeDirection.orientation;
-        EdgeTerminalPoints edgeTerminalPoints = new EdgeTerminalPoints();
         switch (edgeDirection.direction) {
             case LeftToRight:
                 if (orientation == Horizontal) {
                     wayPoints.add(edgeTerminalPoints.rightMiddle(dimensionFrom));
                     wayPoints.add(edgeTerminalPoints.leftMiddle(dimensionTo));
                 }
+                // Special case add bend points to avoid edge overlapping on shape
+                else if (orientation == VerticalHorizontalVertical) {
+                    log.debug("Special case LeftToRight VerticalHorizontalVertical");
+                    BendConfiguration bendConfiguration = edgeDirection.bendConfiguration;
+                    log.debug("Bend configuration: {}", bendConfiguration);
+
+                    DisplayPoint from = bendConfiguration.direction == BendDirection.BOTTOM ? edgeTerminalPoints.centerBottom(dimensionFrom): edgeTerminalPoints.centerTop(dimensionFrom);
+                    DisplayPoint to = bendConfiguration.direction == BendDirection.BOTTOM ? edgeTerminalPoints.centerBottom(dimensionTo): edgeTerminalPoints.centerTop(dimensionTo);
+                    int bendPointY = from.y + bendConfiguration.direction.numericFactor() * bendConfiguration.offset * CELL_HEIGHT;
+
+                    wayPoints.add(from);
+                    wayPoints.add(new DisplayPoint(from.x, bendPointY));
+                    wayPoints.add(new DisplayPoint(to.x, bendPointY));
+                    wayPoints.add(to);
+                }
                 break;
             case RightToLeft:
                 if (orientation == Horizontal) {
                     wayPoints.add(edgeTerminalPoints.leftMiddle(dimensionFrom));
                     wayPoints.add(edgeTerminalPoints.rightMiddle(dimensionTo));
+                }
+                // Special case add bend points to avoid edge overlapping on shape
+                else if (orientation == VerticalHorizontalVertical) { // TODO duplication with LeftToRight
+                    log.debug("Special case RightToLeft VerticalHorizontalVertical");
+                    BendConfiguration bendConfiguration = edgeDirection.bendConfiguration;
+                    log.debug("Bend configuration: {}", bendConfiguration);
+
+                    DisplayPoint from = bendConfiguration.direction == BendDirection.BOTTOM ? edgeTerminalPoints.centerBottom(dimensionFrom): edgeTerminalPoints.centerTop(dimensionFrom);
+                    DisplayPoint to = bendConfiguration.direction == BendDirection.BOTTOM ? edgeTerminalPoints.centerBottom(dimensionTo): edgeTerminalPoints.centerTop(dimensionTo);
+                    int bendPointY = from.y + bendConfiguration.direction.numericFactor() * bendConfiguration.offset * CELL_HEIGHT;
+
+                    wayPoints.add(from);
+                    wayPoints.add(new DisplayPoint(from.x, bendPointY));
+                    wayPoints.add(new DisplayPoint(to.x, bendPointY));
+                    wayPoints.add(to);
                 }
                 break;
             case BottomLeftToTopRight:
@@ -104,7 +135,7 @@ public class WayPointsComputer {
                 }
                 break;
             case TopLeftToBottomRight:
-                if (orientation == HorizontalVertical) { // TODO duplication with BottomLeftToTopRight HorizontalVertical
+                if (orientation == HorizontalVertical) {
                     DisplayPoint from = edgeTerminalPoints.rightMiddle(dimensionFrom);
                     DisplayPoint to = edgeTerminalPoints.centerTop(dimensionTo);
                     wayPoints.add(from);
@@ -162,6 +193,7 @@ public class WayPointsComputer {
     EdgeDirection computeEdgeDirection(Position positionFrom, Position positionTo) {
         Direction direction;
         Orientation orientation;
+        BendConfiguration bendConfiguration = null;
 
         if (positionFrom.getX() == positionTo.getX()) {
             orientation = Orientation.Vertical;
@@ -174,10 +206,46 @@ public class WayPointsComputer {
             orientation = Horizontal;
             int positionFromX = positionFrom.getX();
             int positionToX = positionTo.getX();
+
             if (positionFromX < positionToX) {
                 direction = LeftToRight;
+                if (positionFromX + 1 != positionToX) {
+                    log.debug("Direction {}. Detected potential overlapping of horizontal edge on shapes. Shape: {}",
+                            direction, positionFrom.getShape());
+                    BendConfiguration bendConfigurationBottom = gridSearcher.searchEmptyRow(positionFrom, positionTo, BendDirection.BOTTOM);
+                    if (bendConfigurationBottom.offset != 0) {
+                        log.debug("Not possible to keep horizontal orientation");
+                        orientation = VerticalHorizontalVertical;
+                        bendConfiguration = bendConfigurationBottom;
+                        if (bendConfigurationBottom.offset != 1) {
+                            BendConfiguration bendConfigurationTop = gridSearcher.searchEmptyRow(positionFrom, positionTo, BendDirection.TOP);
+                            if (bendConfigurationTop.offset < bendConfigurationBottom.offset) {
+                                bendConfiguration = bendConfigurationTop;
+                            }
+                        }
+                    } else {
+                        log.debug("Keep the horizontal orientation");
+                    }
+                }
             } else {
                 direction = RightToLeft;
+                if (positionFromX - 1 != positionToX) {
+                    // TODO duplication with LeftToRight
+                    log.debug("Direction {}. Detected potential overlapping of horizontal edge on shapes. Shape: {}",
+                            direction, positionFrom.getShape());
+                    BendConfiguration bendConfigurationBottom = gridSearcher.searchEmptyRow(positionFrom, positionTo, BendDirection.BOTTOM);
+                    if (bendConfigurationBottom.offset != 0) {
+                        log.debug("Not possible to keep horizontal orientation");
+                        orientation = VerticalHorizontalVertical;
+                        bendConfiguration = bendConfigurationBottom;
+                        if (bendConfigurationBottom.offset != 1) {
+                            BendConfiguration bendConfigurationTop = gridSearcher.searchEmptyRow(positionFrom, positionTo, BendDirection.TOP);
+                            if (bendConfigurationTop.offset < bendConfigurationBottom.offset) {
+                                bendConfiguration = bendConfigurationTop;
+                            }
+                        }
+                    }
+                }
             }
         } else if (positionFrom.getX() < positionTo.getX()) {
             if (positionFrom.getY() < positionTo.getY()) {
@@ -217,8 +285,11 @@ public class WayPointsComputer {
             }
         }
 
-        log.debug("Computed Edge orientation. Direction: {}, Orientation: {}", direction, orientation);
-        return EdgeDirection.builder().direction(direction).orientation(orientation).build();
+        log.debug("Computed Edge orientation. Direction: {}, Orientation: {}, {}", direction, orientation,
+                bendConfiguration);
+        return EdgeDirection.builder().direction(direction).orientation(orientation)
+                .bendConfiguration(bendConfiguration)
+                .build();
     }
 
     private static boolean isGatewayAt(Position position) {
