@@ -17,14 +17,14 @@ package io.process.analytics.tools.bpmn.generator.export;
 
 import static io.process.analytics.tools.bpmn.generator.internal.StringUtils.defaultIfNull;
 
+import java.util.stream.Collectors;
+
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter;
-import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.*;
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.ShapeType;
+import io.process.analytics.tools.bpmn.generator.model.display.*;
 import lombok.extern.log4j.Log4j2;
-
-import java.util.stream.Collectors;
 
 @Log4j2
 public class SVGExporter {

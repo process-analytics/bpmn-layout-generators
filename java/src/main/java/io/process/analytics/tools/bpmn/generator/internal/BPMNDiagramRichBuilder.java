@@ -15,8 +15,6 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import static io.process.analytics.tools.bpmn.generator.internal.IdUtils.generateRandomId;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,10 +23,10 @@ import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
-import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayDimension;
-import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayEdge;
-import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayFlowNode;
-import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayPoint;
+import io.process.analytics.tools.bpmn.generator.model.display.DisplayDimension;
+import io.process.analytics.tools.bpmn.generator.model.display.DisplayEdge;
+import io.process.analytics.tools.bpmn.generator.model.display.DisplayFlowNode;
+import io.process.analytics.tools.bpmn.generator.model.display.DisplayPoint;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import io.process.analytics.tools.bpmn.generator.model.ShapeType;
 import lombok.NonNull;
@@ -134,7 +132,7 @@ public class BPMNDiagramRichBuilder {
         diagrams.clear();
         BPMNDiagram bpmnDiagram = initializeBPMNDiagram();
         diagrams.add(bpmnDiagram);
-        
+
         BPMNPlane bpmnPlane = bpmnDiagram.getBPMNPlane();
         List<JAXBElement<? extends DiagramElement>> diagramElements = bpmnPlane.getDiagramElement();
 

@@ -10,10 +10,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.process.analytics.tools.bpmn.generator.converter;
+package io.process.analytics.tools.bpmn.generator.converter.waypoint;
 
-public class Configuration {
-    // TODO this should be configurable for by the client code
-    public static final int CELL_WIDTH = 200;
-    public static final int CELL_HEIGHT = 100;
+import lombok.Builder;
+import lombok.ToString;
+
+@Builder
+@ToString
+public class WayPointDescriptor {
+
+    public final Direction direction;
+    public final Orientation orientation;
+    public final BendConfiguration bendConfiguration;
+
 }
