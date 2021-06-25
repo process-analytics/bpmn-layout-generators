@@ -22,12 +22,14 @@
     </p>
 </p>
 
-:warning: THIS IS AN EXPERIMENTAL PROJECT :warning:
+**:warning: THIS IS AN EXPERIMENTAL PROJECT :warning:**
 
-Tools for generating missing BPMNDiagram elements in BPMN files
+Tools for generating the graphical layout of the BPMN process (BPMNDI Graphical Model) in BPMN files.
+They can be used with diagrams containing only the BPMN Semantic part or to replace the existing BPMNDI part.
 
-Plan work for the 1st implementation
-- could be based on https://www.researchgate.net/publication/221542866_A_Simple_Algorithm_for_Automatic_Layout_of_BPMN_Processes
+
+Plan work for the 1st implementations
+- based or partially based on https://www.researchgate.net/publication/221542866_A_Simple_Algorithm_for_Automatic_Layout_of_BPMN_Processes
 - will be implemented in `Java`. If it works, `javascript`/`TypeScript` and `R` implementations will be done
 
 
@@ -49,4 +51,4 @@ Javascript
 ## License
 
 `bpmn-layout-generators` is released under the [Apache 2.0](LICENSE) license. \
-Copyright &copy; 2020, Bonitasoft S.A.
+Copyright &copy; 2020-present, Bonitasoft S.A.
