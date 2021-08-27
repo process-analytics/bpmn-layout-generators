@@ -12,9 +12,6 @@
  */
 package io.process.analytics.tools.bpmn.generator.converter.waypoint;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import io.process.analytics.tools.bpmn.generator.model.Edge;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.Position;
@@ -69,8 +66,8 @@ public class GridSearcher {
                 .anyMatch(p -> p.getY() == positionFrom.getY() - 1);
     }
 
-
-    public BendConfiguration searchEmptyRow(Position positionFrom, Position positionTo, BendDirection searchDirection) {
+    public BendConfiguration computeConfigurationToPassByEmptyRow(Position positionFrom, Position positionTo,
+                                                                  BendDirection searchDirection) {
         int positionFromY = positionFrom.getY();
         int offset = -1;
         boolean isElementBetween = true;

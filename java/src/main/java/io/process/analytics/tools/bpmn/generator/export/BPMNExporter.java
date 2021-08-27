@@ -16,7 +16,7 @@
 package io.process.analytics.tools.bpmn.generator.export;
 
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter;
-import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter.DisplayModel;
+import io.process.analytics.tools.bpmn.generator.model.display.DisplayModel;
 import io.process.analytics.tools.bpmn.generator.internal.BPMNDiagramRichBuilder;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
