@@ -19,11 +19,18 @@ For more details, please refer to the  http://rforge.net/rJava/:[rJava] document
 
 == Usage
 
+Install the package. `bpmnLayoutGeneratoR-x.y.z` is the version you want to install, see the available branches on GitHub
+
 [source,R]
 ----
 # install the package
 devtools::install_github("process-analytics/bpmn-layout-generators",  ref="bpmnLayoutGeneratoR-x.y.z", subdir="R/bpmnLayoutGeneratoR")
+----
 
+Then load data and generate the layout
+
+[source,R]
+----
 # example source sequence_flow and flow_node
 sequence_flow <- data.frame(id="1",from_id="1",to_id="2")
 flow_node <- data.frame(id=c(1,2),node=c("task1","task2"),type=c("task","task"))
@@ -32,7 +39,6 @@ flow_node <- data.frame(id=c(1,2),node=c("task1","task2"),type=c("task","task"))
 diagram <- bpmnLayoutGeneratoR::generateBpmnLayout(flow_node, sequence_flow, "ASCII")
 ----
 
-* `bpmnLayoutGeneratoR-x.y.z` is the version you want to install, see the available branches on github
 
 == Build and release new version
 
