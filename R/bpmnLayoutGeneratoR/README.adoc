@@ -2,6 +2,20 @@
 
 This library wraps the bpmn-layout-generator java library
 
+
+== Prerequisites
+
+`bpmnLayoutGeneratoR` depends on  http://rforge.net/rJava/:[rJava].
+You must install a JDK to make `rJava` work. For the JDK installation, you can use for instance
+
+* your OS package installer
+* AdoptOpenJDK: https://adoptopenjdk.net/installation.html
+* Adoptium: https://adoptium.net/installation.html
+
+Once the JDK is installed, don't forget to run `R CMD javareconf`. See https://cran.r-project.org/doc/manuals/R-admin.html#Java-support
+
+For more details, please refer to the  http://rforge.net/rJava/:[rJava] documentation.
+
 == Usage
 
 [source,R]
