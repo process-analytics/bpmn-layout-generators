@@ -36,9 +36,14 @@ sequence_flow <- data.frame(id="1",from_id="1",to_id="2")
 flow_node <- data.frame(id=c(1,2),node=c("task1","task2"),type=c("task","task"))
 
 # Call the library and generate the diagram using "ASCII", "BPMN" or "SVG"
-diagram <- bpmnLayoutGeneratoR::generateBpmnLayout(flow_node, sequence_flow, "ASCII")
+diagram <- bpmnLayoutGeneratoR::generateBpmnLayout(flow_node, sequence_flow, "BPMN")
 ----
 
+If you want to display the BPMN diagram, you can install the https://github.com/process-analytics/bpmn-visualization-R[bpmnVisualization] package and then run
+[source,R]
+----
+bpmnVisualization::display(diagram)
+----
 
 == Build and release new version
 
