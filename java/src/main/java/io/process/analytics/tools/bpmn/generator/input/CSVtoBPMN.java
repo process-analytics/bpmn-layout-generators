@@ -37,6 +37,8 @@ public class CSVtoBPMN {
     private final Map<String, EdgeRelation> shapeRelations = new HashMap<>();
 
     public TDefinitions readFromCSV(String nodes, String edges) {
+        System.out.println("nodes: " + nodes);
+        System.out.println("edges: " + edges);
         TProcess process = new TProcess();
         process.setId("process_1");
         TDefinitions definitions = new TDefinitions();
