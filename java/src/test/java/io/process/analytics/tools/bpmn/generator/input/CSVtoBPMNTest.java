@@ -97,8 +97,9 @@ class CSVtoBPMNTest {
 
     @Test
     public void should_convert_csv_to_bpmn_r_package_readme_example() throws IOException {
-        String edge = readCsvFile("src/test/resources/csv/R-package-README/edge.csv");
-        String node = readCsvFile("src/test/resources/csv/R-package-README/node.csv");
+//         from and to id must be long not string, otherwise NPE
+        String edge = readCsvFile("src/test/resources/csv/R-package-README/edges.csv");
+        String node = readCsvFile("src/test/resources/csv/R-package-README/nodes.csv");
 
         TDefinitions definitions = new CSVtoBPMN().readFromCSV(node, edge);
         assertThat(definitions.getId()).isNotNull();
@@ -110,7 +111,7 @@ class CSVtoBPMNTest {
         assertThat(process.getId()).isNotNull();
         BpmnElements bpmnElements = semantic.getBpmnElements(process);
         List<? extends TFlowElement> flowNodes = bpmnElements.getFlowNodes();
-        assertThat(flowNodes).hasSize(9);
+        assertThat(flowNodes).hasSize(2);
         TFlowElement flowElement0 = flowNodes.get(0);
         assertThat(flowElement0.getId()).isEqualTo("bpmnElement_1");
         assertThat(flowElement0.getName()).isEqualTo("End");
