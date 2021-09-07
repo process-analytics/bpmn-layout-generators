@@ -32,10 +32,10 @@ Then load data and generate the layout
 [source,R]
 ----
 # example source sequence_flow and flow_node
-sequence_flow <- data.frame(id="1",from_id="1",to_id="2")
 flow_node <- data.frame(id=c(1,2),node=c("task1","task2"),type=c("task","task"))
+sequence_flow <- data.frame(id=1,from_id=1,to_id=2)
 
-# Call the library and generate the diagram using "ASCII", "BPMN" or "SVG"
+# Call the library and generate the diagram using "ASCII", "BPMN" or "SVG". Defaults to "BPMN".
 diagram <- bpmnLayoutGeneratoR::generateBpmnLayout(flow_node, sequence_flow, "BPMN")
 ----
 
@@ -44,6 +44,11 @@ If you want to display the BPMN diagram, you can install the https://github.com/
 ----
 bpmnVisualization::display(diagram)
 ----
+
+The preview displays something like
+
+image::img/readme_bpmn_display.png[BPMN display in R preview]
+
 
 == Build and release new version
 
