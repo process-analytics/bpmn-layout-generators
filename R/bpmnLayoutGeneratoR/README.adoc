@@ -15,7 +15,7 @@ You must install a JDK to make `rJava` work. For the JDK installation, you can u
 
 Once the JDK is installed, don't forget to run `R CMD javareconf`. See https://cran.r-project.org/doc/manuals/R-admin.html#Java-support
 
-For more details, please refer to the  http://rforge.net/rJava/:[rJava] documentation.
+For more details, please refer to the  http://rforge.net/rJava/:[rJava documentation] and the https://github.com/s-u/rJava/blob/master/README.md[rJava GitHub README].
 
 == Usage
 
