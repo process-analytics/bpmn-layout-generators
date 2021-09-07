@@ -114,15 +114,15 @@ class CSVtoBPMNTest {
         assertThat(flowNodes).hasSize(2);
         TFlowElement flowElement0 = flowNodes.get(0);
         assertThat(flowElement0.getId()).isEqualTo("bpmnElement_1");
-        assertThat(flowElement0.getName()).isEqualTo("End");
+        assertThat(flowElement0.getName()).isEqualTo("task1");
         assertThat(flowElement0).isExactlyInstanceOf(TTask.class);
 
         List<? extends TSequenceFlow> sequenceFlows = bpmnElements.getSequenceFlows();
-        assertThat(sequenceFlows).hasSize(13);
-        TSequenceFlow sequenceFlow12 = sequenceFlows.get(12);
-        assertThat(sequenceFlow12.getId()).isEqualTo("sequenceFlow_13");
-        assertThat(getId(sequenceFlow12.getSourceRef())).isEqualTo("bpmnElement_9");
-        assertThat(getId(sequenceFlow12.getTargetRef())).isEqualTo("bpmnElement_5");
+        assertThat(sequenceFlows).hasSize(1);
+        TSequenceFlow sequenceFlow12 = sequenceFlows.get(0);
+        assertThat(sequenceFlow12.getId()).isEqualTo("sequenceFlow_1");
+        assertThat(getId(sequenceFlow12.getSourceRef())).isEqualTo("bpmnElement_1");
+        assertThat(getId(sequenceFlow12.getTargetRef())).isEqualTo("bpmnElement_2");
     }
 
     // =================================================================================================================
