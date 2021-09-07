@@ -8,8 +8,9 @@ generateBpmnLayout <- function(flow_node, sequence_flow, outputType = "BPMN") {
 
   tryCatch( diagramAsString <- bpmnLayoutJava$generateLayoutFromCSV(flow_node_as_csv, sequence_flow_as_csv, type), Exception = function(e){
     e$printStackTrace()
+    # raise the error
+    stop("BPMN Layout generation fails. See Java stack trace.")
   } )
-  # TODO on stack trace, the diagramAsString variable does not exist, so generate an error
   return(diagramAsString)
 }
 
