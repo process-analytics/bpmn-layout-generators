@@ -48,7 +48,8 @@ jobs:
       # don't cancel running jobs even if one fails
       fail-fast: false
       matrix:
-        java: [8, 11, 17]
+        # java 17 fails: Fatal error compiling: java.lang.IllegalAccessError: class lombok.javac.apt.LombokProcessor (in unnamed module @0x2fcad999) cannot access class com.sun.tools.javac.processing.JavacProcessingEnvironment (in module jdk.compiler) because module jdk.compiler does not export com.sun.tools.javac.processing to unnamed module @0x2fcad999
+        java: [8, 11]
 
     steps:
       - uses: actions/checkout@v2
