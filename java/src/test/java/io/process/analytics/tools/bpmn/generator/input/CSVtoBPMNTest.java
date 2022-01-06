@@ -1,8 +1,24 @@
+/*
+ * Copyright 2021 Bonitasoft S.A.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.process.analytics.tools.bpmn.generator.input;
 
 import io.process.analytics.tools.bpmn.generator.internal.Semantic;
 import io.process.analytics.tools.bpmn.generator.internal.Semantic.BpmnElements;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.namespace.QName;
@@ -78,6 +94,37 @@ class CSVtoBPMNTest {
 
         assertThat(gateway1.getIncoming()).extracting(QName::getLocalPart).containsExactlyInAnyOrder("sequenceFlow_1");
         assertThat(gateway1.getOutgoing()).extracting(QName::getLocalPart).containsExactlyInAnyOrder("sequenceFlow_2", "sequenceFlow_3");
+    }
+
+    @Test
+    @Disabled
+    public void should_convert_csv_to_bpmn_r_package_readme_example() throws IOException {
+//         from and to id must be long not string, otherwise NPE
+        String edge = readCsvFile("src/test/resources/csv/R-package-README/edges.csv");
+        String node = readCsvFile("src/test/resources/csv/R-package-README/nodes.csv");
+
+        TDefinitions definitions = new CSVtoBPMN().readFromCSV(node, edge);
+        assertThat(definitions.getId()).isNotNull();
+        Semantic semantic = new Semantic(definitions);
+
+        List<TProcess> processes = semantic.getProcesses();
+        assertThat(processes).hasSize(1);
+        TProcess process = processes.get(0);
+        assertThat(process.getId()).isNotNull();
+        BpmnElements bpmnElements = semantic.getBpmnElements(process);
+        List<? extends TFlowElement> flowNodes = bpmnElements.getFlowNodes();
+        assertThat(flowNodes).hasSize(2);
+        TFlowElement flowElement0 = flowNodes.get(0);
+        assertThat(flowElement0.getId()).isEqualTo("bpmnElement_1");
+        assertThat(flowElement0.getName()).isEqualTo("task1");
+        assertThat(flowElement0).isExactlyInstanceOf(TTask.class);
+
+        List<? extends TSequenceFlow> sequenceFlows = bpmnElements.getSequenceFlows();
+        assertThat(sequenceFlows).hasSize(1);
+        TSequenceFlow sequenceFlow12 = sequenceFlows.get(0);
+        assertThat(sequenceFlow12.getId()).isEqualTo("sequenceFlow_1");
+        assertThat(getId(sequenceFlow12.getSourceRef())).isEqualTo("bpmnElement_1");
+        assertThat(getId(sequenceFlow12.getTargetRef())).isEqualTo("bpmnElement_2");
     }
 
     // =================================================================================================================
