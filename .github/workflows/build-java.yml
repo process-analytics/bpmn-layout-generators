@@ -1,0 +1,58 @@
+
+
+# dist: xenial
+#jdk:
+#  - openjdk8
+#  - openjdk11
+#
+#cache:
+#  directories:
+#    # Maven dependencies and wrappers
+#    - $HOME/.m2
+#
+#branches:
+#  only:
+#    - master
+#
+#install: skip
+#script: cd java; ./mvnw -V verify
+
+
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+name: Build Java
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - .github/workflows/build-java.yml
+      - java/src/**/*
+      - java/.mvn/**/*
+      - java/pom.xml
+      - java/mvnw
+  pull_request:
+    branches: [ master ]
+      - .github/workflows/build-java.yml
+      - java/src/**/*
+      - java/.mvn/**/*
+      - java/pom.xml
+      - java/mvnw
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          # TODO matrix support 11 + 17 (optional)
+          java-version: '8'
+          distribution: 'zulu'
+          cache: maven
+      - name: Build
+        run: ./mvnw -V verify
+        working-directory: java
+        # TODO upload test artifact on failure
