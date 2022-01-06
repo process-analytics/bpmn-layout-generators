@@ -26,14 +26,15 @@ name: Build Java
 on:
   push:
     branches: [ master ]
-    paths:
-      - .github/workflows/build-java.yml
-      - java/src/**/*
-      - java/.mvn/**/*
-      - java/pom.xml
-      - java/mvnw
+#    paths:
+#      - .github/workflows/build-java.yml
+#      - java/src/**/*
+#      - java/.mvn/**/*
+#      - java/pom.xml
+#      - java/mvnw
   pull_request:
     branches: [ master ]
+    paths:
       - .github/workflows/build-java.yml
       - java/src/**/*
       - java/.mvn/**/*
