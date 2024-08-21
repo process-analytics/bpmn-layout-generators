@@ -22,8 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import javax.xml.bind.JAXBElement;
-
+import jakarta.xml.bind.JAXBElement;
 import org.junit.jupiter.api.Test;
 
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
