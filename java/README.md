@@ -2,7 +2,12 @@
 
 ## Requirements
 
-> JDK 8 or JDK 11
+To build and run, use:
+> JDK 17 or JDK 21
+
+> [!NOTE]
+> May work with older versions of JDK, but it has not been tested
+
 
 ## Build
 
