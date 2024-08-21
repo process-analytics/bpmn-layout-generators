@@ -18,11 +18,11 @@ package io.process.analytics.tools.bpmn.generator.internal;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import javax.xml.bind.*;
 import javax.xml.transform.stream.StreamSource;
 
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.ObjectFactory;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
+import jakarta.xml.bind.*;
 
 public class XmlParser {
 

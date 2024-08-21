@@ -15,8 +15,6 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
