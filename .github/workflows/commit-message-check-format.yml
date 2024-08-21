@@ -1,16 +1,15 @@
 name: Commit Message format check
 
 on:
-  pull_request:
-    branches: [master]
-    types: [opened, edited, synchronize]
+  pull_request_target:
+    # trigger when the PR title changes
+    types: [opened, edited, reopened]
 
 jobs:
-  check-for-cc:
-    runs-on: ubuntu-20.04
+  pr-title:
+    runs-on: ubuntu-22.04
+    permissions:
+      pull-requests: write # post comments when the PR title doesn't match the "Conventional Commits" rules
     steps:
-      - name: check-for-cc
-        id: check-for-cc
-        uses: agenthunt/conventional-commit-checker-action@v1.0.0
-        with:
-          pr-body-regex: '(.*\n*)+(.*)'
+      - name: Check Pull Request title
+        uses: bonitasoft/actions/packages/pr-title-conventional-commits@v3
