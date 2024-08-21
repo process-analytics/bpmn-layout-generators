@@ -5,8 +5,8 @@
 To build and run, use:
 > JDK 17 or JDK 21
 
-> [!NOTE]
-> May work with older versions of JDK, but it has not been tested
+> [!WARNING]
+> The build produces bytecode for JDK 17 or newer, so you cannot run the provided jar with older JDK versions.
 
 
 ## Build
@@ -25,7 +25,7 @@ To generate the layout of an existing BPMN file and save the result as a BPMN fi
 java -jar target/bpmn-layout-generator-*-jar-with-dependencies.jar --output=<path_to_output_file> <path_to_input_bpmn_file>
 ```
 If you want to have the resulting layout in an SVG file, pass `--output-type=SVG`   
-Notice that `ASCII` and `SVG` ouput types have been developed to get feedback when running tests i.e. to get a quick preview of the
+Notice that `ASCII` and `SVG` output types have been developed to get feedback when running tests i.e. to get a quick preview of the
 algorithm result. They are not fully implemented and won't probably never be (if you have some interest on that
 topic, feel free to provide a Pull Request)
 
