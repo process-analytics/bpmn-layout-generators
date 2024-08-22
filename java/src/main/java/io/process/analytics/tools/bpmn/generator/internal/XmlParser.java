@@ -15,7 +15,6 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
 
