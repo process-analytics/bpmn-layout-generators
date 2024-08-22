@@ -13,3 +13,5 @@ updates:
       prefix: "chore(gha)"
     labels:
       - dependencies
+      - github_actions
+      - skip-changelog
