@@ -16,4 +16,6 @@ public class Configuration {
     // TODO this should be configurable for by the client code
     public static final int CELL_WIDTH = 200;
     public static final int CELL_HEIGHT = 100;
+
+    public static final int EDGE_OUTGOING_FIRST_HORIZONTAL_SEGMENT_LENGTH = 20;
 }

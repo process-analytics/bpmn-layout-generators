@@ -16,6 +16,7 @@
 package io.process.analytics.tools.bpmn.generator.converter.waypoint;
 
 import static io.process.analytics.tools.bpmn.generator.converter.Configuration.CELL_HEIGHT;
+import static io.process.analytics.tools.bpmn.generator.converter.Configuration.EDGE_OUTGOING_FIRST_HORIZONTAL_SEGMENT_LENGTH;
 import static io.process.analytics.tools.bpmn.generator.converter.waypoint.Orientation.*;
 
 import java.util.ArrayList;
@@ -64,10 +65,11 @@ public class WayPointsConverter {
                     wayPoints.add(new DisplayPoint(to.x, from.y));
                     wayPoints.add(to);
                 } else if (orientation == VerticalHorizontal) {
-                    DisplayPoint from = edgeTerminalPoints.centerTop(dimensionFrom);
+                    DisplayPoint from = edgeTerminalPoints.rightMiddle(dimensionFrom);
                     DisplayPoint to = edgeTerminalPoints.leftMiddle(dimensionTo);
                     wayPoints.add(from);
-                    wayPoints.add(new DisplayPoint(from.x, to.y));
+                    wayPoints.add(new DisplayPoint(from.x + EDGE_OUTGOING_FIRST_HORIZONTAL_SEGMENT_LENGTH, from.y));
+                    wayPoints.add(new DisplayPoint(from.x + EDGE_OUTGOING_FIRST_HORIZONTAL_SEGMENT_LENGTH, to.y));
                     wayPoints.add(to);
                 }
                 break;
@@ -94,10 +96,11 @@ public class WayPointsConverter {
                     wayPoints.add(new DisplayPoint(to.x, from.y));
                     wayPoints.add(to);
                 } else if (orientation == VerticalHorizontal) {
-                    DisplayPoint from = edgeTerminalPoints.centerBottom(dimensionFrom);
+                    DisplayPoint from = edgeTerminalPoints.rightMiddle(dimensionFrom);
                     DisplayPoint to = edgeTerminalPoints.leftMiddle(dimensionTo);
                     wayPoints.add(from);
-                    wayPoints.add(new DisplayPoint(from.x, to.y));
+                    wayPoints.add(new DisplayPoint(from.x + EDGE_OUTGOING_FIRST_HORIZONTAL_SEGMENT_LENGTH, from.y));
+                    wayPoints.add(new DisplayPoint(from.x + EDGE_OUTGOING_FIRST_HORIZONTAL_SEGMENT_LENGTH, to.y));
                     wayPoints.add(to);
                 }
                 break;
@@ -139,13 +142,15 @@ public class WayPointsConverter {
                                                                     DisplayDimension dimensionFrom, DisplayDimension dimensionTo) {
         log.debug("Bend configuration: {}", bendConfiguration);
 
-        DisplayPoint from = bendConfiguration.direction == BendDirection.BOTTOM ? edgeTerminalPoints.centerBottom(dimensionFrom): edgeTerminalPoints.centerTop(dimensionFrom);
+        DisplayPoint from = edgeTerminalPoints.rightMiddle(dimensionFrom);
         DisplayPoint to = bendConfiguration.direction == BendDirection.BOTTOM ? edgeTerminalPoints.centerBottom(dimensionTo): edgeTerminalPoints.centerTop(dimensionTo);
-        int bendPointY = from.y + bendConfiguration.direction.numericFactor() * bendConfiguration.offset * CELL_HEIGHT;
+        int bendPointY = from.y + bendConfiguration.direction.numericFactor() * ( dimensionFrom.height / 2 + bendConfiguration.offset * CELL_HEIGHT);
 
         List<DisplayPoint> wayPoints = new ArrayList<>();
         wayPoints.add(from);
-        wayPoints.add(new DisplayPoint(from.x, bendPointY));
+        DisplayPoint intermediate = new DisplayPoint(from.x + EDGE_OUTGOING_FIRST_HORIZONTAL_SEGMENT_LENGTH, from.y);
+        wayPoints.add(intermediate);
+        wayPoints.add(new DisplayPoint(intermediate.x, bendPointY));
         wayPoints.add(new DisplayPoint(to.x, bendPointY));
         wayPoints.add(to);
         return wayPoints;
