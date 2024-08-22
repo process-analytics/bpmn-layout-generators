@@ -3,9 +3,6 @@ package io.process.analytics.tools.bpmn.generator;
 import static io.process.analytics.tools.bpmn.generator.export.BPMNExporter.defaultBpmnExporter;
 import static io.process.analytics.tools.bpmn.generator.internal.BpmnInOut.defaultBpmnInOut;
 
-import java.io.File;
-import java.io.IOException;
-
 import io.process.analytics.tools.bpmn.generator.algo.ShapeLayouter;
 import io.process.analytics.tools.bpmn.generator.algo.ShapeSorter;
 import io.process.analytics.tools.bpmn.generator.converter.BpmnToAlgoModelConverter;
@@ -13,7 +10,6 @@ import io.process.analytics.tools.bpmn.generator.export.ASCIIExporter;
 import io.process.analytics.tools.bpmn.generator.export.SVGExporter;
 import io.process.analytics.tools.bpmn.generator.input.CSVtoBPMN;
 import io.process.analytics.tools.bpmn.generator.internal.BpmnInOut;
-import io.process.analytics.tools.bpmn.generator.internal.FileUtils;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.TDefinitions;
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
@@ -93,20 +89,17 @@ public class BPMNLayoutGenerator {
 
 
     private String export(LayoutSortedDiagram layout, ExportType exportType) {
-        switch (exportType) {
-            case ASCII:
-                return exportToAscii(layout);
-            case BPMN:
-                return exportToBpmn(layout);
-            case SVG:
-                return exportToSvg(layout);
-            default:
-                throw new IllegalStateException("Unexpected Export Type: " + exportType);
-        }
+        return switch (exportType) {
+            case ASCII -> exportToAscii(layout);
+            case BPMN -> exportToBpmn(layout);
+            case SVG -> exportToSvg(layout);
+            default -> throw new IllegalStateException("Unexpected Export Type: " + exportType);
+        };
     }
 
     @RequiredArgsConstructor
     @Getter
+    // TODO switch to record
     public static class LayoutSortedDiagram {
 
         private final TDefinitions originalDefinitions;
