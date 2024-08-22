@@ -4,9 +4,9 @@
         <a href="https://github.com/process-analytics/bpmn-layout-generators/releases">
             <img alt="GitHub release (latest by date including pre-releases" src="https://img.shields.io/github/v/release/process-analytics/bpmn-layout-generators?color=orange&include_prereleases"> 
         </a> 
-        <a href="https://travis-ci.com/process-analytics/bpmn-layout-generators">
-            <img alt="Build" src="https://travis-ci.com/process-analytics/bpmn-layout-generators.svg?branch=master"> 
-        </a> 
+        <a href="https://github.com/process-analytics/bpmn-layout-generators/actions/workflows/build-java.yml">
+          <img alt="Build" src="https://github.com/process-analytics/bpmn-layout-generators/workflows/Build%20Java/badge.svg"> 
+        </a>
         <br>
         <!-- no CONTRIBUTING guide available for now
         <a href="CONTRIBUTING.md">
@@ -28,15 +28,16 @@ Tools for generating the graphical layout of the BPMN process (BPMNDI Graphical 
 They can be used with diagrams containing only the BPMN Semantic part or to replace the existing BPMNDI part.
 
 
-Plan work for the 1st implementations
-- based or partially based on https://www.researchgate.net/publication/221542866_A_Simple_Algorithm_for_Automatic_Layout_of_BPMN_Processes
-- will be implemented in `Java`. If it works, `javascript`/`TypeScript` and `R` implementations will be done
-
 
 ## Implementations
 
+> [!NOTE]
+> The implementations are based or partially based on https://www.researchgate.net/publication/221542866_A_Simple_Algorithm_for_Automatic_Layout_of_BPMN_Processes
+
+Available implementations:
 - [java](java/README.md)
 - [R](R/bpmnLayoutGeneratoR/README.adoc) This is only a wrapper of the java library
+
 
 ## Existing alternatives
 
@@ -47,6 +48,7 @@ Java
 
 Javascript
 - https://github.com/bpmn-io/bpmn-auto-layout/
+
 
 ## License
 
