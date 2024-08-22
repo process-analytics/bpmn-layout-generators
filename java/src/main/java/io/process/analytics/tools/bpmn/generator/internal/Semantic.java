@@ -31,6 +31,8 @@ import lombok.RequiredArgsConstructor;
  * Helper to access to the BPMN semantic part
  */
 @RequiredArgsConstructor
+// TODO switch to record
+// TODO lombok getter on class
 public class Semantic {
 
     @NonNull
@@ -40,12 +42,6 @@ public class Semantic {
     // assuming this is a TBaseElement
     public static String getId(Object object) {
         return ((TBaseElement) object).getId();
-    }
-
-    public List<TParticipant> getParticipants() {
-        return getCollaboration()
-                .map(TCollaboration::getParticipant)
-                .orElseGet(Collections::emptyList);
     }
 
     public Optional<TCollaboration> getCollaboration() {
@@ -106,9 +102,7 @@ public class Semantic {
 
     public static void addFlowNodes(TProcess process, Collection<TFlowNode> flowElements) {
         flowElements.stream()
-                .map(f -> {
-                    return new JAXBElement<>(bpmnElementQName(f), TFlowNode.class, null, f);
-                })
+                .map(f -> new JAXBElement<>(bpmnElementQName(f), TFlowNode.class, null, f))
                 .forEach(f -> process.getFlowElement().add(f));
     }
 
@@ -123,7 +117,7 @@ public class Semantic {
     }
 
     //TODO add other type of flow node elements
-    private static final Map<Class<? extends TFlowNode>, String> bpmnElementBindings = new HashMap<Class<? extends TFlowNode>, String>() {{
+    private static final Map<Class<? extends TFlowNode>, String> bpmnElementBindings = new HashMap<>() {{
         put(TParallelGateway.class, "parallelGateway");
         put(TInclusiveGateway.class, "inclusiveGateway");
         put(TExclusiveGateway.class, "exclusiveGateway");
