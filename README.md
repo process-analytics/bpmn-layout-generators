@@ -4,9 +4,6 @@
         <a href="https://github.com/process-analytics/bpmn-layout-generators/releases">
             <img alt="GitHub release (latest by date including pre-releases" src="https://img.shields.io/github/v/release/process-analytics/bpmn-layout-generators?color=orange&include_prereleases"> 
         </a> 
-        <a href="https://travis-ci.com/process-analytics/bpmn-layout-generators">
-            <img alt="Build" src="https://travis-ci.com/process-analytics/bpmn-layout-generators.svg?branch=master"> 
-        </a>
         <a href="https://github.com/process-analytics/bpmn-layout-generators/actions/workflows/build-java.yml">
           <img alt="Build" src="https://github.com/process-analytics/bpmn-layout-generators/workflows/Build%20Java/badge.svg"> 
         </a>
