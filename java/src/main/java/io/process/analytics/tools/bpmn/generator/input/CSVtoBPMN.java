@@ -71,8 +71,6 @@ public class CSVtoBPMN {
                     flowNode = new TEndEvent();
                     break;
                 case "gateway":
-                    flowNode = new TParallelGateway();
-                    break;
                 case "parallel_gateway":
                     flowNode = new TParallelGateway();
                     break;
@@ -191,7 +189,7 @@ public class CSVtoBPMN {
     private static class EdgeRelation {
 
         public final List<String> incoming = new ArrayList<>();
-        public final List<String> outgoing = new ArrayList<>();;
+        public final List<String> outgoing = new ArrayList<>();
 
     }
 
