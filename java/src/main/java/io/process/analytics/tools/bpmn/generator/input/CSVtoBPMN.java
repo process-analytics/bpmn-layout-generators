@@ -61,17 +61,7 @@ public class CSVtoBPMN {
                 continue;
             }
             String[] node = line.split(",");
-            String type = removeEnclosingDoubleQuote(node[3]);
-            TFlowNode flowNode = switch (type) {
-                case "start_event" -> new TStartEvent();
-                case "end_event" -> new TEndEvent();
-                case "gateway", "parallel_gateway" -> new TParallelGateway();
-                case "exclusive_gateway" -> new TExclusiveGateway();
-                case "inclusive_gateway" -> new TInclusiveGateway();
-                case "user_task" -> new TUserTask();
-                case "service_task" -> new TServiceTask();
-                default -> new TTask();
-            };
+            TFlowNode flowNode = gettFlowNode(node);
             flowNode.setName(removeEnclosingDoubleQuote(node[2]));
 
             String originalId = node[1];
@@ -85,6 +75,21 @@ public class CSVtoBPMN {
             flowElements.add(flowNode);
         }
         return flowElements;
+    }
+
+    private static TFlowNode gettFlowNode(String[] node) {
+        String type = removeEnclosingDoubleQuote(node[3]);
+        TFlowNode flowNode = switch (type) {
+            case "start_event" -> new TStartEvent();
+            case "end_event" -> new TEndEvent();
+            case "gateway", "parallel_gateway" -> new TParallelGateway();
+            case "exclusive_gateway" -> new TExclusiveGateway();
+            case "inclusive_gateway" -> new TInclusiveGateway();
+            case "user_task" -> new TUserTask();
+            case "service_task" -> new TServiceTask();
+            default -> new TTask();
+        };
+        return flowNode;
     }
 
     private void assignIncomingAndOutgoingReferences(List<TFlowNode> flowNodeElements) {
