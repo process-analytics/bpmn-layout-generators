@@ -4,7 +4,6 @@ import static io.process.analytics.tools.bpmn.generator.export.ASCIIExporter.toA
 import static io.process.analytics.tools.bpmn.generator.model.Position.position;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.process.analytics.tools.bpmn.generator.model.Edge;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
@@ -22,6 +21,7 @@ public class ShapeLayouter {
         for (Shape shape : diagram.getShapes()) {
             Position positionOfCurrentShape = positionShape(diagram, grid, shape);
             putOnGrid(grid, positionOfCurrentShape);
+            // TODO check usage of supplier, intellij says it is deprecated
             log.debug("Adding {}:\n{}", shape::getName, () -> toAscii(grid));
             addRowsWhenShapeIsASplit(diagram, grid, shape, positionOfCurrentShape);
         }
@@ -76,8 +76,8 @@ public class ShapeLayouter {
     private void compactGrid(Grid grid) {
         int i = 0;
         while (i < grid.getLastRowIndex()) {
-            List<Integer> currentRow = grid.getRow(i).stream().map(Position::getX).collect(Collectors.toList());
-            List<Integer> nextRow = grid.getRow(i + 1).stream().map(Position::getX).collect(Collectors.toList());
+            List<Integer> currentRow = grid.getRow(i).stream().map(Position::getX).toList();
+            List<Integer> nextRow = grid.getRow(i + 1).stream().map(Position::getX).toList();
 
             boolean currentRowCanBeMovedBelow = true;
             for (Integer shapeIndexInCurrentRow : currentRow) {
@@ -109,7 +109,7 @@ public class ShapeLayouter {
     private Position addSplit(Grid grid, Shape shape, String previousShapeID, List<Edge> outgoingEdgesOfPreviousShape) {
         Position previousShapePosition = grid.getPosition(previousShapeID);
         int numberOfShapesInTheSplit = outgoingEdgesOfPreviousShape.size();
-        int indexOfCurrentShape = outgoingEdgesOfPreviousShape.stream().map(Edge::getTo).collect(Collectors.toList()).indexOf(shape.getId());
+        int indexOfCurrentShape = outgoingEdgesOfPreviousShape.stream().map(Edge::getTo).toList().indexOf(shape.getId());
         //put element right to the split vertically distributed according to the index
         int relativeYPosition;
         if (numberOfShapesInTheSplit % 2 == 0 && indexOfCurrentShape >= numberOfShapesInTheSplit / 2) {
@@ -124,7 +124,7 @@ public class ShapeLayouter {
     private Position addJoin(Grid grid, Shape shape, List<Edge> incomingEdges) {
         //first implementation: middle of elements it joins
         // later we should also try yo find the split to align it to that if possible
-        List<Position> positions = incomingEdges.stream().map(Edge::getFrom).map(grid::getPosition).collect(Collectors.toList());
+        List<Position> positions = incomingEdges.stream().map(Edge::getFrom).map(grid::getPosition).toList();
         int xMax = positions.stream().map(Position::getX).reduce(0, Math::max);
         int yMax = positions.stream().map(Position::getY).reduce(0, Math::max);
         int yMin = positions.stream().map(Position::getY).reduce(Integer.MAX_VALUE, Math::min);
