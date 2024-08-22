@@ -35,7 +35,6 @@ import lombok.Singular;
  */
 public class ShapeSorter {
 
-
     /**
      * sort nodes of a diagram in topological order
      *
@@ -78,12 +77,9 @@ public class ShapeSorter {
     }
 
     private Diagram doSort(Diagram diagram) {
-        List<Shape> shapeToSort = new ArrayList<>();
-        List<Edge> remainingEdges = new ArrayList<>();
-        List<Edge> finalEdges = new ArrayList<>();
-        shapeToSort.addAll(diagram.getShapes());
-        remainingEdges.addAll(diagram.getEdges());
-        finalEdges.addAll(diagram.getEdges());
+        List<Shape> shapeToSort = new ArrayList<>(diagram.getShapes());
+        List<Edge> remainingEdges = new ArrayList<>(diagram.getEdges());
+        List<Edge> finalEdges = new ArrayList<>(diagram.getEdges());
         List<Join> joins = findAllJoins(shapeToSort, remainingEdges);
 
         Diagram.DiagramBuilder sortedDiagram = Diagram.builder();
