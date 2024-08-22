@@ -62,34 +62,16 @@ public class CSVtoBPMN {
             }
             String[] node = line.split(",");
             String type = removeEnclosingDoubleQuote(node[3]);
-            TFlowNode flowNode;
-            switch (type) {
-                case "start_event":
-                    flowNode = new TStartEvent();
-                    break;
-                case "end_event":
-                    flowNode = new TEndEvent();
-                    break;
-                case "gateway":
-                case "parallel_gateway":
-                    flowNode = new TParallelGateway();
-                    break;
-                case "exclusive_gateway":
-                    flowNode = new TExclusiveGateway();
-                    break;
-                case "inclusive_gateway":
-                    flowNode = new TInclusiveGateway();
-                    break;
-                case "user_task":
-                    flowNode = new TUserTask();
-                    break;
-                case "service_task":
-                    flowNode = new TServiceTask();
-                    break;
-                case "task":
-                default:
-                    flowNode = new TTask();
-            }
+            TFlowNode flowNode = switch (type) {
+                case "start_event" -> new TStartEvent();
+                case "end_event" -> new TEndEvent();
+                case "gateway", "parallel_gateway" -> new TParallelGateway();
+                case "exclusive_gateway" -> new TExclusiveGateway();
+                case "inclusive_gateway" -> new TInclusiveGateway();
+                case "user_task" -> new TUserTask();
+                case "service_task" -> new TServiceTask();
+                default -> new TTask();
+            };
             flowNode.setName(removeEnclosingDoubleQuote(node[2]));
 
             String originalId = node[1];
