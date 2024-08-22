@@ -53,7 +53,7 @@ public class Semantic {
                 .map(JAXBElement::getValue)
                 .filter(TCollaboration.class::isInstance)
                 .map(TCollaboration.class::cast)
-                .collect(Collectors.toList());
+                .toList();
 
         // TODO check at most 1 otherwise error
         // TODO refactor into a more functional way
