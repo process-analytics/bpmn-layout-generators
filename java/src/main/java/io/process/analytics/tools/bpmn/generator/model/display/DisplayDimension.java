@@ -15,6 +15,7 @@ package io.process.analytics.tools.bpmn.generator.model.display;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+// TODO switch to record
 public class DisplayDimension {
 
     public final int x;
