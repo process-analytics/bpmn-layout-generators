@@ -30,7 +30,7 @@ jobs:
           git config --local user.name "${{ vars.PA_BOT_NAME }}"
           git config pull.rebase true
       - name: Checkout default branch
-        run: git checkout main && git pull --tags
+        run: git checkout master && git pull --tags
 
       - uses: actions/setup-java@v4
         with:
