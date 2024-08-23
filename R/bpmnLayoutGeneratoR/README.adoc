@@ -10,8 +10,7 @@ This library wraps the bpmn-layout-generator java library
 You must install a JDK to make `rJava` work. For the JDK installation, you can use for instance
 
 * your OS package installer
-* AdoptOpenJDK: https://adoptopenjdk.net/installation.html
-* Adoptium: https://adoptium.net/installation.html
+* Adoptium: https://adoptium.net/installation/
 
 Once the JDK is installed, don't forget to run `R CMD javareconf`. See https://cran.r-project.org/doc/manuals/R-admin.html#Java-support
 
@@ -49,10 +48,22 @@ The preview displays something like
 
 image::img/readme_bpmn_display.png[BPMN display in R preview]
 
-
+[#release]
 == Build and release new version
 
-* on the master branch create a branch named `bpmnLayoutGeneratoR-x.y.z` (replace with version)
+[NOTE]
+====
+Generally, the R release follow the Java release and is fully automated, so there is nothing to do.
+For more details, see the xref:../../README.md[overall release process].
+
+In this case, the branch mentioned here must be created from the related tag.
+
+Otherwise, it has to be created from the `master` branch.
+====
+
+The following is for a manual release:
+
+* create a branch named `bpmnLayoutGeneratoR-x.y.z` (replace with version)
 * execute `make install` in the directory `R/bpmnLayoutGeneratoR`
-* commit and push everything with title `release(R): bpmnLayoutGeneratoR-x.y.z`
+* commit and push everything with title `release: bpmnLayoutGeneratoR-x.y.z`
 

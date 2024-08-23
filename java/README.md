@@ -9,8 +9,22 @@ To build and run, use:
 > The build produces bytecode for JDK 17 or newer, so you cannot run the provided jar with older JDK versions.
 
 
-## Build
+## Get the bpmn-layout-generator jar
 
+Choose one of the following options:
+
+### Download
+
+The jar is available in the release branches of the [R package](../R/bpmnLayoutGeneratoR/README.adoc).
+
+For example, for version `0.1.4`, you can download the jar from https://github.com/process-analytics/bpmn-layout-generators/tree/bpmnLayoutGeneratoR-0.1.4/R/bpmnLayoutGeneratoR/inst/java.
+
+
+### Build
+
+> [!NOTE]
+> Building the jar let you use the latest version of the code.
+ 
 The project bundles a Maven Wrapper, so just run
 ``` bash
 ./mvnw package
@@ -37,3 +51,8 @@ java -jar target/bpmn-layout-generator-*-jar-with-dependencies.jar \
   --output=<path_to_output_file> \
   csv/PatientsProcess/nodeSimple.csv csv/PatientsProcess/edgeSimple.cs
 ```
+
+
+## Release
+
+The release process is fully automated. See the [release process](../README.md) for more details.
