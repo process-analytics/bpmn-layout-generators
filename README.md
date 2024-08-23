@@ -98,18 +98,10 @@ This workflow:
 - Triggers the publishing of the npm package
 - Creates a draft GitHub release
 
-Manage Milestone:
-- **Note:** we always put issues related to a version in a Milestone whose name matches the version.
-- Ensure the name of the milestone used for the new release version matches the name of the tag/version that has just been pushed. Renamed it if needed.
-- Clean this opened milestone if some issues are still opened (move them to a new one or discard milestone from them)
-- Close the milestone
-
 The release workflow has initiated a new draft GitHub release, which needs to be updated and published :
 - For more details about GitHub release, follow the [GitHub help](https://help.github.com/en/github/administering-a-repository/managing-releases-in-a-repository#creating-a-release):
 - The release notes has been [automatically generated](https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes). Review and adjust it if necessary.
 - Publish the GitHub release
-
-
 
 
 ## License
