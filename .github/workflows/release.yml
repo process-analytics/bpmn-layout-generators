@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'The version to release'
+        required: true
+
+jobs:
+  releaseVersion:
+    runs-on: ubuntu-22.04
+    env:
+      MAVEN_ARGS: "-B -ntp"
+      VERSION: ${{ github.event.inputs.version }}
+    steps:
+      - run: |
+          echo "Version: ${{ env.VERSION }}"
+
+      - name: Setup checkout
+        uses: actions/checkout@v4
+        with:
+          # Use a PAT to ensure that
+          #   commits are authored with a specific user
+          #   workflow run are triggered after git push
+          token: ${{ secrets.GH_RELEASE_TOKEN }}
+      - name: Config git
+        run: |
+          git config --local user.email "${{ vars.PA_BOT_EMAIL }}"
+          git config --local user.name "${{ vars.PA_BOT_NAME }}"
+          git config pull.rebase true
+      - name: Checkout default branch
+        run: git checkout main && git pull --tags
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'zulu'
+          cache: 'maven'
+      - name: Set release version of the java project
+        run: |
+          cd ${{ github.workspace }}/java && ./mvnw ${{env.MAVEN_ARGS}} versions:set -DnewVersion=${{ env.VERSION }} versions:commit
+          cd ${{ github.workspace }}
+          git commit -a -m "chore(release): ${{ env.VERSION }}"
+
+      - name: Create the release tag
+        run: |
+          git tag -a v${{ env.VERSION }} -m "chore(release): ${{ env.VERSION }}"
+      - name: Set development version of the java project
+        run: |
+          cd ${{ github.workspace }}/java && ./mvnw ${{env.MAVEN_ARGS}} versions:set -DnextSnapshot=true versions:commit
+          cd ${{ github.workspace }}
+          git commit -a -m "chore(release): prepare next development version"
+
+      - name: Push commits and tags
+        run: |
+          git push
+          git push --tags
