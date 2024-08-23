@@ -48,10 +48,18 @@ The preview displays something like
 
 image::img/readme_bpmn_display.png[BPMN display in R preview]
 
-
+[#release]
 == Build and release new version
 
-* on the master branch create a branch named `bpmnLayoutGeneratoR-x.y.z` (replace with version)
+[NOTE]
+====
+Generally, the R release follow the Java release.
+In this case, the branch mentioned here must be created from the related tag.
+
+Otherwise, it has to be created from the `master` branch.
+====
+
+* create a branch named `bpmnLayoutGeneratoR-x.y.z` (replace with version)
 * execute `make install` in the directory `R/bpmnLayoutGeneratoR`
-* commit and push everything with title `release(R): bpmnLayoutGeneratoR-x.y.z`
+* commit and push everything with title `release: bpmnLayoutGeneratoR-x.y.z`
 

@@ -51,3 +51,8 @@ java -jar target/bpmn-layout-generator-*-jar-with-dependencies.jar \
   --output=<path_to_output_file> \
   csv/PatientsProcess/nodeSimple.csv csv/PatientsProcess/edgeSimple.cs
 ```
+
+
+## Release
+
+

@@ -50,6 +50,12 @@ Javascript
 - https://github.com/bpmn-io/bpmn-auto-layout/
 
 
+## Release
+
+- release the java project
+- then release the [R package](R/bpmnLayoutGeneratoR/README.adoc#release)
+
+
 ## License
 
 `bpmn-layout-generators` is released under the [Apache 2.0](LICENSE) license. \
