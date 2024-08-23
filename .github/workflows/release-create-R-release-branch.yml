@@ -1,0 +1,43 @@
+name: Release - create the R package release branch
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  release:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ./R/bpmnLayoutGeneratoR
+    steps:
+      - name: Setup checkout
+        uses: actions/checkout@v4
+        with:
+          # Use a PAT to ensure that
+          #   commits are authored with a specific user
+          #   workflow run are triggered after git push
+          token: ${{ secrets.GH_RELEASE_TOKEN }}
+      - name: Config git
+        run: |
+          git config --local user.email "${{ vars.PA_BOT_EMAIL }}"
+          git config --local user.name "${{ vars.PA_BOT_NAME }}"
+          git config pull.rebase true
+
+      - name: Set env
+        run: |
+          echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
+
+      - name: Create release branch
+        run: |
+          git checkout -b bpmnLayoutGeneratoR-${{ env.VERSION }}
+
+      - name: Make the R package
+        run: |
+          make install
+
+      - name: Commit and push
+        run: |
+          release(R): bpmnLayoutGeneratoR-${{ env.VERSION }}
+          git push --set-upstream origin release/v${{ env.VERSION }}
