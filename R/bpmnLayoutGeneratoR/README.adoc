@@ -61,6 +61,8 @@ In this case, the branch mentioned here must be created from the related tag.
 Otherwise, it has to be created from the `master` branch.
 ====
 
+The following is for a manual release:
+
 * create a branch named `bpmnLayoutGeneratoR-x.y.z` (replace with version)
 * execute `make install` in the directory `R/bpmnLayoutGeneratoR`
 * commit and push everything with title `release: bpmnLayoutGeneratoR-x.y.z`
