@@ -53,7 +53,9 @@ image::img/readme_bpmn_display.png[BPMN display in R preview]
 
 [NOTE]
 ====
-Generally, the R release follow the Java release.
+Generally, the R release follow the Java release and is fully automated, so there is nothing to do.
+For more details, see the xref:../../README.md[overall release process].
+
 In this case, the branch mentioned here must be created from the related tag.
 
 Otherwise, it has to be created from the `master` branch.

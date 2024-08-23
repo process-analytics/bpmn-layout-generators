@@ -55,4 +55,4 @@ java -jar target/bpmn-layout-generator-*-jar-with-dependencies.jar \
 
 ## Release
 
-
+The release process is fully automated. See the [release process](../README.md) for more details.

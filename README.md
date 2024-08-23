@@ -83,20 +83,16 @@ Ensure that all merged PR included in the release are labelled. You can find the
 
 ### Perform the release
 
-- release the java project
-- then release the [R package](R/bpmnLayoutGeneratoR/README.adoc#release)
-
-
-### Publish the release notes
-
 When all updates have been completed, you are ready to publish a new release.
 
-Go to the [release workflow](https://github.com/process-analytics/bv-experimental-add-ons/actions/workflows/release.yml) in GitHub Actions and run it by choosing the type of release.
+Go to the [release workflow](https://github.com/process-analytics/bpmn-layout-generators/actions/workflows/release.yml) in GitHub Actions and run it by choosing the version to release.
 
 This workflow:
 - Creates a Git tag
-- Triggers the publishing of the npm package
-- Creates a draft GitHub release
+- Triggers the creation of the release branch of the R package 
+- Triggers the creation of a draft GitHub release
+
+### Publish the release notes
 
 The release workflow has initiated a new draft GitHub release, which needs to be updated and published :
 - For more details about GitHub release, follow the [GitHub help](https://help.github.com/en/github/administering-a-repository/managing-releases-in-a-repository#creating-a-release):
