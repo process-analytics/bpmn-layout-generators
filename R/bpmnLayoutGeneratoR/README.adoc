@@ -10,8 +10,7 @@ This library wraps the bpmn-layout-generator java library
 You must install a JDK to make `rJava` work. For the JDK installation, you can use for instance
 
 * your OS package installer
-* AdoptOpenJDK: https://adoptopenjdk.net/installation.html
-* Adoptium: https://adoptium.net/installation.html
+* Adoptium: https://adoptium.net/installation/
 
 Once the JDK is installed, don't forget to run `R CMD javareconf`. See https://cran.r-project.org/doc/manuals/R-admin.html#Java-support
 
