@@ -1,4 +1,4 @@
-name: Create the R package release branch
+name: Release - create the R package release branch
 
 on:
   push:
