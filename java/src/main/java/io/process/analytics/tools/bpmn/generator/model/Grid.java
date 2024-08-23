@@ -1,13 +1,12 @@
 package io.process.analytics.tools.bpmn.generator.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  *
- * Represent a grid with coordinate as follow
+ * Represent a grid with coordinate as follows
  *
  * <pre>
  *  + ➞ x
@@ -15,6 +14,7 @@ import java.util.stream.Collectors;
  *  y
  * </pre>
  */
+// TODO use lombok getter?
 public class Grid {
 
     private final List<Position> positions = new ArrayList<>();

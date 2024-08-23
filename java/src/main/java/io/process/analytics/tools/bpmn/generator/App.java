@@ -21,7 +21,6 @@ import static java.util.stream.Collectors.joining;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
 import java.util.concurrent.Callable;
 
 import io.process.analytics.tools.bpmn.generator.BPMNLayoutGenerator.ExportType;
@@ -54,7 +53,6 @@ public class App implements Callable<Integer> {
     private File[] inputFiles;
 
     public static void main(String[] args) throws Exception {
-
         int exitCode = runApp(args);
         System.exit(exitCode);
     }

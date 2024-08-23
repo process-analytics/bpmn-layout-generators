@@ -20,6 +20,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Builder
+// TODO switch to record
 public class DisplayModel {
     public final int width;
     public final int height;

@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 @Builder(toBuilder = true)
 @RequiredArgsConstructor
+// TODO switch to record
 public class Shape {
 
     private final String id; // the bpmnElement id

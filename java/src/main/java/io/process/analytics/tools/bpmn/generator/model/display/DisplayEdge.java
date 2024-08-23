@@ -12,7 +12,6 @@
  */
 package io.process.analytics.tools.bpmn.generator.model.display;
 
-import io.process.analytics.tools.bpmn.generator.model.display.DisplayPoint;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +19,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Builder
+// TODO switch to record
 public class DisplayEdge {
 
     public final String bpmnElementId;

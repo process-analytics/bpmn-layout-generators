@@ -16,5 +16,5 @@
 package io.process.analytics.tools.bpmn.generator.model;
 
 public enum ShapeType {
-    ACTIVITY, EVENT, GATEWAY;
+    ACTIVITY, EVENT, GATEWAY
 }
