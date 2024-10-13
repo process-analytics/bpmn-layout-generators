@@ -19,10 +19,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
+import jakarta.xml.bind.JAXBElement;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

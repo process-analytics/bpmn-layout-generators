@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import io.process.analytics.tools.bpmn.generator.model.display.DisplayDimension;
@@ -29,6 +28,7 @@ import io.process.analytics.tools.bpmn.generator.model.display.DisplayFlowNode;
 import io.process.analytics.tools.bpmn.generator.model.display.DisplayPoint;
 import io.process.analytics.tools.bpmn.generator.internal.generated.model.*;
 import io.process.analytics.tools.bpmn.generator.model.ShapeType;
+import jakarta.xml.bind.JAXBElement;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
