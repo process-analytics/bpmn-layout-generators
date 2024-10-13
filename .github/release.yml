@@ -1,0 +1,20 @@
+changelog:
+  exclude:
+    labels:
+      - skip-changelog
+  categories:
+    - title: 🎉 New Features
+      labels:
+        - enhancement
+    - title: 🐛 Bug Fixes
+      labels:
+        - bug
+    - title: 📝 Documentation
+      labels:
+        - documentation
+    - title: 📦 Dependency updates
+      labels:
+        - dependencies
+    - title: ⚙️ Other Changes
+      labels:
+        - "*"

@@ -17,9 +17,12 @@ package io.process.analytics.tools.bpmn.generator.export;
 
 import static io.process.analytics.tools.bpmn.generator.internal.StringUtils.defaultIfNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import io.process.analytics.tools.bpmn.generator.converter.AlgoToDisplayModelConverter;
+import io.process.analytics.tools.bpmn.generator.converter.waypoint.Direction;
 import io.process.analytics.tools.bpmn.generator.model.Diagram;
 import io.process.analytics.tools.bpmn.generator.model.Grid;
 import io.process.analytics.tools.bpmn.generator.model.ShapeType;
@@ -51,6 +54,7 @@ public class SVGExporter {
         final String colorEgeStroke = "Black";
         final int edgeStrokeWidth = 2;
         final double edgeStrokeOpacity = 0.5;
+        final int edgeArrowHeight = 10;
 
         for (DisplayFlowNode flowNode : model.flowNodes) {
             DisplayDimension flowNodeDimension = flowNode.dimension;
@@ -158,16 +162,41 @@ public class SVGExporter {
                         .append(" fill=\"none\"")
                         .append(" />\n");
 
-                // highlight target point
-                DisplayPoint targetPoint = edge.wayPoints.get(edge.wayPoints.size() - 1);
-                content.append("<circle")
-                        .append(" cx=\"").append(targetPoint.x).append("\"")
-                        .append(" cy=\"").append(targetPoint.y).append("\"")
-                        .append(" r=\"").append("5").append("\"")
+                // edge arrow
+                List<DisplayPoint> wayPoints = edge.wayPoints;
+                Direction lastSegmentDirection = detectLastSegmentDirection(wayPoints);
+                DisplayPoint last = wayPoints.get(wayPoints.size() - 1);
+
+                List<DisplayPoint> arrowPoints = new ArrayList<>();
+
+                if (lastSegmentDirection == Direction.LeftToRight) {
+                    arrowPoints.add(new DisplayPoint(last.x, last.y)); // top of the arrow
+                    arrowPoints.add(new DisplayPoint(last.x - edgeArrowHeight, last.y + edgeArrowHeight / 2));
+                    arrowPoints.add(new DisplayPoint(last.x - edgeArrowHeight, last.y - edgeArrowHeight / 2));
+                } else if (lastSegmentDirection == Direction.RightToLeft) {
+                    arrowPoints.add(new DisplayPoint(last.x, last.y)); // top of the arrow
+                    arrowPoints.add(new DisplayPoint(last.x + edgeArrowHeight, last.y + edgeArrowHeight / 2));
+                    arrowPoints.add(new DisplayPoint(last.x + edgeArrowHeight, last.y - edgeArrowHeight / 2));
+                } else if (lastSegmentDirection == Direction.TopToBottom) {
+                    arrowPoints.add(new DisplayPoint(last.x, last.y)); // top of the arrow
+                    arrowPoints.add(new DisplayPoint(last.x - edgeArrowHeight / 2, last.y - edgeArrowHeight));
+                    arrowPoints.add(new DisplayPoint(last.x + edgeArrowHeight / 2, last.y - edgeArrowHeight));
+                } else if (lastSegmentDirection == Direction.BottomToTop) {
+                    arrowPoints.add(new DisplayPoint(last.x, last.y)); // top of the arrow
+                    arrowPoints.add(new DisplayPoint(last.x - edgeArrowHeight / 2, last.y + edgeArrowHeight));
+                    arrowPoints.add(new DisplayPoint(last.x + edgeArrowHeight / 2, last.y + edgeArrowHeight));
+                }
+
+                content.append("<polygon")
                         .append(" stroke=\"").append(colorEgeStroke).append("\"")
                         .append(" stroke-width=\"").append(edgeStrokeWidth).append("\"")
                         .append(" stroke-opacity=\"").append(edgeStrokeOpacity).append("\"")
                         .append(" fill=\"").append(colorEgeStroke).append("\"")
+                        .append(" points=\"")
+                        .append(arrowPoints.stream()
+                                .map(point -> point.x + "," + point.y)
+                                .collect(Collectors.joining(" ")))
+                        .append("\"")
                         .append(" />\n");
             }
         }
@@ -176,4 +205,16 @@ public class SVGExporter {
         return content.toString();
     }
 
+    // here we assume that we have only vertical and horizontal segments, and we have at least 2 points in the list
+    // visible for testing
+    static Direction detectLastSegmentDirection(List<DisplayPoint> wayPoints) {
+        DisplayPoint last = wayPoints.get(wayPoints.size() - 1);
+        DisplayPoint beforeLast = wayPoints.get(wayPoints.size() - 2);
+        // horizontal
+        if (last.x == beforeLast.x) {
+            return last.y > beforeLast.y ? Direction.TopToBottom : Direction.BottomToTop;
+        }
+        // vertical
+        return last.x > beforeLast.x ? Direction.LeftToRight : Direction.RightToLeft;
+    }
 }
