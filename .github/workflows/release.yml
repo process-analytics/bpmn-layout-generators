@@ -9,7 +9,7 @@ on:
 
 jobs:
   releaseVersion:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       MAVEN_ARGS: "-B -ntp"
       VERSION: ${{ github.event.inputs.version }}
