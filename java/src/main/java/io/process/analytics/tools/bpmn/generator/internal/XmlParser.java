@@ -15,7 +15,6 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -56,6 +55,7 @@ public class XmlParser {
         } catch(PropertyException e) {
             // In case another JAXB implementation is used
             // do not stop processing, namespace prefixes will be generated automatically in that case
+            // TODO switch to logger
             e.printStackTrace();
         }
         return marshaller;

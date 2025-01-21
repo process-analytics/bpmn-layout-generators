@@ -15,7 +15,6 @@
  */
 package io.process.analytics.tools.bpmn.generator.internal;
 
-import static io.process.analytics.tools.bpmn.generator.internal.FileUtils.createParents;
 import static io.process.analytics.tools.bpmn.generator.internal.FileUtils.fileContent;
 
 import java.io.File;

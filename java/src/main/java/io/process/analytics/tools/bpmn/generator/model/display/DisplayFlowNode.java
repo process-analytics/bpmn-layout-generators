@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Builder
+// TODO switch to record
 public class DisplayFlowNode {
 
     public final String bpmnElementId;

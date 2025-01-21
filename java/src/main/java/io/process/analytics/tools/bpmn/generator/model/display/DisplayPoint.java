@@ -17,6 +17,7 @@ import lombok.ToString;
 
 @RequiredArgsConstructor
 @ToString
+// TODO switch to record
 public class DisplayPoint {
 
     public final int x;
