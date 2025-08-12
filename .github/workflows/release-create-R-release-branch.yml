@@ -13,7 +13,7 @@ jobs:
         working-directory: ./R/bpmnLayoutGeneratoR
     steps:
       - name: Setup checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           # Use a PAT to ensure that
           #   commits are authored with a specific user
