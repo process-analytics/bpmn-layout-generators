@@ -32,7 +32,7 @@ jobs:
       - name: Checkout default branch
         run: git checkout master && git pull --tags
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           java-version: 17
           distribution: 'zulu'
