@@ -18,7 +18,7 @@ jobs:
           echo "Version: ${{ env.VERSION }}"
 
       - name: Setup checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           # Use a PAT to ensure that
           #   commits are authored with a specific user
